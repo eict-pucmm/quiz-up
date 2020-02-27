@@ -1,6 +1,6 @@
-# Brainstorm
+# Quiz Up
 
-brainstorm
+quiz up
 
 ## Technologies
 
@@ -9,7 +9,7 @@ brainstorm
 ## Folder Structure
 
 ```bash
-brainstorm
+quiz-up
 ├── src/                          # Source directory
 |   ├── server/                   # All server side code
 |   |   ├── config/               # Configuration files
