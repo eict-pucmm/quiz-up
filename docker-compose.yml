@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  brainstorm:
+    container_name: backend
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: npm run dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/srv/brainstorm
+      - api_node_modules:/srv/brainstorm/node_modules
+    links:
+      - mongo
+  mongo:
+    container_name: mongo_brainstorm
+    image: mongo
+    ports:
+      - '27017:27017'
+    logging:
+      driver: 'none'
+
+volumes:
+  api_node_modules:
