@@ -47,7 +47,7 @@ const findById = async (req, res) => {
  * Creates a Category
  * @param {Object} req
  * @param {Object} res
- * @returns Message stating that a Category was created and a status of CREATED.
+ * @returns The saved category
  */
 const create = async (req, res) => {
   const [error, value] = await validateData(req.body, attributes);
@@ -68,7 +68,7 @@ const create = async (req, res) => {
  * Updates a Category
  * @param {Object} req
  * @param {Object} res
- * @returns Message stating that a Category was updated and a status of OK.
+ * @returns The category updated
  */
 const update = async (req, res) => {
   const [error, value] = await validateData(req.body, attributes);
