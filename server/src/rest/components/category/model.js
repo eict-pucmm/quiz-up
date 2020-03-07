@@ -9,7 +9,7 @@ const Category = new Schema({
     required: true,
     minlength: 4,
     maxlength: 255,
-    unique: true
+    unique: true,
   },
   createdAt: {
     type: Date,

@@ -13,16 +13,16 @@ const Question = new Schema({
   category: {
     type: new Schema({
       category: {
-        type: String
-      }
-    })
+        type: String,
+      },
+    }),
   },
   points: {
     type: Number,
     required: true,
     min: 100,
     max: 500,
-    default: 100
+    default: 100,
   },
   createdAt: {
     type: Date,
@@ -42,9 +42,15 @@ const Question = new Schema({
  */
 export function validateQuestion(question) {
   const schema = Joi.object({
-    name: Joi.string().min(4).max(255).required(),
+    name: Joi.string()
+      .min(4)
+      .max(255)
+      .required(),
     category: Joi.objectId(),
-    points: Joi.number().min(100).max(500).required()
+    points: Joi.number()
+      .min(100)
+      .max(500)
+      .required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);

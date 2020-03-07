@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(URL_QUESTIONS, questions);
 app.use(URL_CATEGORIES, categories);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!🌎');
-});
+app.get('/', (req, res) => res.json({ message: 'Hello World!🌎' }));
 
-app.listen(PORT, () => console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`),
+);
