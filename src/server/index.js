@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { MONGO, PORT } from './config/dotenv';
-import { questions } from './config/routes';
-import { URL_QUESTIONS } from './config/urls';
+import { questions, categories } from './config/routes';
+import { URL_QUESTIONS, URL_CATEGORIES } from './config/urls';
 import connectToDB from './services/mongo';
 
 const app = express();
@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(URL_QUESTIONS, questions);
+app.use(URL_CATEGORIES, categories);
 
 app.get('/', (req, res) => {
   res.send('Hello World!🌎');

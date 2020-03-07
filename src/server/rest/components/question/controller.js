@@ -5,7 +5,7 @@ import {
   BAD_REQUEST,
   CREATED,
 } from '../../../config/statusCodes';
-import wrapper from '../../middlewares/async';
+import wrapper from '../../utils/async';
 import publishQuestion from '../../../services/publisher';
 import subscribeToChannel from '../../../services/subscriber';
 
