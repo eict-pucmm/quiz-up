@@ -2,12 +2,18 @@ import Question, { validateQuestion } from './model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
-  BAD_REQUEST,
   CREATED,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
+import validateData from '../../utils/validateData';
 import publishQuestion from '../../../services/publisher';
 import subscribeToChannel from '../../../services/subscriber';
+
+const attributes = {
+  Model: Question,
+  field: 'question',
+  validate: validateQuestion
+};
 
 /**
  * List of Question
@@ -44,16 +50,18 @@ const findById = async (req, res) => {
  * @returns Message stating that a Question was created and a status of CREATED.
  */
 const create = async (req, res) => {
-  const { error } = validateQuestion(req.body);
+  const [error, value] = await validateData(req.body, attributes);
+
   if (error) {
-    return res.status(BAD_REQUEST).json({ error: error.details[0].message });
+    return res.status(error.status).send(error.message);
   }
-  const question = new Question(req.body);
+
+  const question = new Question(value);
   const [errorSaving, savedQuestion] = await wrapper(question.save());
 
   return errorSaving
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error creating the question')
-    : res.status(CREATED).send('Question created!');
+    ? res.status(INTERNAL_SERVER_ERROR).json({ message: 'Error creating the question', error: errorSaving })
+    : res.status(CREATED).send(savedQuestion);
 };
 
 /**
