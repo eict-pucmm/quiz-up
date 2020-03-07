@@ -5,6 +5,7 @@ const BAD_REQUEST = 400;
 const UNAUTHORIZED = 401;
 const FORBIDDEN = 403;
 const NOT_FOUND = 404;
+const DUPLICATE = 409;
 const INTERNAL_SERVER_ERROR = 500;
 
 export {
@@ -15,5 +16,6 @@ export {
   UNAUTHORIZED,
   FORBIDDEN,
   NOT_FOUND,
+  DUPLICATE,
   INTERNAL_SERVER_ERROR,
 };
