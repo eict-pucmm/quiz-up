@@ -12,7 +12,7 @@ import subscribeToChannel from '../../../services/subscriber';
 const attributes = {
   Model: Question,
   field: 'question',
-  validate: validateQuestion
+  validate: validateQuestion,
 };
 
 /**
@@ -60,7 +60,9 @@ const create = async (req, res) => {
   const [errorSaving, savedQuestion] = await wrapper(question.save());
 
   return errorSaving
-    ? res.status(INTERNAL_SERVER_ERROR).json({ message: 'Error creating the question', error: errorSaving })
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error creating the question', error: errorSaving })
     : res.status(CREATED).send(savedQuestion);
 };
 

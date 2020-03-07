@@ -11,7 +11,7 @@ import validateData from '../../utils/validateData';
 const attributes = {
   Model: Category,
   field: 'category',
-  validate: validateCategory
+  validate: validateCategory,
 };
 
 /**
@@ -60,7 +60,9 @@ const create = async (req, res) => {
   const [errorSaving, savedCategory] = await wrapper(category.save());
 
   return errorSaving
-    ? res.status(INTERNAL_SERVER_ERROR).json({ message: 'Error creating the category', error: errorSaving })
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error creating the category', error: errorSaving })
     : res.status(CREATED).send(savedCategory);
 };
 
@@ -81,7 +83,7 @@ const update = async (req, res) => {
     Category.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true }
+      { new: true },
     ),
   );
 
@@ -89,6 +91,5 @@ const update = async (req, res) => {
     ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the category')
     : res.status(CREATED).send(updatedCategory);
 };
-
 
 export { list, findById, create, update };
