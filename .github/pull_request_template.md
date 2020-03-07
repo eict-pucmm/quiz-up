@@ -17,17 +17,6 @@ Do not mark the options that are not relevant.
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
 
-# How to test this:
-
-Example that should be erased when it's not neccesary
-To run this project you will need to:
-
-- `git pull`
-- `git checkout BRANCH_NAME`
-- if you installed some dependencies next line should be: `npm install`
-- `npm start`
-- Once you start the project do the things that needs to be follow to find expected behavior
-
 # Screenshots
 
 Can be deleted if it's not neccesary
