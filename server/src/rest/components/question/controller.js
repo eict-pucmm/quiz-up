@@ -1,8 +1,10 @@
 import Question, { validateQuestion } from './model';
+import Category from '../category/model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
+  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -23,6 +25,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, questions] = await wrapper(Question.find());
+
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ questions });
@@ -50,20 +53,32 @@ const findById = async (req, res) => {
  * @returns Message stating that a Question was created and a status of CREATED.
  */
 const create = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  try {
+    const [error, value] = await validateData(req.body, attributes);
 
-  if (error) {
-    return res.status(error.status).send(error.message);
+    if (error) {
+      return res.status(error.status).send(error.message);
+    }
+
+    const category = await Category.findOne({ category: value.category });
+    if (!category) return res.status(BAD_REQUEST).send('Invalid category name');
+
+    let question = new Question({
+      question: value.question,
+      category: {
+        category: category.category,
+      },
+      points: value.points,
+    });
+
+    question = await question.save();
+
+    return res.status(CREATED).send(question);
+  } catch (error) {
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: 'Error creating the question', error });
   }
-
-  const question = new Question(value);
-  const [errorSaving, savedQuestion] = await wrapper(question.save());
-
-  return errorSaving
-    ? res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: 'Error creating the question', error: errorSaving })
-    : res.status(CREATED).send(savedQuestion);
 };
 
 /**

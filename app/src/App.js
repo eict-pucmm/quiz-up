@@ -4,7 +4,8 @@ import "./App.css";
 
 class App extends Component {
   state = {
-    questions: []
+    questions: [],
+    question: ""
   };
 
   componentDidMount() {
@@ -19,13 +20,31 @@ class App extends Component {
 
     return response.data;
   };
+
+  onClick = async event => {
+    const { name, value } = event.target;
+    await this.setState({ [name]: value });
+
+    await axios
+      .post("/api/questions/publish/", { question: this.state.question })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
   render() {
     const { questions } = this.state;
 
     return (
       <div className="App">
         {questions.map(q => (
-          <p key={q._id}>{q.name}</p>
+          <button
+            key={q._id}
+            id="question"
+            value={q.question}
+            name="question"
+            onClick={this.onClick}
+          >
+            {q.question}
+          </button>
         ))}
       </div>
     );
