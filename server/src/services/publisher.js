@@ -6,9 +6,8 @@ export default function(message = {}) {
     connection.createChannel((err, channel) => {
       const exchange = 'questions';
 
-      channel.assertExchange(exchange, 'fanout', { durable: true });
+      channel.assertExchange(exchange, 'fanout', { durable: false });
       channel.publish(exchange, '', Buffer.from(JSON.stringify(message)));
-      console.log(' [x] Sent %s', message);
     });
 
     setTimeout(() => connection.close(), 500);
