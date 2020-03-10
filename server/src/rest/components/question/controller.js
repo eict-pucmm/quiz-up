@@ -13,7 +13,7 @@ import subscribeToChannel from '../../../services/subscriber';
 
 const attributes = {
   Model: Question,
-  field: 'question',
+  field: 'name',
   validate: validateQuestion,
 };
 
@@ -25,6 +25,22 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, questions] = await wrapper(Question.find());
+
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ questions });
+};
+
+/**
+ * List of Question
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of Question
+ */
+const getRoundOfQuestions = async (req, res) => {
+  const [error, questions] = await wrapper(
+    Question.find({ 'category.name': req.body.category }),
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -60,13 +76,13 @@ const create = async (req, res) => {
       return res.status(error.status).send(error.message);
     }
 
-    const category = await Category.findOne({ category: value.category });
+    const category = await Category.findOne({ name: value.category });
     if (!category) return res.status(BAD_REQUEST).send('Invalid category name');
 
     let question = new Question({
-      question: value.question,
+      name: value.name,
       category: {
-        category: category.category,
+        name: category.name,
       },
       points: value.points,
     });

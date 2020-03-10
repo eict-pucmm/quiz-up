@@ -10,7 +10,7 @@ import validateData from '../../utils/validateData';
 
 const attributes = {
   Model: Category,
-  field: 'category',
+  field: 'name',
   validate: validateCategory,
 };
 

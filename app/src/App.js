@@ -39,11 +39,11 @@ class App extends Component {
           <button
             key={q._id}
             id="question"
-            value={q.question}
+            value={q.name}
             name="question"
             onClick={this.onClick}
           >
-            {q.question}
+            {q.name}
           </button>
         ))}
       </div>

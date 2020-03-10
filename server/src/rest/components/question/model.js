@@ -4,7 +4,7 @@ import Joi from '@hapi/joi';
 const Schema = moongose.Schema;
 
 const Question = new Schema({
-  question: {
+  name: {
     type: String,
     required: true,
     minlength: 4,
@@ -12,7 +12,7 @@ const Question = new Schema({
   },
   category: {
     type: new Schema({
-      category: {
+      name: {
         type: String,
         required: true,
       },
@@ -44,7 +44,7 @@ const Question = new Schema({
  */
 export function validateQuestion(question) {
   const schema = Joi.object({
-    question: Joi.string()
+    name: Joi.string()
       .min(4)
       .max(255)
       .required(),
