@@ -95,7 +95,8 @@ const publish = async (req, res) => {
 };
 
 const subscribe = async (req, res) => {
-  subscribeToChannel();
+  const receivedAt = new Date();
+  subscribeToChannel(receivedAt);
   return res.status(OK).send('its done');
 };
 
