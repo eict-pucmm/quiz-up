@@ -1,0 +1,26 @@
+{
+  "name": "quiz-up",
+  "version": "1.0.0",
+  "description": "Manager for panel based questions games.",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "client": "cd app && npm start",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ect-pucmm/quiz-up.git"
+  },
+  "keywords": [],
+  "author": "Gabriel Urena <gabriel.uh@hotmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ect-pucmm/quiz-up/issues"
+  },
+  "homepage": "https://github.com/ect-pucmm/quiz-up#readme"
+}
