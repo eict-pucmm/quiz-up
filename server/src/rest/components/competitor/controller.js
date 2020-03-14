@@ -6,7 +6,6 @@ import {
   CREATED,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
-import validateData from '../../utils/validateData';
 
 /**
  * List of Competitor
