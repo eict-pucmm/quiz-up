@@ -6,4 +6,12 @@ const URL_EVENTS = '/api/events/';
 const URL_ROUNDS = '/api/rounds/';
 const URL_RESULTS = '/api/results';
 
-export { URL_QUESTIONS, URL_CATEGORIES, URL_COMPETITORS, URL_TEAMS };
+export {
+  URL_QUESTIONS,
+  URL_CATEGORIES,
+  URL_COMPETITORS,
+  URL_TEAMS,
+  URL_EVENTS,
+  URL_ROUNDS,
+  URL_RESULTS,
+};

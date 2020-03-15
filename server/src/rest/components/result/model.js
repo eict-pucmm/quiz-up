@@ -7,6 +7,7 @@ const Result = new Schema({
   team: {
     type: new Schema({
       name: {
+        type: String,
         minlength: 4,
         maxlength: 255,
       },

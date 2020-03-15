@@ -6,7 +6,7 @@ const Schema = moongose.Schema;
 const Event = new Schema({
   name: {
     type: String,
-    min: 4,
+    minlength: 4,
     required: true,
   },
   rounds: [
