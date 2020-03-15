@@ -12,7 +12,7 @@ const Event = new Schema({
   rounds: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Question',
+      ref: 'Round',
     },
   ],
   dateOfEvent: {
@@ -32,6 +32,7 @@ const Event = new Schema({
  */
 export function validateEvent(event) {
   const schema = Joi.object({
+    name: Joi.string().required(),
     rounds: Joi.array().items(Joi.objectId()),
     dateOfEvent: Joi.date().required(),
   }).options({ stripUnknown: true });
