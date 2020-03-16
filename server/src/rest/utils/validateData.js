@@ -17,12 +17,14 @@ export default async function(body, attributes) {
     return [{ status: BAD_REQUEST, message: error.details[0].message }, null];
   }
 
-  const exists = await Model.findOne({ [field]: value[field] });
-  if (exists) {
-    return [
-      { status: DUPLICATE, message: `This ${field} already exist` },
-      null,
-    ];
+  if (Model && field) {
+    const exists = await Model.findOne({ [field]: value[field] });
+    if (exists) {
+      return [
+        { status: DUPLICATE, message: `This ${field} already exist` },
+        null,
+      ];
+    }
   }
 
   return [null, value];

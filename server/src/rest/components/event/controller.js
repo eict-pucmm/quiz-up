@@ -9,8 +9,6 @@ import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
 
 const attributes = {
-  Model: Event,
-  field: 'name',
   validate: validateEvent,
 };
 
@@ -54,8 +52,8 @@ const create = async (req, res) => {
     return res.status(error.status).send(error.message);
   }
 
-  const Event = new Event(value);
-  const [errorSaving, savedEvent] = await wrapper(Event.save());
+  const event = new Event(value);
+  const [errorSaving, savedEvent] = await wrapper(event.save());
 
   return errorSaving
     ? res

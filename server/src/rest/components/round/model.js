@@ -10,6 +10,15 @@ const Round = new Schema({
     minlength: 4,
     maxlength: 255,
   },
+  event: {
+    type: new Schema({
+      name: {
+        type: String,
+        required: true,
+      },
+    }),
+    required: true,
+  },
   questions: [
     {
       type: Schema.Types.ObjectId,
@@ -43,10 +52,11 @@ export function validateRound(round) {
       .min(4)
       .max(255)
       .required(),
+    event: Joi.string().required(),
     questions: Joi.array()
       .items(Joi.objectId())
       .required(),
-    roomId: Joi.string().regex(/^[0-9]$/),
+    roomId: Joi.string().regex(/^[0-9]{3,6}$/),
     results: Joi.array().items(Joi.objectId()),
   }).options({ stripUnknown: true });
 
