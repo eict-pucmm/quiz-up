@@ -21,7 +21,9 @@ const attributes = {
  * @returns {JSON} of Round
  */
 const list = async (req, res) => {
-  const [error, rounds] = await wrapper(Round.find());
+  const [error, rounds] = await wrapper(
+    Round.find().populate('event', 'name dateOfEvent'),
+  );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ rounds });
@@ -34,7 +36,17 @@ const list = async (req, res) => {
  * @returns {JSON} of a Round
  */
 const findById = async (req, res) => {
-  const [error, round] = await wrapper(Round.findById({ _id: req.params.id }));
+  const [error, round] = await wrapper(
+    Round.findById({ _id: req.params.id }).populate([
+      {
+        path: 'questions',
+        select: 'name points category.name',
+      },
+      {
+        path: 'participants',
+      },
+    ]),
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -54,8 +66,8 @@ const create = async (req, res) => {
     return res.status(error.status).send(error.message);
   }
 
-  const Round = new Round(value);
-  const [errorSaving, savedRound] = await wrapper(Round.save());
+  const round = new Round(value);
+  const [errorSaving, savedRound] = await wrapper(round.save());
 
   return errorSaving
     ? res
