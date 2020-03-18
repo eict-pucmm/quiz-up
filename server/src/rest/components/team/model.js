@@ -9,6 +9,7 @@ const Team = new Schema({
     required: true,
     minlength: 4,
     maxlength: 255,
+    unique: true,
   },
   competitors: [
     {

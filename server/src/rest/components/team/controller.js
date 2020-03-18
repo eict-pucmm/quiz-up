@@ -20,7 +20,9 @@ const attributes = {
  * @returns {JSON} of Team
  */
 const list = async (req, res) => {
-  const [error, teams] = await wrapper(Team.find());
+  const [error, teams] = await wrapper(
+    Team.find().populate('competitors', 'fullName -_id'),
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -34,7 +36,12 @@ const list = async (req, res) => {
  * @returns {JSON} of a Team
  */
 const findById = async (req, res) => {
-  const [error, team] = await wrapper(Team.findOne({ _id: req.params.id }));
+  const [error, team] = await wrapper(
+    Team.findOne({ _id: req.params.id }).populate(
+      'competitors',
+      'fullName -_id',
+    ),
+  );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ team });
