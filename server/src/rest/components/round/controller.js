@@ -45,6 +45,7 @@ const findById = async (req, res) => {
       },
       {
         path: 'participants',
+        select: 'name',
       },
     ]),
   );
