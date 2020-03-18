@@ -4,13 +4,14 @@ import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
+  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
 
 const attributes = {
   Model: Round,
-  field: 'roomId',
+  field: 'name',
   validate: validateRound,
 };
 
@@ -83,10 +84,10 @@ const create = async (req, res) => {
  * @returns The Round updated
  */
 const update = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  const { error, value } = await validateRound(req.body);
 
   if (error) {
-    return res.status(error.status).send(error.message);
+    return res.status(BAD_REQUEST).send(error.details[0].message);
   }
 
   const [errorUpdating, updatedRound] = await wrapper(
@@ -99,7 +100,7 @@ const update = async (req, res) => {
 
   return errorUpdating
     ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the Round')
-    : res.status(CREATED).send(updatedRound);
+    : res.status(OK).send(updatedRound);
 };
 
 export { list, findById, create, update };
