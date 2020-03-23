@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Card } from "antd";
+import { Card, Modal, Button } from "antd";
 import axios from "axios";
 import { URL_ROUNDS } from "../../config/urls";
 
@@ -8,7 +8,9 @@ import "./styles.css";
 class RoundOfEventCard extends Component {
   state = {
     rounds: [],
-    loading: true
+    selectedRound: 0,
+    loading: true,
+    visible: false
   };
 
   componentDidMount() {
@@ -20,8 +22,22 @@ class RoundOfEventCard extends Component {
       .catch(({ response }) => console.log(response));
   }
 
+  showModal = roundIndex => {
+    this.setState({ visible: true, selectedRound: roundIndex });
+  };
+
+  handleOk = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
   render() {
-    const { rounds, loading } = this.state;
+    const { rounds, loading, selectedRound } = this.state;
 
     return loading ? (
       <Card loading={loading} />
@@ -30,26 +46,39 @@ class RoundOfEventCard extends Component {
         {rounds.length === 0 ? (
           <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
         ) : (
-          rounds.map(round => {
-            return (
-              <Card
-                type="inner"
-                loading={loading}
-                title={round.name}
-                extra={
-                  <span
-                    onClick={() => console.log("klk")}
-                    style={{ color: "blue" }}
-                  >
-                    Mas Informacion
-                  </span>
-                }
-                key={round._id}
-              >
-                Round Data
-              </Card>
-            );
-          })
+          <Fragment>
+            {rounds.map((round, index) => {
+              return (
+                <Card
+                  key={round._id}
+                  type="inner"
+                  loading={loading}
+                  title={round.name}
+                  extra={
+                    <span
+                      onClick={() => this.showModal(index)}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      Mas Informacion
+                    </span>
+                  }
+                >
+                  Round Data
+                </Card>
+              );
+            })}
+            <Modal
+              title={rounds[selectedRound].name}
+              centered
+              visible={this.state.visible}
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+              cancelText="Cancelar"
+            >
+              <p>Some contents...</p>
+              <Button>Empezar Ronda</Button>
+            </Modal>
+          </Fragment>
         )}
       </Fragment>
     );
