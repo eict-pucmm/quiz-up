@@ -7,42 +7,50 @@ import "./styles.css";
 
 class RoundOfEventCard extends Component {
   state = {
-    rounds: []
+    rounds: [],
+    loading: true
   };
 
   componentDidMount() {
     axios
       .get(`${URL_ROUNDS}/event/${this.props.event}`)
-      .then(({ data }) => this.setState({ rounds: data.rounds }))
+      .then(({ data }) =>
+        this.setState({ rounds: data.rounds, loading: false })
+      )
       .catch(({ response }) => console.log(response));
   }
 
   render() {
-    const { rounds } = this.state;
+    const { rounds, loading } = this.state;
 
-    return rounds.length === 0 ? (
-      <Card.Grid hoverable={false}>Este Evento NO tiene rondas</Card.Grid>
+    return loading ? (
+      <Card loading={loading} />
     ) : (
       <Fragment>
-        {rounds.map(round => {
-          return (
-            <Card
-              type="inner"
-              title={round.name}
-              extra={
-                <span
-                  onClick={() => console.log("klk")}
-                  style={{ color: "blue" }}
-                >
-                  Mas Informacion
-                </span>
-              }
-              key={round._id}
-            >
-              Round Data
-            </Card>
-          );
-        })}
+        {rounds.length === 0 ? (
+          <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
+        ) : (
+          rounds.map(round => {
+            return (
+              <Card
+                type="inner"
+                loading={loading}
+                title={round.name}
+                extra={
+                  <span
+                    onClick={() => console.log("klk")}
+                    style={{ color: "blue" }}
+                  >
+                    Mas Informacion
+                  </span>
+                }
+                key={round._id}
+              >
+                Round Data
+              </Card>
+            );
+          })
+        )}
       </Fragment>
     );
   }

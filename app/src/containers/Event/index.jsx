@@ -15,9 +15,9 @@ class Event extends Component {
   componentDidMount() {
     axios
       .get(URL_EVENTS)
-      .then(({ data }) => {
-        this.setState({ events: data.events, loading: false });
-      })
+      .then(({ data }) =>
+        this.setState({ events: data.events, loading: false })
+      )
       .catch(({ response }) => console.log(response));
   }
 
@@ -36,18 +36,19 @@ class Event extends Component {
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
         </Breadcrumb>
         <div style={{ background: "#fff", padding: 24, minHeight: 580 }}>
-          {events.map(({ _id, name, dateOfEvent }) => {
-            return (
-              <Card
-                title={`${name} ${dateOfEvent}`}
-                loading={loading}
-                key={_id}
-              >
-                <p style={innerTitle}>Rondas del evento</p>
-                <RoundOfEventCard event={_id} />
-              </Card>
-            );
-          })}
+          {events.length === 0 ? (
+            <Card loading={loading}></Card>
+          ) : (
+            events.map(({ _id, name, dateOfEvent }) => {
+              return (
+                <Card title={`${name} ${dateOfEvent}`} key={_id}>
+                  <p style={innerTitle}>Rondas del evento</p>
+                  <RoundOfEventCard event={_id} />
+                </Card>
+              );
+            })
+          )}
+          {}
         </div>
       </Fragment>
     );
