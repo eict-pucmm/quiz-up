@@ -1,5 +1,5 @@
 import express from 'express';
-import { list, findById, create, update } from './controller';
+import { list, findById, create, update, roundByEvent } from './controller';
 
 const router = express.Router();
 
@@ -9,6 +9,13 @@ const router = express.Router();
  * @access Public
  */
 router.get('/', list);
+
+/**
+ * @route GET '/'
+ * @returns {JSON} of all roundss
+ * @access Public
+ */
+router.get('/event/:idOfEvent', roundByEvent);
 
 /**
  * @route GET '/:id'

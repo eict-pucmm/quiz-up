@@ -30,6 +30,16 @@ const list = async (req, res) => {
     : res.status(OK).json({ rounds });
 };
 
+const roundByEvent = async (req, res) => {
+  const [error, rounds] = await wrapper(
+    Round.find({ event: req.params.idOfEvent }),
+  );
+
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ rounds });
+};
+
 /**
  * Finds one specific Round
  * @param {Object} req
@@ -104,4 +114,4 @@ const update = async (req, res) => {
     : res.status(OK).send(updatedRound);
 };
 
-export { list, findById, create, update };
+export { list, findById, create, update, roundByEvent };
