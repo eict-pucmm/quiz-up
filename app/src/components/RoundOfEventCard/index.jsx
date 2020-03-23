@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { Card, Modal, Button } from "antd";
+import { Card, Modal } from "antd";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { URL_ROUNDS } from "../../config/urls";
 
@@ -76,7 +77,16 @@ class RoundOfEventCard extends Component {
               cancelText="Cancelar"
             >
               <p>Some contents...</p>
-              <Button>Empezar Ronda</Button>
+              <Link
+                to={`/event/round/${rounds[selectedRound]._id}`}
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: 10
+                }}
+              >
+                Empezar Ronda
+              </Link>
             </Modal>
           </Fragment>
         )}

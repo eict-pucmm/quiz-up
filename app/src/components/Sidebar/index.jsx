@@ -1,12 +1,17 @@
 import React from "react";
 import { Menu, Layout } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import useReactRouter from "use-react-router";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 const Sidebar = () => {
-  return (
+  const { location } = useReactRouter();
+
+  return location.pathname.includes("/event/round/") ? (
+    <div></div>
+  ) : (
     <Sider>
       <Menu defaultSelectedKeys={["Dashboard"]} mode="inline">
         <Menu.Item key="Dashboard">Dashboard</Menu.Item>
