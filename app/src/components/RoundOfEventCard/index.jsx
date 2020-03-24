@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Card, Modal } from "antd";
+import { Card, Modal, Button } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { URL_ROUNDS } from "../../config/urls";
@@ -45,12 +45,16 @@ class RoundOfEventCard extends Component {
     ) : (
       <Fragment>
         {rounds.length === 0 ? (
-          <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
+          <Fragment>
+            <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
+            <Button>Agregar Ronda</Button>
+          </Fragment>
         ) : (
           <Fragment>
             {rounds.map((round, index) => {
               return (
                 <Card
+                  onClick={() => this.showModal(index)}
                   key={round._id}
                   type="inner"
                   loading={loading}
