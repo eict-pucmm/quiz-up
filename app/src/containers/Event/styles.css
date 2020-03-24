@@ -1,0 +1,16 @@
+.breadcrumb-title {
+  padding: 14px 0 !important;
+}
+
+.outer-event-card {
+  background: #fff;
+  padding: 24px;
+  min-height: 580px;
+}
+
+.event-rounds-label {
+  font-size: 14;
+  color: black !important;
+  margin-bottom: 16px;
+  font-weight: 500;
+}

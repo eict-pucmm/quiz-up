@@ -1,11 +1,15 @@
 @import "~antd/dist/antd.css";
 
+.container {
+  padding: 0 50px;
+}
 .red {
   background-color: red;
 }
 
-.white {
+.title-quiz-up {
   color: white !important;
+  margin-top: 15px !important;
 }
 .App {
   text-align: center;

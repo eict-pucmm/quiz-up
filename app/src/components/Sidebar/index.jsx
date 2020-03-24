@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Menu, Layout } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import useReactRouter from "use-react-router";
@@ -14,7 +15,9 @@ const Sidebar = () => {
   ) : (
     <Sider>
       <Menu defaultSelectedKeys={["Dashboard"]} mode="inline">
-        <Menu.Item key="Dashboard">Dashboard</Menu.Item>
+        <Menu.Item key="Dashboard">
+          <Link to="/">Dashboard</Link>
+        </Menu.Item>
         <SubMenu
           title={
             <span>
@@ -24,8 +27,12 @@ const Sidebar = () => {
           }
         >
           <Menu.ItemGroup key="Preguntas">
-            <Menu.Item key="Preguntas">Preguntas</Menu.Item>
-            <Menu.Item key="Categorias">Categorias</Menu.Item>
+            <Menu.Item key="Preguntas">
+              <Link to="/questions">Preguntas</Link>
+            </Menu.Item>
+            <Menu.Item key="Categorias">
+              <Link to="/categories">Categorias</Link>
+            </Menu.Item>
           </Menu.ItemGroup>
         </SubMenu>
       </Menu>

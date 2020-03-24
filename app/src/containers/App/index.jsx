@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Layout } from "antd";
-
 import Title from "antd/lib/typography/Title";
-import Sidebar from "../../components/Sidebar";
+
 import Routes from "../../components/Routes";
+import Sidebar from "../../components/Sidebar";
 
 import "./styles.css";
 
@@ -15,18 +15,18 @@ const App = () => {
     <div>
       <Layout>
         <Header>
-          <Title className="white" level={3}>
-            Quiz Up
+          <Title className="title-quiz-up" level={3}>
+            <a href="/">Quiz Up</a>
           </Title>
         </Header>
         <Layout>
           <Router>
             <Sidebar />
             <Layout>
-              <Content style={{ padding: "0 50px" }}>
+              <Content className="container">
                 <Routes />
               </Content>
-              <Footer style={{ textAlign: "center" }}></Footer>
+              <Footer />
             </Layout>
           </Router>
         </Layout>

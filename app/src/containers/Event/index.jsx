@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from "react";
 import { Breadcrumb, Card } from "antd";
 import axios from "axios";
+
 import { URL_EVENTS } from "../../config/urls";
 import RoundOfEventCard from "../../components/RoundOfEventCard";
 
@@ -24,31 +25,24 @@ class Event extends Component {
   render() {
     const { loading, events } = this.state;
 
-    const innerTitle = {
-      fontSize: 14,
-      color: "black",
-      marginBottom: 16,
-      fontWeight: 500
-    };
     return (
       <Fragment>
-        <Breadcrumb style={{ margin: "16px 0" }}>
+        <Breadcrumb className="breadcrumb-title">
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
         </Breadcrumb>
-        <div style={{ background: "#fff", padding: 24, minHeight: 580 }}>
+        <div className="outer-event-card">
           {events.length === 0 ? (
             <Card loading={loading}></Card>
           ) : (
             events.map(({ _id, name, dateOfEvent }) => {
               return (
                 <Card title={`${name} ${dateOfEvent}`} key={_id}>
-                  <p style={innerTitle}>Rondas del evento</p>
+                  <p className="event-rounds-label">Rondas del evento</p>
                   <RoundOfEventCard event={_id} />
                 </Card>
               );
             })
           )}
-          {}
         </div>
       </Fragment>
     );

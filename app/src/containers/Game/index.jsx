@@ -1,9 +1,12 @@
 import React, { Component, Fragment } from "react";
-import axios from "axios";
 import { Card, Modal, Button } from "antd";
+import axios from "axios";
 import Countdown from "react-countdown-now";
-import { URL_ROUNDS, URL_QUESTIONS } from "../../config/urls";
 
+import { URL_ROUNDS, URL_QUESTIONS } from "../../config/urls";
+import { OK } from "../../config/statusCodes";
+
+import "./styles.css";
 class Game extends Component {
   state = {
     questions: [],
@@ -44,7 +47,7 @@ class Game extends Component {
       .then(res => {
         console.log(res);
 
-        if (res.status === 200) {
+        if (res.status === OK) {
           this.setState({ published: true });
         }
       })
@@ -65,11 +68,6 @@ class Game extends Component {
   renderer = ({ seconds }) => <span>{seconds}</span>;
 
   render() {
-    const gridStyle = {
-      width: "25%",
-      textAlign: "center"
-    };
-
     const { loading, questions, visible, question, published } = this.state;
 
     return (
@@ -82,7 +80,7 @@ class Game extends Component {
               {questions.map((question, index) => {
                 return (
                   <Card.Grid
-                    style={gridStyle}
+                    className="question-card"
                     key={question._id}
                     onClick={() => this.showModal(index)}
                   >

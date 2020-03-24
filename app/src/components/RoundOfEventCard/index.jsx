@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Card, Modal, Button } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
 import { URL_ROUNDS } from "../../config/urls";
 
 import "./styles.css";
@@ -54,15 +55,16 @@ class RoundOfEventCard extends Component {
             {rounds.map((round, index) => {
               return (
                 <Card
-                  onClick={() => this.showModal(index)}
+                  className="cursor-pointer"
                   key={round._id}
-                  type="inner"
                   loading={loading}
+                  onClick={() => this.showModal(index)}
                   title={round.name}
+                  type="inner"
                   extra={
                     <span
                       onClick={() => this.showModal(index)}
-                      style={{ color: "blue", cursor: "pointer" }}
+                      className="more-info-label cursor-pointer"
                     >
                       Mas Informacion
                     </span>
@@ -73,21 +75,17 @@ class RoundOfEventCard extends Component {
               );
             })}
             <Modal
-              title={rounds[selectedRound].name}
-              centered
-              visible={this.state.visible}
-              onOk={this.handleOk}
-              onCancel={this.handleCancel}
               cancelText="Cancelar"
+              centered
+              onCancel={this.handleCancel}
+              onOk={this.handleOk}
+              title={rounds[selectedRound].name}
+              visible={this.state.visible}
             >
               <p>Some contents...</p>
               <Link
+                className="start-round-btn"
                 to={`/event/round/${rounds[selectedRound]._id}`}
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  padding: 10
-                }}
               >
                 Empezar Ronda
               </Link>
