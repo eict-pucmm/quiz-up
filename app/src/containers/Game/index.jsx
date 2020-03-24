@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Card, Modal, Button } from "antd";
 import axios from "axios";
-import Countdown from "react-countdown-now";
+import Countdown from "react-countdown";
 
 import { URL_ROUNDS, URL_QUESTIONS } from "../../config/urls";
 import { OK } from "../../config/statusCodes";
