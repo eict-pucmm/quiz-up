@@ -20,6 +20,8 @@ class Game extends Component {
         this.setState({ questions: data.round.questions, loading: false })
       )
       .catch(({ response }) => console.log(response));
+
+    this.subscribe();
   }
 
   showModal = selectedQuestion => {
@@ -33,7 +35,7 @@ class Game extends Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, published: false });
   };
 
   publishQuestion = event => {
@@ -46,6 +48,17 @@ class Game extends Component {
           this.setState({ published: true });
         }
       })
+      .catch(err => console.log(err));
+  };
+
+  handlePublished = () => {
+    this.setState({ published: false });
+  };
+
+  subscribe = () => {
+    axios
+      .get(`${URL_QUESTIONS}/mq/subscribe/`)
+      .then(res => console.log(res))
       .catch(err => console.log(err));
   };
 
