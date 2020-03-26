@@ -36,6 +36,6 @@ router.post('/publish', publish);
  * @returns Message stating that the question was send
  * @access Public
  */
-router.get('/mq/subscribe', subscribe);
+router.post('/mq/subscribe', subscribe);
 
 export default router;

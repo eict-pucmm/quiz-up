@@ -27,6 +27,13 @@ class Game extends Component {
     this.subscribe();
   }
 
+  componentWillUnmount() {
+    axios
+      .post(`${URL_QUESTIONS}/mq/subscribe/`, { unsubscribe: true })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
   showModal = selectedQuestion => {
     this.setState({ visible: true, question: selectedQuestion });
   };
@@ -60,7 +67,7 @@ class Game extends Component {
 
   subscribe = () => {
     axios
-      .get(`${URL_QUESTIONS}/mq/subscribe/`)
+      .post(`${URL_QUESTIONS}/mq/subscribe/`)
       .then(res => console.log(res))
       .catch(err => console.log(err));
   };
