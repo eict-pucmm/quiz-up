@@ -38,7 +38,7 @@ class Event extends Component {
               return (
                 <Card title={`${name} ${dateOfEvent}`} key={_id}>
                   <p className="event-rounds-label">Rondas del evento</p>
-                  <RoundOfEventCard event={_id} />
+                  <RoundOfEventCard gameEvent={{ _id, name }} />
                 </Card>
               );
             })

@@ -51,9 +51,7 @@ export function validateRound(round) {
       .max(255)
       .required(),
     event: Joi.string().required(),
-    questions: Joi.array()
-      .items(Joi.objectId())
-      .required(),
+    questions: Joi.array().items(Joi.objectId()),
     participants: Joi.array().items(Joi.objectId()),
     results: Joi.array().items(Joi.objectId()),
   }).options({ stripUnknown: true });

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import { URL_ROUNDS } from "../../config/urls";
+import AddRoundModal from "../AddRoundModal";
 
 import "./styles.css";
 
@@ -12,12 +13,16 @@ class RoundOfEventCard extends Component {
     rounds: [],
     selectedRound: 0,
     loading: true,
-    visible: false
+    visible: false,
+    addRound: false,
+    roundToAdd: {
+      name: ""
+    }
   };
 
   componentDidMount() {
     axios
-      .get(`${URL_ROUNDS}/event/${this.props.event}`)
+      .get(`${URL_ROUNDS}/event/${this.props.gameEvent._id}`)
       .then(({ data }) =>
         this.setState({ rounds: data.rounds, loading: false })
       )
@@ -35,11 +40,28 @@ class RoundOfEventCard extends Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, addRound: false });
+  };
+
+  onSubmit = () => {
+    const { name } = this.state.roundToAdd;
+    axios
+      .post(`${URL_ROUNDS}/`, { name, event: this.props.gameEvent._id })
+      .then(({ data }) => {
+        this.setState({ visible: false, addRound: false });
+        window.location.reload(false);
+      })
+      .catch(({ response }) => console.log(response));
+  };
+
+  handleChange = event => {
+    const { name, value } = event.target;
+
+    this.setState({ roundToAdd: { [name]: value } });
   };
 
   render() {
-    const { rounds, loading, selectedRound } = this.state;
+    const { rounds, loading, selectedRound, addRound, roundToAdd } = this.state;
 
     return loading ? (
       <Card loading={loading} />
@@ -48,7 +70,17 @@ class RoundOfEventCard extends Component {
         {rounds.length === 0 ? (
           <Fragment>
             <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
-            <Button>Agregar Ronda</Button>
+            <Button onClick={() => this.setState({ addRound: true })}>
+              Agregar Ronda
+            </Button>
+            <AddRoundModal
+              onCancel={this.handleCancel}
+              roundToAdd={roundToAdd}
+              visible={addRound}
+              handleChange={this.handleChange}
+              onSubmit={this.onSubmit}
+              {...this.props}
+            />
           </Fragment>
         ) : (
           <Fragment>
