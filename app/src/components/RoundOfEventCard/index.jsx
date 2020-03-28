@@ -15,6 +15,7 @@ class RoundOfEventCard extends Component {
     loading: true,
     visible: false,
     addRound: false,
+    savingRound: false,
     roundToAdd: {
       name: ""
     }
@@ -44,11 +45,12 @@ class RoundOfEventCard extends Component {
   };
 
   onSubmit = () => {
+    this.setState({ savingRound: true });
     const { name } = this.state.roundToAdd;
     axios
       .post(`${URL_ROUNDS}/`, { name, event: this.props.gameEvent._id })
       .then(({ data }) => {
-        this.setState({ visible: false, addRound: false });
+        this.setState({ visible: false, addRound: false, savingRound: false });
         window.location.reload(false);
       })
       .catch(({ response }) => console.log(response));
@@ -61,7 +63,14 @@ class RoundOfEventCard extends Component {
   };
 
   render() {
-    const { rounds, loading, selectedRound, addRound, roundToAdd } = this.state;
+    const {
+      rounds,
+      loading,
+      selectedRound,
+      addRound,
+      roundToAdd,
+      savingRound
+    } = this.state;
 
     return loading ? (
       <Card loading={loading} />
@@ -70,17 +79,6 @@ class RoundOfEventCard extends Component {
         {rounds.length === 0 ? (
           <Fragment>
             <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
-            <Button onClick={() => this.setState({ addRound: true })}>
-              Agregar Ronda
-            </Button>
-            <AddRoundModal
-              onCancel={this.handleCancel}
-              roundToAdd={roundToAdd}
-              visible={addRound}
-              handleChange={this.handleChange}
-              onSubmit={this.onSubmit}
-              {...this.props}
-            />
           </Fragment>
         ) : (
           <Fragment>
@@ -124,6 +122,18 @@ class RoundOfEventCard extends Component {
             </Modal>
           </Fragment>
         )}
+        <Button onClick={() => this.setState({ addRound: true })}>
+          Agregar Ronda
+        </Button>
+        <AddRoundModal
+          onCancel={this.handleCancel}
+          roundToAdd={roundToAdd}
+          visible={addRound}
+          saving={savingRound}
+          handleChange={this.handleChange}
+          onSubmit={this.onSubmit}
+          {...this.props}
+        />
       </Fragment>
     );
   }

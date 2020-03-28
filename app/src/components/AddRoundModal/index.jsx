@@ -7,7 +7,8 @@ const AddRoundModal = ({
   onCancel,
   onSubmit,
   handleChange,
-  roundToAdd
+  roundToAdd,
+  saving
 }) => {
   const { name } = roundToAdd;
   return (
@@ -18,7 +19,7 @@ const AddRoundModal = ({
       title={`Agregar nueva ronda al evento: ${gameEvent.name}`}
       visible={visible}
       footer={[
-        <Button key="submit" onClick={onSubmit}>
+        <Button key="submit" loading={saving} onClick={onSubmit}>
           Crear Ronda
         </Button>
       ]}
