@@ -28,7 +28,7 @@ class Event extends Component {
     return (
       <Fragment>
         <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item>Eventos</Breadcrumb.Item>
         </Breadcrumb>
         <div className="outer-event-card">
           {events.length === 0 ? (

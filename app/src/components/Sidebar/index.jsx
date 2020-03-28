@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Layout } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
 import useReactRouter from "use-react-router";
+import sidebarItems from "../../constants/sidebar";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -11,30 +11,35 @@ const Sidebar = () => {
   const { location } = useReactRouter();
 
   return location.pathname.includes("/event/round/") ? (
-    <div></div>
+    <Fragment />
   ) : (
     <Sider>
-      <Menu defaultSelectedKeys={["Dashboard"]} mode="inline">
-        <Menu.Item key="Dashboard">
-          <Link to="/">Dashboard</Link>
-        </Menu.Item>
-        <SubMenu
-          title={
-            <span>
-              <QuestionCircleOutlined />
-              Preguntas
-            </span>
-          }
-        >
-          <Menu.ItemGroup key="Preguntas">
-            <Menu.Item key="Preguntas">
-              <Link to="/questions">Preguntas</Link>
+      <Menu defaultSelectedKeys={["Events"]} mode="inline">
+        {sidebarItems.map(({ title, route, subMenu, Icon }) => {
+          return !subMenu ? (
+            <Menu.Item key={title}>
+              <Link to={route}>{title}</Link>
             </Menu.Item>
-            <Menu.Item key="Categorias">
-              <Link to="/categories">Categorias</Link>
-            </Menu.Item>
-          </Menu.ItemGroup>
-        </SubMenu>
+          ) : (
+            <SubMenu
+              key={title}
+              title={
+                <span>
+                  <Icon />
+                  {title}
+                </span>
+              }
+            >
+              <Menu.ItemGroup key={title}>
+                {subMenu.map(({ title, route }) => (
+                  <Menu.Item key={title}>
+                    <Link to={route}>{title}</Link>
+                  </Menu.Item>
+                ))}
+              </Menu.ItemGroup>
+            </SubMenu>
+          );
+        })}
       </Menu>
     </Sider>
   );
