@@ -14,3 +14,14 @@
   margin-bottom: 16px;
   font-weight: 500;
 }
+
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-date-label {
+  color: darkgray;
+  padding: 16px;
+  font-size: 15px;
+}

@@ -1,7 +1,7 @@
-import moongose from 'mongoose';
+import mongoose from 'mongoose';
 import Joi from '@hapi/joi';
 
-const Schema = moongose.Schema;
+const Schema = mongoose.Schema;
 
 const Event = new Schema({
   name: {
@@ -35,4 +35,4 @@ export function validateEvent(event) {
   return schema.validate(event);
 }
 
-export default moongose.model('Event', Event);
+export default mongoose.model('Event', Event);

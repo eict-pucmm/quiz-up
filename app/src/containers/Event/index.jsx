@@ -3,6 +3,7 @@ import { Breadcrumb, Card } from "antd";
 import axios from "axios";
 
 import { URL_EVENTS } from "../../config/urls";
+import formatDate from "../../helpers/date";
 import RoundOfEventCard from "../../components/RoundOfEventCard";
 
 import "./styles.css";
@@ -36,7 +37,17 @@ class Event extends Component {
           ) : (
             events.map(({ _id, name, dateOfEvent }) => {
               return (
-                <Card title={`${name} ${dateOfEvent}`} key={_id}>
+                <Card
+                  title={
+                    <div className="row">
+                      {name}
+                      <span className="event-date-label">
+                        Fecha del evento: {formatDate(dateOfEvent)}
+                      </span>
+                    </div>
+                  }
+                  key={_id}
+                >
                   <p className="event-rounds-label">Rondas del evento</p>
                   <RoundOfEventCard gameEvent={{ _id, name }} />
                 </Card>
