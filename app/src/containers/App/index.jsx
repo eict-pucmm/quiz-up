@@ -14,7 +14,7 @@ const App = () => {
   return (
     <div>
       <Layout>
-        <Header>
+        <Header className="header">
           <Title className="title-quiz-up" level={3}>
             <a href="/">Quiz Up</a>
           </Title>

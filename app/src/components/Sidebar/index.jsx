@@ -14,7 +14,7 @@ const Sidebar = () => {
     <Fragment />
   ) : (
     <Sider>
-      <Menu defaultSelectedKeys={["Events"]} mode="inline">
+      <Menu defaultSelectedKeys={["Events"]} mode="inline" theme="dark">
         {sidebarItems.map(({ title, route, subMenu, Icon }) => {
           return !subMenu ? (
             <Menu.Item key={title}>
