@@ -32,3 +32,8 @@
   flex-direction: column;
   justify-content: space-evenly;
 }
+
+.add-event-btn {
+  width: 100%;
+  margin-bottom: 8px;
+}

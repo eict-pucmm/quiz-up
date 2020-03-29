@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Card, Modal, Row, Col, Empty, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -89,14 +90,14 @@ class RoundList extends Component {
           <Fragment>
             <Row gutter={[40, 16]}>
               <Col className="gutter-row" span={8}>
-                <div className="">
-                  <Card
-                    hoverable
-                    onClick={() => this.setState({ addRound: true })}
-                  >
-                    Agregar Ronda
-                  </Card>
-                </div>
+                <Card
+                  hoverable
+                  className="add-round-card"
+                  onClick={() => this.setState({ addRound: true })}
+                >
+                  <PlusOutlined />
+                  Agregar Ronda
+                </Card>
               </Col>
               {rounds.map((round, index) => {
                 return (

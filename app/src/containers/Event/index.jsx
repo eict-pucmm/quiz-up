@@ -1,17 +1,25 @@
 import React, { Fragment, Component } from "react";
 import { Breadcrumb, Card, Empty, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 import { URL_EVENTS } from "../../config/urls";
-import formatDate from "../../helpers/date";
 import RoundList from "../../components/RoundList";
+import EventCardTitle from "../../components/EventCardTitle";
+import AddEventModal from "../../components/AddEventModal";
 
 import "./styles.css";
 
 class Event extends Component {
   state = {
     events: [],
-    loading: true
+    loading: true,
+    visible: false,
+    savingEvent: false,
+    eventToAdd: {
+      name: "",
+      dateOfEvent: new Date()
+    }
   };
 
   componentDidMount() {
@@ -26,8 +34,44 @@ class Event extends Component {
       .catch(({ response }) => console.log(response));
   }
 
+  showModal = () => {
+    this.setState({ visible: true });
+  };
+
+  handleOk = () => {
+    this.setState({ visible: false });
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
+  handleChange = event => {
+    const { name, value } = event.target;
+
+    this.setState({ eventToAdd: { ...this.state.eventToAdd, [name]: value } });
+  };
+
+  handleDateChange = date => {
+    this.setState({
+      eventToAdd: { ...this.state.eventToAdd, dateOfEvent: date }
+    });
+  };
+
+  onSubmit = () => {
+    this.setState({ savingEvent: true });
+
+    axios
+      .post(`${URL_EVENTS}/`, { ...this.state.eventToAdd })
+      .then(({ data }) => {
+        this.setState({ visible: false, savingEvent: false });
+        window.location.reload(false);
+      })
+      .catch(({ response }) => console.log(response));
+  };
+
   render() {
-    const { loading, events } = this.state;
+    const { loading, events, visible, eventToAdd, savingEvent } = this.state;
 
     return (
       <Fragment>
@@ -36,9 +80,9 @@ class Event extends Component {
         </Breadcrumb>
         {loading ? (
           <div className="loading-card-placeholder">
-            <Card loading={loading}></Card>
-            <Card loading={loading}></Card>
-            <Card loading={loading}></Card>
+            {[1, 2, 3].map(i => (
+              <Card key={i} loading={loading}></Card>
+            ))}
           </div>
         ) : (
           <div className="outer-event-card">
@@ -47,25 +91,38 @@ class Event extends Component {
                 <Button type="primary">Crear Evento</Button>
               </Empty>
             ) : (
-              events.map(({ _id, name, dateOfEvent }) => {
-                return (
-                  <Card
-                    title={
-                      <div className="row">
-                        {name}
-                        <span className="event-date-label">
-                          Fecha del evento: {formatDate(dateOfEvent)}
-                        </span>
-                      </div>
-                    }
-                    key={_id}
-                  >
-                    <p className="event-rounds-label">Rondas del evento</p>
-                    <RoundList gameEvent={{ _id, name }} />
-                  </Card>
-                );
-              })
+              <Fragment>
+                <Button
+                  className="add-event-btn"
+                  type="dashed"
+                  size="large"
+                  onClick={() => this.setState({ visible: true })}
+                >
+                  <PlusOutlined />
+                  Agregar Evento
+                </Button>
+                {events.map(event => {
+                  return (
+                    <Card
+                      title={<EventCardTitle gameEvent={event} />}
+                      key={event._id}
+                    >
+                      <p className="event-rounds-label">Rondas del evento</p>
+                      <RoundList gameEvent={event} />
+                    </Card>
+                  );
+                })}
+              </Fragment>
             )}
+            <AddEventModal
+              handleChange={this.handleChange}
+              handleDateChange={this.handleDateChange}
+              onCancel={this.handleCancel}
+              onSubmit={this.onSubmit}
+              eventToAdd={eventToAdd}
+              saving={savingEvent}
+              visible={visible}
+            />
           </div>
         )}
       </Fragment>
