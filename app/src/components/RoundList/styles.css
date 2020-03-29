@@ -2,12 +2,13 @@
   color: dodgerblue !important;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .start-round-btn {
   color: #fff !important;
   background-color: green;
   padding: 10px;
+}
+
+.gutter-box {
+  padding: 8px 0;
+  background: #00a0e9;
 }

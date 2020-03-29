@@ -26,11 +26,9 @@
   font-size: 15px;
 }
 
-.loading-spin-icon {
-  width: 1000px;
-  height: 1000px;
-  position: absolute;
-  left: 50%;
-  margin-top: 25vh;
-  margin-left: 25px;
+.loading-card-placeholder {
+  height: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }

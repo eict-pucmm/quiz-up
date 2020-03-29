@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from "react";
-import { Card, Modal, Button } from "antd";
+import { Card, Modal, Row, Col, Empty, Button } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 import { URL_ROUNDS } from "../../config/urls";
 import AddRoundModal from "../AddRoundModal";
+import RoundCard from "../RoundCard";
 
 import "./styles.css";
 
-class RoundOfEventCard extends Component {
+class RoundList extends Component {
   state = {
     rounds: [],
     selectedRound: 0,
@@ -78,32 +79,37 @@ class RoundOfEventCard extends Component {
       <Fragment>
         {rounds.length === 0 ? (
           <Fragment>
-            <Card.Grid hoverable={false}>Este evento NO tiene rondas</Card.Grid>
+            <Empty description="Este evento NO tiene rondas">
+              <Button onClick={() => this.setState({ addRound: true })}>
+                Agregar Ronda
+              </Button>
+            </Empty>
           </Fragment>
         ) : (
           <Fragment>
-            {rounds.map((round, index) => {
-              return (
-                <Card
-                  className="cursor-pointer"
-                  key={round._id}
-                  loading={loading}
-                  onClick={() => this.showModal(index)}
-                  title={round.name}
-                  type="inner"
-                  extra={
-                    <span
-                      onClick={() => this.showModal(index)}
-                      className="more-info-label cursor-pointer"
-                    >
-                      Mas Informacion
-                    </span>
-                  }
-                >
-                  Round Data
-                </Card>
-              );
-            })}
+            <Row gutter={[40, 16]}>
+              <Col className="gutter-row" span={8}>
+                <div className="">
+                  <Card
+                    hoverable
+                    onClick={() => this.setState({ addRound: true })}
+                  >
+                    Agregar Ronda
+                  </Card>
+                </div>
+              </Col>
+              {rounds.map((round, index) => {
+                return (
+                  <RoundCard
+                    index={index}
+                    key={round._id}
+                    loading={loading}
+                    round={round}
+                    showModal={this.showModal}
+                  />
+                );
+              })}
+            </Row>
             <Modal
               cancelText="Cancelar"
               centered
@@ -122,21 +128,19 @@ class RoundOfEventCard extends Component {
             </Modal>
           </Fragment>
         )}
-        <Button onClick={() => this.setState({ addRound: true })}>
-          Agregar Ronda
-        </Button>
+
         <AddRoundModal
-          onCancel={this.handleCancel}
-          roundToAdd={roundToAdd}
-          visible={addRound}
-          saving={savingRound}
-          handleChange={this.handleChange}
-          onSubmit={this.onSubmit}
           {...this.props}
+          handleChange={this.handleChange}
+          onCancel={this.handleCancel}
+          onSubmit={this.onSubmit}
+          roundToAdd={roundToAdd}
+          saving={savingRound}
+          visible={addRound}
         />
       </Fragment>
     );
   }
 }
 
-export default RoundOfEventCard;
+export default RoundList;

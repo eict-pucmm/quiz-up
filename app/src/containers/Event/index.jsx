@@ -1,10 +1,10 @@
 import React, { Fragment, Component } from "react";
-import { Breadcrumb, Card, Empty, Button, Spin } from "antd";
+import { Breadcrumb, Card, Empty, Button } from "antd";
 import axios from "axios";
 
 import { URL_EVENTS } from "../../config/urls";
 import formatDate from "../../helpers/date";
-import RoundOfEventCard from "../../components/RoundOfEventCard";
+import RoundList from "../../components/RoundList";
 
 import "./styles.css";
 
@@ -20,7 +20,7 @@ class Event extends Component {
       .then(({ data }) => {
         setTimeout(
           () => this.setState({ events: data.events, loading: false }),
-          1500
+          1000
         );
       })
       .catch(({ response }) => console.log(response));
@@ -29,16 +29,16 @@ class Event extends Component {
   render() {
     const { loading, events } = this.state;
 
-    console.log(loading);
-
     return (
       <Fragment>
         <Breadcrumb className="breadcrumb-title">
           <Breadcrumb.Item>Eventos</Breadcrumb.Item>
         </Breadcrumb>
         {loading ? (
-          <div className="loading-spin-icon">
-            <Spin className="icon-spin" size="large" />
+          <div className="loading-card-placeholder">
+            <Card loading={loading}></Card>
+            <Card loading={loading}></Card>
+            <Card loading={loading}></Card>
           </div>
         ) : (
           <div className="outer-event-card">
@@ -61,7 +61,7 @@ class Event extends Component {
                     key={_id}
                   >
                     <p className="event-rounds-label">Rondas del evento</p>
-                    <RoundOfEventCard gameEvent={{ _id, name }} />
+                    <RoundList gameEvent={{ _id, name }} />
                   </Card>
                 );
               })
