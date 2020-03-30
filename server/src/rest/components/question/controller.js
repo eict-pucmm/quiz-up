@@ -13,7 +13,7 @@ import subscribeToChannel from '../../../services/subscriber';
 
 const attributes = {
   Model: Question,
-  field: 'name',
+  fields: 'name',
   validate: validateQuestion,
 };
 

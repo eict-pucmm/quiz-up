@@ -9,7 +9,7 @@ import validateData from '../../utils/validateData';
 
 const attributes = {
   Model: Team,
-  field: 'name',
+  fields: 'name',
   validate: validateTeam,
 };
 
