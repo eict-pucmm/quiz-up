@@ -13,18 +13,15 @@ export default async function(body, attributes) {
   const { Model, fields, validate } = attributes;
   const { value, error } = validate(body);
 
-  //make dynamic queries to findOne
-  let query = {};
-  const args = fields.split(',');
-  args.map(i => {
-    query = { ...query, [i]: value[i] };
-  });
-
   if (error) {
     return [{ status: BAD_REQUEST, message: error.details[0].message }, null];
   }
 
   if (Model && fields) {
+    //make dynamic queries to findOne
+    let query = {};
+    fields.split(',').map(i => (query = { ...query, [i]: value[i] }));
+
     const exists = await Model.findOne(query);
     if (exists) {
       return [
