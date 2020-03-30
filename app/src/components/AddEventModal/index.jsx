@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Button, Form, Input } from "antd";
 import DatePicker from "react-datepicker";
+import EVENT from "../../constants/event";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,8 +18,8 @@ const AddEventModal = ({
 
   return (
     <Modal
-      cancelText="Cancelar"
       centered
+      cancelText="Cancelar"
       onCancel={onCancel}
       title={"Agregar un nuevo Evento"}
       visible={visible}
@@ -29,23 +30,26 @@ const AddEventModal = ({
       ]}
     >
       <Form
-        labelCol={{
-          span: 4
-        }}
-        wrapperCol={{
-          span: 14
-        }}
-        layout="horizontal"
+        layout="vertical"
         size="medium"
+        labelCol={{
+          span: 12
+        }}
       >
-        <Form.Item>
-          <Input name="name" value={name} onChange={handleChange} />
-          <DatePicker
-            selected={dateOfEvent}
-            onChange={handleDateChange}
-            dateFormat="dd/MM/yyyy"
-          />
-        </Form.Item>
+        {EVENT.map(attributes => (
+          <Form.Item label={attributes.label} key={attributes.id}>
+            {attributes.id === "dateOfEvent" ? (
+              <DatePicker
+                {...attributes}
+                className="ant-input"
+                onChange={handleDateChange}
+                selected={dateOfEvent}
+              />
+            ) : (
+              <Input {...attributes} value={name} onChange={handleChange} />
+            )}
+          </Form.Item>
+        ))}
       </Form>
     </Modal>
   );
