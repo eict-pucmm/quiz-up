@@ -1,14 +1,15 @@
 import React from "react";
 import { Modal, Button, Form, Input } from "antd";
+import ROUND from "../../constants/round";
 
 const AddRoundModal = ({
   gameEvent,
-  visible,
+  handleChange,
   onCancel,
   onSubmit,
-  handleChange,
   roundToAdd,
-  saving
+  saving,
+  visible
 }) => {
   const { name } = roundToAdd;
   return (
@@ -34,9 +35,11 @@ const AddRoundModal = ({
         layout="horizontal"
         size="medium"
       >
-        <Form.Item>
-          <Input name="name" value={name} onChange={handleChange} />
-        </Form.Item>
+        {ROUND.map(attributes => (
+          <Form.Item label={attributes.label} key={attributes.id}>
+            <Input {...attributes} value={name} onChange={handleChange} />
+          </Form.Item>
+        ))}
       </Form>
     </Modal>
   );
