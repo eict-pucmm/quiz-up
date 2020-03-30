@@ -27,12 +27,10 @@ class RoundList extends Component {
     this.getRoundsOfEvent();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { savingRound } = this.state;
-
+  componentDidUpdate(_, prevState) {
     // this is to not reload the entire page again and only
     // re-render the event that has a new round
-    if (prevState.savingRound !== savingRound) {
+    if (prevState.savingRound !== this.state.savingRound) {
       this.getRoundsOfEvent();
     }
   }
@@ -87,7 +85,7 @@ class RoundList extends Component {
   handleChange = event => {
     const { name, value } = event.target;
 
-    this.setState({ roundToAdd: { [name]: value } });
+    this.setState({ roundToAdd: { ...this.state.roundToAdd, [name]: value } });
   };
 
   render() {

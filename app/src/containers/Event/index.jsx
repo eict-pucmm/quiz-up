@@ -1,12 +1,12 @@
 import React, { Fragment, Component } from "react";
-import { Breadcrumb, Card, Empty, Button } from "antd";
+import { Breadcrumb, Card, Empty, Button, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 import { URL_EVENTS } from "../../config/urls";
-import RoundList from "../../components/RoundList";
-import EventCardTitle from "../../components/EventCardTitle";
 import AddEventModal from "../../components/AddEventModal";
+import EventCardTitle from "../../components/EventCardTitle";
+import RoundList from "../../components/RoundList";
 
 import "./styles.css";
 
@@ -23,6 +23,18 @@ class Event extends Component {
   };
 
   componentDidMount() {
+    this.getEvents();
+  }
+
+  componentDidUpdate(_, prevState) {
+    // this is to not reload the entire page again and only
+    // re-render the event that has a new round
+    if (prevState.savingEvent !== this.state.savingEvent) {
+      this.getEvents();
+    }
+  }
+
+  getEvents() {
     axios
       .get(URL_EVENTS)
       .then(({ data }) => {
@@ -33,14 +45,6 @@ class Event extends Component {
       })
       .catch(({ response }) => console.log(response));
   }
-
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
-  handleOk = () => {
-    this.setState({ visible: false });
-  };
 
   handleCancel = () => {
     this.setState({ visible: false });
@@ -64,10 +68,21 @@ class Event extends Component {
     axios
       .post(`${URL_EVENTS}/`, { ...this.state.eventToAdd })
       .then(({ data }) => {
-        this.setState({ visible: false, savingEvent: false });
-        window.location.reload(false);
+        this.setState({
+          visible: false,
+          savingEvent: false,
+          eventToAdd: { name: "", dateOfEvent: new Date() }
+        });
+        notification["success"]({
+          message: "El evento ha sido creada con exito"
+        });
       })
-      .catch(({ response }) => console.log(response));
+      .catch(({ response }) => {
+        this.setState({ savingEvent: false });
+        notification["error"]({
+          message: response.data
+        });
+      });
   };
 
   render() {
