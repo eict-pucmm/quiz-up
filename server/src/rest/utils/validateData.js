@@ -10,18 +10,25 @@ import { BAD_REQUEST, DUPLICATE } from '../../config/statusCodes';
  * validated body of the request.
  */
 export default async function(body, attributes) {
-  const { Model, field, validate } = attributes;
+  const { Model, fields, validate } = attributes;
   const { value, error } = validate(body);
+
+  //make dynamic queries to findOne
+  let query = {};
+  const args = fields.split(',');
+  args.map(i => {
+    query = { ...query, [i]: value[i] };
+  });
 
   if (error) {
     return [{ status: BAD_REQUEST, message: error.details[0].message }, null];
   }
 
-  if (Model && field) {
-    const exists = await Model.findOne({ [field]: value[field] });
+  if (Model && fields) {
+    const exists = await Model.findOne(query);
     if (exists) {
       return [
-        { status: DUPLICATE, message: `This ${field} already exist` },
+        { status: DUPLICATE, message: `This ${fields} already exist` },
         null,
       ];
     }

@@ -11,7 +11,7 @@ import validateData from '../../utils/validateData';
 
 const attributes = {
   Model: Round,
-  field: 'name',
+  field: 'name,event',
   validate: validateRound,
 };
 
