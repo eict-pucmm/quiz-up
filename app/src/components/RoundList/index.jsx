@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Card, Modal, Row, Col, Empty, Button } from "antd";
+import { Card, Modal, Row, Col, Empty, Button, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -24,13 +24,27 @@ class RoundList extends Component {
   };
 
   componentDidMount() {
+    this.getRoundsOfEvent();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { savingRound } = this.state;
+
+    // this is to not reload the entire page again and only
+    // re-render the event that has a new round
+    if (prevState.savingRound !== savingRound) {
+      this.getRoundsOfEvent();
+    }
+  }
+
+  getRoundsOfEvent = () => {
     axios
       .get(`${URL_ROUNDS}/event/${this.props.gameEvent._id}`)
       .then(({ data }) =>
         this.setState({ rounds: data.rounds, loading: false })
       )
       .catch(({ response }) => console.log(response));
-  }
+  };
 
   showModal = roundIndex => {
     this.setState({ visible: true, selectedRound: roundIndex });
@@ -52,10 +66,22 @@ class RoundList extends Component {
     axios
       .post(`${URL_ROUNDS}/`, { name, event: this.props.gameEvent._id })
       .then(({ data }) => {
-        this.setState({ visible: false, addRound: false, savingRound: false });
-        window.location.reload(false);
+        this.setState({
+          visible: false,
+          addRound: false,
+          savingRound: false,
+          roundToAdd: { name: "" }
+        });
+        notification["success"]({
+          message: "La ronda ha sido creada con exito"
+        });
       })
-      .catch(({ response }) => console.log(response));
+      .catch(({ response }) => {
+        this.setState({ savingRound: false });
+        notification["error"]({
+          message: response.data
+        });
+      });
   };
 
   handleChange = event => {

@@ -104,6 +104,7 @@ class Event extends Component {
                 {events.map(event => {
                   return (
                     <Card
+                      className="event-card"
                       title={<EventCardTitle gameEvent={event} />}
                       key={event._id}
                     >

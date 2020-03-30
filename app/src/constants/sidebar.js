@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 export default [
-  { title: "Events", route: "/" },
+  { title: "Eventos", route: "/" },
   {
     title: "Preguntas",
     Icon: QuestionCircleOutlined,

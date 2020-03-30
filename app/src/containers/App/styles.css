@@ -2,8 +2,11 @@
 
 .container {
   padding: 0 50px;
-  /*take entire browser screen height*/
-  height: 94vh;
+  overflow: initial;
+}
+
+.app-header {
+  padding: 0;
 }
 
 .header {
@@ -16,6 +19,7 @@
 .title-quiz-up {
   color: white !important;
   margin-top: 15px !important;
+  text-align: center;
 }
 .App {
   text-align: center;

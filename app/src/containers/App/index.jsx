@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Layout } from "antd";
-import Title from "antd/lib/typography/Title";
 
 import Routes from "../../components/Routes";
 import Sidebar from "../../components/Sidebar";
@@ -12,26 +11,18 @@ const { Header, Footer, Content } = Layout;
 
 const App = () => {
   return (
-    <div>
-      <Layout>
-        <Header className="header">
-          <Title className="title-quiz-up" level={3}>
-            <a href="/">Quiz Up</a>
-          </Title>
-        </Header>
+    <Layout>
+      <Router>
+        <Sidebar />
         <Layout>
-          <Router>
-            <Sidebar />
-            <Layout>
-              <Content className="container">
-                <Routes />
-              </Content>
-              <Footer />
-            </Layout>
-          </Router>
+          <Header className="app-header" />
+          <Content className="container">
+            <Routes />
+          </Content>
+          <Footer />
         </Layout>
-      </Layout>
-    </div>
+      </Router>
+    </Layout>
   );
 };
 

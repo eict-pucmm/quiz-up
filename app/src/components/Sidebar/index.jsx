@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, Layout } from "antd";
 import useReactRouter from "use-react-router";
 import sidebarItems from "../../constants/sidebar";
+import Title from "antd/lib/typography/Title";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -14,7 +15,18 @@ const Sidebar = () => {
     <Fragment />
   ) : (
     <Sider>
-      <Menu defaultSelectedKeys={["Events"]} mode="inline" theme="dark">
+      <div>
+        <Title className="title-quiz-up" level={3}>
+          <a href="/">Quiz Up</a>
+        </Title>
+      </div>
+      <Menu
+        className="sidebar-menu"
+        defaultSelectedKeys={["Eventos"]}
+        mode="inline"
+        style={{ height: "100vh" }}
+        theme="dark"
+      >
         {sidebarItems.map(({ title, route, subMenu, Icon }) => {
           return !subMenu ? (
             <Menu.Item key={title}>

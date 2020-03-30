@@ -3,9 +3,13 @@
 }
 
 .outer-event-card {
-  background: #fff;
-  padding: 24px;
+  background: none;
+  padding: 16px;
   min-height: 580px;
+}
+
+.event-card {
+  margin-bottom: 25px !important;
 }
 
 .event-rounds-label {
