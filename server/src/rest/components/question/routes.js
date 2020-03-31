@@ -19,23 +19,23 @@ router.get('/:id', findById);
 
 /**
  * @route POST '/'
- * @returns message that says the operation was succesfull
+ * @returns {JSON} of the question created
  * @access Private
  */
 router.post('/', create);
 
 /**
- * @route GET '/publish'
+ * @route GET 'mq//publish'
  * @returns Message stating that the question was send
  * @access Public
  */
-router.post('/publish', publish);
+router.post('/mq/publish', publish);
 
 /**
- * @route GET '/publish'
- * @returns Message stating that the question was send
+ * @route GET '/mq/subscribe/'
+ * @returns Message stating that the app it's subscribe
  * @access Public
  */
-router.post('/mq/subscribe', subscribe);
+router.post('/mq/subscribe/', subscribe);
 
 export default router;

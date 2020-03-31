@@ -5,14 +5,14 @@ const router = express.Router();
 
 /**
  * @route GET '/'
- * @returns {JSON} of all roundss
+ * @returns {JSON} of all rounds
  * @access Public
  */
 router.get('/', list);
 
 /**
- * @route GET '/'
- * @returns {JSON} of all roundss
+ * @route GET '/event/:idOfEvent'
+ * @returns {JSON} of all the rounds from a certain event
  * @access Public
  */
 router.get('/event/:idOfEvent', roundByEvent);

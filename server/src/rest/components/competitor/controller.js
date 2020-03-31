@@ -8,10 +8,10 @@ import {
 import wrapper from '../../utils/async';
 
 /**
- * List of Competitor
+ * List of Competitors
  * @param {Object} req
  * @param {Object} res
- * @returns {JSON} of Competitor
+ * @returns {JSON} of Competitors
  */
 const list = async (req, res) => {
   const [error, competitors] = await wrapper(Competitor.find());

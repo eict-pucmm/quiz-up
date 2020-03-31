@@ -21,11 +21,10 @@ export default async function(flag = false) {
           { noAck: true },
         );
       } catch (error) {
-        console.log('cannot consume🤷🏼‍♂️', error);
+        console.log(error);
       }
     }
   } catch (error) {
-    console.error('Oh no!🤕', error);
     process.exit(1);
   }
 }

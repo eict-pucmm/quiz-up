@@ -17,20 +17,25 @@ quiz-up
 ├───── app/                          # All public assets
 |   |  ├── public/                   # All of the client side code
 |   |  ├── src/                      # All of the client side code
+|   |   |   ├── config/              # Configuration files
+|   |   |   ├── constants/           # Constant files for the forms and components
+|   |   |   ├── containers/          # React containers
+|   |   |   ├── components/          # React components
+|   |   |   └──  helpers/            # Helper functions used in the frontend section of the file
 └───── .gitignore                    # files ignored by git
 └───── package.json                  # All dependencies and script to run the application
 ├───── server/                       # Source directory
-|   |   ├── src/                      # All server side code
-|   |   |   ├── config/               # Configuration files
-|   |   |   └── rest/                 # "heart" of the API
-|   |   |   |   └───components        # Each component takes care of its own routes, controller and model
-|   |   |   |   utils                 # API's utils
-|   |   |   └── services/             # files for external services. E.g: sending mails
-|   |   |   └── index.js              # Initialize server and handle routes and services
+|   |   ├── src/                     # All server side code
+|   |   |   ├── config/              # Configuration files
+|   |   |   ├── rest/                # "heart" of the API
+|   |   |   |   ├── components       # Each component takes care of its own routes, controller and model
+|   |   |   |   └── utils            # API's utils
+|   |   |   └── services/            # files for external services. E.g: sending mails
+|   |   |   └── index.js             # Initialize server and handle routes and services
 └───── .babelrc                      # Babel configuration file
 └───── .gitignore                    # files ignored by git
 └───── package.json                  # All dependencies and script to run the application
-└── README.md                     # README file
+└── README.md                        # README file
 ```
 
 ---

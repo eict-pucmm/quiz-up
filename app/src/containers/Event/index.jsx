@@ -103,7 +103,12 @@ class Event extends Component {
           <div className="outer-event-card">
             {events.length === 0 ? (
               <Empty description={<span>No hay eventos creados!</span>}>
-                <Button type="primary">Crear Evento</Button>
+                <Button
+                  type="primary"
+                  onClick={() => this.setState({ visible: true })}
+                >
+                  Crear Evento
+                </Button>
               </Empty>
             ) : (
               <Fragment>

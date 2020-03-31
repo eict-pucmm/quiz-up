@@ -14,7 +14,7 @@ const attributes = {
 };
 
 /**
- * List of Team
+ * List of Teams
  * @param {Object} req
  * @param {Object} res
  * @returns {JSON} of Team
@@ -51,7 +51,7 @@ const findById = async (req, res) => {
  * Creates a Team
  * @param {Object} req
  * @param {Object} res
- * @returns Message stating that a Team was created and a status of CREATED.
+ * @returns the Team created
  */
 const create = async (req, res) => {
   const [error, value] = await validateData(req.body, attributes);

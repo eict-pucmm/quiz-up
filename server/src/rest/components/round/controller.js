@@ -16,10 +16,10 @@ const attributes = {
 };
 
 /**
- * List of Round
+ * List of Rounds
  * @param {Object} req
  * @param {Object} res
- * @returns {JSON} of Round
+ * @returns {JSON} of Rounds
  */
 const list = async (req, res) => {
   const [error, rounds] = await wrapper(
@@ -30,10 +30,18 @@ const list = async (req, res) => {
     : res.status(OK).json({ rounds });
 };
 
+/**
+ * List of Rounds that belong to an event
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of Rounds
+ */
 const roundByEvent = async (req, res) => {
   const [error, rounds] = await wrapper(
     Round.find({ event: req.params.idOfEvent }),
   );
+
+  console.log(error, rounds);
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })

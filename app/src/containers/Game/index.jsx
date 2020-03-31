@@ -50,7 +50,7 @@ class Game extends Component {
 
   publishQuestion = event => {
     axios
-      .post(`${URL_QUESTIONS}/publish/`, { question: event.target.value })
+      .post(`${URL_QUESTIONS}/mq/publish/`, { question: event.target.value })
       .then(res => {
         console.log(res);
 
@@ -96,29 +96,36 @@ class Game extends Component {
                 );
               })}
             </Card>
-            <Modal
-              visible={visible}
-              onOk={this.handleOk}
-              onCancel={this.handleCancel}
-              centered
-              footer={[
-                <Button
-                  key="submit"
-                  value={questions[question].name}
-                  onClick={this.publishQuestion}
-                >
-                  Abrir Pregunta
-                </Button>
-              ]}
-            >
-              {questions[question].name}
-              <br />
-              {published ? (
-                <Countdown date={Date.now() + 15000} renderer={this.renderer} />
-              ) : (
-                <Fragment />
-              )}
-            </Modal>
+            {questions.length === 0 ? (
+              <Fragment />
+            ) : (
+              <Modal
+                visible={visible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                centered
+                footer={[
+                  <Button
+                    key="submit"
+                    value={questions[question].name}
+                    onClick={this.publishQuestion}
+                  >
+                    Abrir Pregunta
+                  </Button>
+                ]}
+              >
+                {questions[question].name}
+                <br />
+                {published ? (
+                  <Countdown
+                    date={Date.now() + 15000}
+                    renderer={this.renderer}
+                  />
+                ) : (
+                  <Fragment />
+                )}
+              </Modal>
+            )}
           </Fragment>
         )}
       </div>

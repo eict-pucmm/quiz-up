@@ -13,7 +13,7 @@ const attributes = {
 };
 
 /**
- * List of Event
+ * List of Events
  * @param {Object} req
  * @param {Object} res
  * @returns {JSON} of Event
@@ -40,7 +40,7 @@ const findById = async (req, res) => {
 };
 
 /**
- * Creates a Event
+ * Creates an Event
  * @param {Object} req
  * @param {Object} res
  * @returns The saved Event
@@ -63,7 +63,7 @@ const create = async (req, res) => {
 };
 
 /**
- * Updates a Event
+ * Updates an Event
  * @param {Object} req
  * @param {Object} res
  * @returns The Event updated
