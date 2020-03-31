@@ -3,48 +3,45 @@ import Joi from '@hapi/joi';
 
 const Schema = moongose.Schema;
 
-const Team = new Schema({
-  name: {
-    type: String,
+const Result = new Schema({
+  team: {
+    type: new Schema({
+      name: {
+        type: String,
+        minlength: 4,
+        maxlength: 255,
+      },
+    }),
     required: true,
-    minlength: 4,
-    maxlength: 255,
-    unique: true,
   },
-  competitors: [
+  questionsAnswered: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Competitor',
+      ref: 'Question',
     },
   ],
-  createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
 });
 
 /**
- * Validate the data sent to create a team.
- * @param {Object} team
+ * Validate the data sent to create a result.
+ * @param {Object} result
  * @returns {Promise} Promise-like object that
  * can be used as a promise, or as a simple object.
  *
  * To learn more you can head to:
  * https://github.com/hapijs/joi/blob/v13.1.2/API.md#validatevalue-schema-options-callback
  */
-export function validateTeam(team) {
+export function validateResult(result) {
   const schema = Joi.object({
     name: Joi.string()
       .min(4)
       .max(255)
       .required(),
-    competitors: Joi.array()
-      .items(Joi.objectId())
-      .required(),
+    dateOfEvent: Joi.date().required(),
+    questionsAnswered: Joi.array().items(Joi.objectId()),
   }).options({ stripUnknown: true });
 
-  return schema.validate(team);
+  return schema.validate(result);
 }
 
-export default moongose.model('Team', Team);
+export default moongose.model('Result', Result);

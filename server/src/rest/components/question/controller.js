@@ -13,12 +13,12 @@ import subscribeToChannel from '../../../services/subscriber';
 
 const attributes = {
   Model: Question,
-  field: 'name',
+  fields: 'name',
   validate: validateQuestion,
 };
 
 /**
- * List of Question
+ * List of Questions
  * @param {Object} req
  * @param {Object} res
  * @returns {JSON} of Question
@@ -110,10 +110,15 @@ const publish = async (req, res) => {
   return res.status(OK).send('question sent to subscribers');
 };
 
+/**
+ * Subscribe to a queue
+ * @param {Object} req
+ * @param {Object} res
+ * @returns Message stating it's subscribed.
+ */
 const subscribe = async (req, res) => {
-  const receivedAt = new Date();
-  subscribeToChannel(receivedAt);
-  return res.status(OK).send('its done');
+  subscribeToChannel(req.body.unsubscribe);
+  return res.status(OK).send('subscribed');
 };
 
 export { list, findById, create, publish, subscribe };

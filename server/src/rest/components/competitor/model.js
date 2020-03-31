@@ -8,7 +8,6 @@ const Competitor = new Schema({
     type: String,
     required: true,
     minlength: 4,
-    unique: true,
   },
   createdAt: {
     type: Date,

@@ -1,16 +1,18 @@
-import amqp from 'amqplib/callback_api';
+import amqp from 'amqplib';
 import { AMQP_CONNECTION_URL } from '../config/dotenv';
 
-export default function() {
-  amqp.connect(AMQP_CONNECTION_URL, (err, connection) => {
-    connection.createChannel((error, channel) => {
-      const exchange = 'answers';
-
-      channel.assertExchange(exchange, 'fanout', { durable: false });
-
-      channel.assertQueue('', { exclusive: true }, (err, queue) => {
-        channel.bindQueue(queue.queue, exchange, '');
-
+export default async function(flag = false) {
+  try {
+    const exchange = 'answers';
+    const connection = await amqp.connect(AMQP_CONNECTION_URL);
+    if (flag) {
+      await connection.close();
+    } else {
+      const channel = await connection.createChannel();
+      await channel.assertExchange(exchange, 'fanout', { durable: false });
+      const queue = await channel.assertQueue('', { exclusive: true });
+      await channel.bindQueue(queue.queue, exchange, '');
+      try {
         channel.consume(
           queue.queue,
           message => {
@@ -18,7 +20,11 @@ export default function() {
           },
           { noAck: true },
         );
-      });
-    });
-  });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  } catch (error) {
+    process.exit(1);
+  }
 }

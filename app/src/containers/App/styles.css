@@ -1,3 +1,26 @@
+@import "~antd/dist/antd.css";
+
+.container {
+  padding: 0 50px;
+  overflow: initial;
+}
+
+.app-header {
+  padding: 0;
+}
+
+.header {
+  height: 6vh;
+}
+.red {
+  background-color: red;
+}
+
+.title-quiz-up {
+  color: white !important;
+  margin-top: 15px !important;
+  text-align: center;
+}
 .App {
   text-align: center;
 }

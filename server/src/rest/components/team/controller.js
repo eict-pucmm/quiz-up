@@ -9,18 +9,20 @@ import validateData from '../../utils/validateData';
 
 const attributes = {
   Model: Team,
-  field: 'name',
+  fields: 'name',
   validate: validateTeam,
 };
 
 /**
- * List of Team
+ * List of Teams
  * @param {Object} req
  * @param {Object} res
  * @returns {JSON} of Team
  */
 const list = async (req, res) => {
-  const [error, teams] = await wrapper(Team.find());
+  const [error, teams] = await wrapper(
+    Team.find().populate('competitors', 'fullName -_id'),
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -34,7 +36,12 @@ const list = async (req, res) => {
  * @returns {JSON} of a Team
  */
 const findById = async (req, res) => {
-  const [error, team] = await wrapper(Team.findOne({ _id: req.params.id }));
+  const [error, team] = await wrapper(
+    Team.findOne({ _id: req.params.id }).populate(
+      'competitors',
+      'fullName -_id',
+    ),
+  );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ team });
@@ -44,7 +51,7 @@ const findById = async (req, res) => {
  * Creates a Team
  * @param {Object} req
  * @param {Object} res
- * @returns Message stating that a Team was created and a status of CREATED.
+ * @returns the Team created
  */
 const create = async (req, res) => {
   const [error, value] = await validateData(req.body, attributes);

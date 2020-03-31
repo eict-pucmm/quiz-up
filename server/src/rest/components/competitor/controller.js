@@ -8,10 +8,10 @@ import {
 import wrapper from '../../utils/async';
 
 /**
- * List of Competitor
+ * List of Competitors
  * @param {Object} req
  * @param {Object} res
- * @returns {JSON} of Competitor
+ * @returns {JSON} of Competitors
  */
 const list = async (req, res) => {
   const [error, competitors] = await wrapper(Competitor.find());
@@ -66,7 +66,7 @@ const create = async (req, res) => {
  * @returns The Competitor updated
  */
 const update = async (req, res) => {
-  const [error, value] = await validateCompetitor(req.body);
+  const { error, value } = await validateCompetitor(req.body);
 
   if (error) {
     return res.status(error.status).send(error.message);
@@ -82,7 +82,7 @@ const update = async (req, res) => {
 
   return errorUpdating
     ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the category')
-    : res.status(CREATED).send(updatedCategory);
+    : res.status(OK).send(updatedCategory);
 };
 
 export { list, findById, create, update };

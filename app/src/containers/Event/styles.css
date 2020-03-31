@@ -1,0 +1,43 @@
+.breadcrumb-title {
+  padding: 14px 0 !important;
+}
+
+.outer-event-card {
+  background: none;
+  padding: 16px;
+  min-height: 580px;
+}
+
+.event-card {
+  margin-bottom: 25px !important;
+}
+
+.event-rounds-label {
+  font-size: 14;
+  color: black !important;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-date-label {
+  color: darkgray;
+  padding: 16px;
+  font-size: 15px;
+}
+
+.loading-card-placeholder {
+  height: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.add-event-btn {
+  width: 100%;
+  margin-bottom: 8px;
+}

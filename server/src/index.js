@@ -2,12 +2,23 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { MONGO, PORT } from './config/dotenv';
-import { questions, categories, competitors, teams } from './config/routes';
+import {
+  questions,
+  categories,
+  competitors,
+  teams,
+  events,
+  results,
+  rounds,
+} from './config/routes';
 import {
   URL_QUESTIONS,
   URL_CATEGORIES,
   URL_COMPETITORS,
   URL_TEAMS,
+  URL_EVENTS,
+  URL_RESULTS,
+  URL_ROUNDS,
 } from './config/urls';
 import connectToDB from './services/mongo';
 import joiValidation from './services/joiValidation';
@@ -24,6 +35,9 @@ app.use(URL_QUESTIONS, questions);
 app.use(URL_CATEGORIES, categories);
 app.use(URL_COMPETITORS, competitors);
 app.use(URL_TEAMS, teams);
+app.use(URL_ROUNDS, rounds);
+app.use(URL_EVENTS, events);
+app.use(URL_RESULTS, results);
 
 app.get('/', (req, res) => res.send('Hello World!🌎'));
 
