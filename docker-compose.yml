@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  mongo:
+    container_name: mongo_quiz_up
+    image: mongo
+    ports:
+      - "27017:27017"
+    logging:
+      driver: "none"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    logging:
+      driver: "none"
+
+  api:
+    container_name: quiz_up_api
+    build:
+      context: "./server"
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/opt/app
+      - /opt/app/node_modules
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  client:
+    container_name: quiz_up_app
+    build:
+      context: "./app"
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/opt/app
+      - /opt/app/node_modules

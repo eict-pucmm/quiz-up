@@ -1,6 +1,0 @@
-#!/bin/bash
-
-npm install
-cd server && npm install
-cd ../app && npm install
-cd ..

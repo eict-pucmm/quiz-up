@@ -41,8 +41,6 @@ const roundByEvent = async (req, res) => {
     Round.find({ event: req.params.idOfEvent }),
   );
 
-  console.log(error, rounds);
-
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ rounds });

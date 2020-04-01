@@ -22,8 +22,10 @@ quiz-up
 |   |   |   ├── containers/          # React containers
 |   |   |   ├── components/          # React components
 |   |   |   └──  helpers/            # Helper functions used in the frontend section of the file
-└───── .gitignore                    # files ignored by git
-└───── package.json                  # All dependencies and script to run the application
+└────── .gitignore                   # files ignored by git
+└────── .dockerignore                # files ignored by docker
+└────── Dockerfile                   # file that contains the commands needed to assemble an image
+└────── package.json                 # All dependencies and script to run the application
 ├───── server/                       # Source directory
 |   |   ├── src/                     # All server side code
 |   |   |   ├── config/              # Configuration files
@@ -32,13 +34,25 @@ quiz-up
 |   |   |   |   └── utils            # API's utils
 |   |   |   └── services/            # files for external services. E.g: sending mails
 |   |   |   └── index.js             # Initialize server and handle routes and services
-└───── .babelrc                      # Babel configuration file
-└───── .gitignore                    # files ignored by git
-└───── package.json                  # All dependencies and script to run the application
+└───── babel.config,js               # Babel configuration file
+└───── .dockerignore                 # files ignored by docker
+└───── Dockerfile                    # file that contains the commands needed to assemble an image
+└── .docker-compose.yml              # file defining services, networks and volumes for docker containers
 └── README.md                        # README file
 ```
 
 ---
+
+# Minimum setup needed to run the project
+
+## Docker
+
+You need to have `docker` and `docker-compose` installed to run this project. If you don't have it installed you can follow [this guide](https://docs.docker.com/install/) for `docker` and [this one](https://docs.docker.com/compose/install/) for `docker-compose`.
+
+- First clone this repository.
+- After that open your terminal of preference and navigate to the directory you cloned this project.
+- Add the neccessary environment variables for the server in its own `.env` file
+- type the command `docker-compose up`
 
 ## Scripts used on the project
 
