@@ -30,3 +30,14 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+
+  client:
+    container_name: quiz_up_app
+    build:
+      context: "./app"
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/opt/app
+      - /opt/app/node_modules
