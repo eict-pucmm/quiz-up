@@ -51,6 +51,7 @@ You need to have `docker` and `docker-compose` installed to run this project. If
 
 - First clone this repository.
 - After that open your terminal of preference and navigate to the directory you cloned this project.
+- Add the neccessary environment variables for the server in its own `.env` file
 - type the command `docker-compose up`
 
 ## Scripts used on the project
