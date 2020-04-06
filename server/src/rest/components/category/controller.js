@@ -4,6 +4,7 @@ import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
+  NO_CONTENT,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -92,4 +93,14 @@ const update = async (req, res) => {
     : res.status(CREATED).send(updatedCategory);
 };
 
-export { list, findById, create, update };
+const remove = async (req, res) => {
+  const [errorRemoving, removedCategory] = await wrapper(
+    Category.findByIdAndRemove({ _id: req.params.id }),
+  );
+
+  return errorRemoving
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the category')
+    : res.status(NO_CONTENT);
+};
+
+export { list, findById, create, update, remove };
