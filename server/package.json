@@ -11,7 +11,7 @@
     "dev": "babel-watch -L ./src/index.js",
     "build": "rm -rf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules",
     "lint": "eslint --fix 'src/**/*.js'",
-    "prettier": "prettier --write 'src/**/*.{js|json}'"
+    "prettier": "prettier --write \"**/*.+(js|jsx|json|css|md)\""
   },
   "keywords": [],
   "author": "ECT PUCMM",

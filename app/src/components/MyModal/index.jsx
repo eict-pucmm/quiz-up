@@ -1,5 +1,5 @@
-import React from "react";
-import { Modal, Button, Form } from "antd";
+import React from 'react';
+import { Modal, Button, Form } from 'antd';
 
 const MyModal = ({
   children,
@@ -8,7 +8,7 @@ const MyModal = ({
   saving,
   title,
   type,
-  visible
+  visible,
 }) => {
   return (
     <Modal
@@ -19,7 +19,7 @@ const MyModal = ({
       footer={[
         <Button key="submit" loading={saving} onClick={onSubmit}>
           Crear {type}
-        </Button>
+        </Button>,
       ]}
     >
       <Form layout="vertical" size="medium" labelCol={{ span: 12 }}>

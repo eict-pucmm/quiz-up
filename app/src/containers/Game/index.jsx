@@ -1,26 +1,26 @@
-import React, { Component, Fragment } from "react";
-import { Card, Modal, Button } from "antd";
-import axios from "axios";
-import Countdown from "react-countdown";
+import React, { Component, Fragment } from 'react';
+import { Card, Modal, Button } from 'antd';
+import axios from 'axios';
+import Countdown from 'react-countdown';
 
-import { URL_ROUNDS, URL_QUESTIONS } from "../../config/urls";
-import { OK } from "../../config/statusCodes";
+import { URL_ROUNDS, URL_QUESTIONS } from '../../config/urls';
+import { OK } from '../../config/statusCodes';
 
-import "./styles.css";
+import './styles.css';
 class Game extends Component {
   state = {
     questions: [],
     question: 0,
     loading: true,
     visible: false,
-    published: false
+    published: false,
   };
 
   componentDidMount() {
     axios
       .get(`${URL_ROUNDS}/${this.props.match.params.idOfRound}`)
       .then(({ data }) =>
-        this.setState({ questions: data.round.questions, loading: false })
+        this.setState({ questions: data.round.questions, loading: false }),
       )
       .catch(({ response }) => console.log(response));
 
@@ -30,17 +30,17 @@ class Game extends Component {
   componentWillUnmount() {
     axios
       .post(`${URL_QUESTIONS}/mq/subscribe/`, { unsubscribe: true })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   }
 
-  showModal = selectedQuestion => {
+  showModal = (selectedQuestion) => {
     this.setState({ visible: true, question: selectedQuestion });
   };
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -48,17 +48,17 @@ class Game extends Component {
     this.setState({ visible: false, published: false });
   };
 
-  publishQuestion = event => {
+  publishQuestion = (event) => {
     axios
       .post(`${URL_QUESTIONS}/mq/publish/`, { question: event.target.value })
-      .then(res => {
+      .then((res) => {
         console.log(res);
 
         if (res.status === OK) {
           this.setState({ published: true });
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   handlePublished = () => {
@@ -68,8 +68,8 @@ class Game extends Component {
   subscribe = () => {
     axios
       .post(`${URL_QUESTIONS}/mq/subscribe/`)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   renderer = ({ seconds }) => <span>{seconds}</span>;
@@ -111,7 +111,7 @@ class Game extends Component {
                     onClick={this.publishQuestion}
                   >
                     Abrir Pregunta
-                  </Button>
+                  </Button>,
                 ]}
               >
                 {questions[question].name}

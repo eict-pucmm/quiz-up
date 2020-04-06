@@ -1,14 +1,14 @@
-import React, { Fragment, Component } from "react";
-import { Breadcrumb, Card, Empty, Button, notification } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
+import React, { Fragment, Component } from 'react';
+import { Breadcrumb, Card, Empty, Button, notification } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
-import { URL_EVENTS } from "../../config/urls";
-import AddEventModal from "../../components/AddEventModal";
-import EventCardTitle from "../../components/EventCardTitle";
-import RoundList from "../../components/RoundList";
+import { URL_EVENTS } from '../../config/urls';
+import AddEventModal from '../../components/AddEventModal';
+import EventCardTitle from '../../components/EventCardTitle';
+import RoundList from '../../components/RoundList';
 
-import "./styles.css";
+import './styles.css';
 
 class Event extends Component {
   state = {
@@ -17,9 +17,9 @@ class Event extends Component {
     visible: false,
     savingEvent: false,
     eventToAdd: {
-      name: "",
-      dateOfEvent: new Date()
-    }
+      name: '',
+      dateOfEvent: new Date(),
+    },
   };
 
   componentDidMount() {
@@ -40,7 +40,7 @@ class Event extends Component {
       .then(({ data }) => {
         setTimeout(
           () => this.setState({ events: data.events, loading: false }),
-          1000
+          1000,
         );
       })
       .catch(({ response }) => console.log(response));
@@ -50,15 +50,15 @@ class Event extends Component {
     this.setState({ visible: false });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target;
 
     this.setState({ eventToAdd: { ...this.state.eventToAdd, [name]: value } });
   };
 
-  handleDateChange = date => {
+  handleDateChange = (date) => {
     this.setState({
-      eventToAdd: { ...this.state.eventToAdd, dateOfEvent: date }
+      eventToAdd: { ...this.state.eventToAdd, dateOfEvent: date },
     });
   };
 
@@ -71,16 +71,16 @@ class Event extends Component {
         this.setState({
           visible: false,
           savingEvent: false,
-          eventToAdd: { name: "", dateOfEvent: new Date() }
+          eventToAdd: { name: '', dateOfEvent: new Date() },
         });
-        notification["success"]({
-          message: "El evento ha sido creada con exito"
+        notification['success']({
+          message: 'El evento ha sido creada con exito',
         });
       })
       .catch(({ response }) => {
         this.setState({ savingEvent: false });
-        notification["error"]({
-          message: response.data
+        notification['error']({
+          message: response.data,
         });
       });
   };
@@ -95,7 +95,7 @@ class Event extends Component {
         </Breadcrumb>
         {loading ? (
           <div className="loading-card-placeholder">
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3].map((i) => (
               <Card key={i} loading={loading}></Card>
             ))}
           </div>
@@ -121,7 +121,7 @@ class Event extends Component {
                   <PlusOutlined />
                   Agregar Evento
                 </Button>
-                {events.map(event => {
+                {events.map((event) => {
                   return (
                     <Card
                       className="event-card"

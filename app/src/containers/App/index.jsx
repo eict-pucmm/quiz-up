@@ -1,11 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Layout } from "antd";
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Layout } from 'antd';
 
-import Routes from "../../components/Routes";
-import Sidebar from "../../components/Sidebar";
+import Routes from '../../components/Routes';
+import Sidebar from '../../components/Sidebar';
 
-import "./styles.css";
+import './styles.css';
 
 const { Header, Footer, Content } = Layout;
 

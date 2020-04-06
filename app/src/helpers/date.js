@@ -1,4 +1,4 @@
-export default function(date) {
+export default function (date) {
   const fullDate = new Date(date);
   let dd = fullDate.getDate();
 

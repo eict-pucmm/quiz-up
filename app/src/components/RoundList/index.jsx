@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from "react";
-import { Card, Modal, Row, Col, Empty, Button, notification } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { Component, Fragment } from 'react';
+import { Card, Modal, Row, Col, Empty, Button, notification } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-import { URL_ROUNDS } from "../../config/urls";
-import AddRoundModal from "../AddRoundModal";
-import RoundCard from "../RoundCard";
+import { URL_ROUNDS } from '../../config/urls';
+import AddRoundModal from '../AddRoundModal';
+import RoundCard from '../RoundCard';
 
-import "./styles.css";
+import './styles.css';
 
 class RoundList extends Component {
   state = {
@@ -19,8 +19,8 @@ class RoundList extends Component {
     addRound: false,
     savingRound: false,
     roundToAdd: {
-      name: ""
-    }
+      name: '',
+    },
   };
 
   componentDidMount() {
@@ -39,18 +39,18 @@ class RoundList extends Component {
     axios
       .get(`${URL_ROUNDS}/event/${this.props.gameEvent._id}`)
       .then(({ data }) =>
-        this.setState({ rounds: data.rounds, loading: false })
+        this.setState({ rounds: data.rounds, loading: false }),
       )
       .catch(({ response }) => console.log(response));
   };
 
-  showModal = roundIndex => {
+  showModal = (roundIndex) => {
     this.setState({ visible: true, selectedRound: roundIndex });
   };
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -68,21 +68,21 @@ class RoundList extends Component {
           visible: false,
           addRound: false,
           savingRound: false,
-          roundToAdd: { name: "" }
+          roundToAdd: { name: '' },
         });
-        notification["success"]({
-          message: "La ronda ha sido creada con exito"
+        notification['success']({
+          message: 'La ronda ha sido creada con exito',
         });
       })
       .catch(({ response }) => {
         this.setState({ savingRound: false });
-        notification["error"]({
-          message: response.data
+        notification['error']({
+          message: response.data,
         });
       });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target;
 
     this.setState({ roundToAdd: { ...this.state.roundToAdd, [name]: value } });
@@ -95,7 +95,7 @@ class RoundList extends Component {
       selectedRound,
       addRound,
       roundToAdd,
-      savingRound
+      savingRound,
     } = this.state;
 
     return loading ? (

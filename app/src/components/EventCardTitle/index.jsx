@@ -1,5 +1,5 @@
-import React from "react";
-import formatDate from "../../helpers/date";
+import React from 'react';
+import formatDate from '../../helpers/date';
 
 const EventCardTitle = ({ gameEvent }) => {
   const { name, dateOfEvent } = gameEvent;

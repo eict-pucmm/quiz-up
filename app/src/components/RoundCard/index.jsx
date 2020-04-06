@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Col } from "antd";
+import React from 'react';
+import { Card, Col } from 'antd';
 
 const RoundCard = ({ round, showModal, loading, index }) => {
   const { _id, name } = round;

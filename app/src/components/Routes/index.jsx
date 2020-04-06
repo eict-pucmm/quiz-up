@@ -1,10 +1,10 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Categories from "../../containers/Categories";
-import Event from "../../containers/Event";
-import Game from "../../containers/Game";
-import NotFound from "../NotFound";
-import Questions from "../../containers/Questions";
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Categories from '../../containers/Categories';
+import Event from '../../containers/Event';
+import Game from '../../containers/Game';
+import NotFound from '../NotFound';
+import Questions from '../../containers/Questions';
 
 const Routes = () => {
   return (
@@ -14,7 +14,7 @@ const Routes = () => {
       <Route path="/questions" component={Questions} />
       <Route
         path="/event/round/:idOfRound"
-        render={props => <Game {...props} />}
+        render={(props) => <Game {...props} />}
       />
       <Route component={NotFound} />
     </Switch>
