@@ -7,6 +7,11 @@
     "proxy": "the proxy route is the container name of the docker-compose.yml file",
     "proxy-on-localhost": "http://localhost:8080/"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "dependencies": {
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.5.0",
@@ -21,6 +26,12 @@
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.0",
     "use-react-router": "1.0.7"
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "husky": "4.2.3",
+    "prettier": "2.0.3",
+    "pretty-quick": "2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

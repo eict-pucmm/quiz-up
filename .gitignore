@@ -1,0 +1,15 @@
+server/node_modules
+server/.DS_Store
+server/.env
+server/dist
+server/package-lock.json
+
+# dependencies
+app/node_modules
+app/.pnp
+app/.pnp.js
+app/coverage
+app/build
+app/package-lock.json
+
+.vscode
