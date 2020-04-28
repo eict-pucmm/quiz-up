@@ -3,6 +3,8 @@ package-lock.json
 .idea
 .vscode
 DS_Store
+.github
+
 
 server/node_modules
 server/.DS_Store
