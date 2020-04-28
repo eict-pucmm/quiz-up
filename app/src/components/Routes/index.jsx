@@ -14,7 +14,7 @@ const Routes = () => {
       <Route path="/questions" component={Questions} />
       <Route
         path="/event/round/:idOfRound"
-        render={(props) => <Game {...props} />}
+        render={props => <Game {...props} />}
       />
       <Route component={NotFound} />
     </Switch>

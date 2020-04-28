@@ -9,7 +9,7 @@ import { BAD_REQUEST, DUPLICATE } from '../../config/statusCodes';
  * @return {Array} first value is an error object, the second one is the
  * validated body of the request.
  */
-export default async function(body, attributes) {
+export default async function (body, attributes) {
   const { Model, fields, validate } = attributes;
   const { value, error } = validate(body);
 

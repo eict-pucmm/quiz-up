@@ -28,7 +28,7 @@ const list = async (req, res) => {
  */
 const findById = async (req, res) => {
   const [error, result] = await wrapper(
-    Result.findById({ _id: req.params.id }),
+    Result.findById({ _id: req.params.id })
   );
 
   return error
@@ -76,8 +76,8 @@ const update = async (req, res) => {
     Result.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true },
-    ),
+      { new: true }
+    )
   );
 
   return errorUpdating

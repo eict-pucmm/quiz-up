@@ -28,7 +28,7 @@ const list = async (req, res) => {
  */
 const findById = async (req, res) => {
   const [error, competitor] = await wrapper(
-    Competitor.findById({ _id: req.params.id }),
+    Competitor.findById({ _id: req.params.id })
   );
 
   return error
@@ -76,8 +76,8 @@ const update = async (req, res) => {
     Competitor.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true },
-    ),
+      { new: true }
+    )
   );
 
   return errorUpdating
