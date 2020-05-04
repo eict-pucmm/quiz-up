@@ -1,14 +1,7 @@
-node_modules
-.git
-.DS_Store
 .github
 .vscode
 .idea
 
-server/node_modules
-server/.git
-server/.DS_Store
-
-app/node_modules
-app/.git
-app/.DS_Store
+**/node_modules
+**/.git
+**/.DS_Store
