@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export default function(mongoDB) {
+export default function (mongoDB) {
   mongoose
     .connect(mongoDB, {
       useNewUrlParser: true,

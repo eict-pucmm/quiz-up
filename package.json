@@ -1,0 +1,34 @@
+{
+  "name": "quiz-up",
+  "version": "1.0.0",
+  "description": "Manager for panel based questions games.",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier --write \"**/*.+(js|jsx|css|scss)\"",
+    "lint": "eslint --fix \"**/*.+(js|jsx)\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ect-pucmm/quiz-up.git"
+  },
+  "keywords": [],
+  "author": "ECT PUCMM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ect-pucmm/quiz-up/issues"
+  },
+  "homepage": "https://github.com/ect-pucmm/quiz-up#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "6.8.0",
+    "eslint-plugin-react": "7.19.0",
+    "husky": "4.2.5",
+    "prettier": "2.0.5",
+    "pretty-quick": "2.0.1"
+  }
+}

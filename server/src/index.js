@@ -52,5 +52,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () =>
-  console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`),
+  console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`)
 );

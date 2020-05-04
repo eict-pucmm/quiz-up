@@ -29,10 +29,7 @@ const Category = new Schema({
  */
 export function validateCategory(category) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(category);

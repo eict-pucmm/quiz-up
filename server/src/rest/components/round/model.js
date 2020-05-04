@@ -46,10 +46,7 @@ const Round = new Schema({
  */
 export function validateRound(round) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
     event: Joi.string().required(),
     questions: Joi.array().items(Joi.objectId()),
     participants: Joi.array().items(Joi.objectId()),

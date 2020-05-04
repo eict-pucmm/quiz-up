@@ -40,7 +40,7 @@ class Event extends Component {
       .then(({ data }) => {
         setTimeout(
           () => this.setState({ events: data.events, loading: false }),
-          1000,
+          1000
         );
       })
       .catch(({ response }) => console.log(response));
@@ -50,13 +50,13 @@ class Event extends Component {
     this.setState({ visible: false });
   };
 
-  handleChange = (event) => {
+  handleChange = event => {
     const { name, value } = event.target;
 
     this.setState({ eventToAdd: { ...this.state.eventToAdd, [name]: value } });
   };
 
-  handleDateChange = (date) => {
+  handleDateChange = date => {
     this.setState({
       eventToAdd: { ...this.state.eventToAdd, dateOfEvent: date },
     });
@@ -95,7 +95,7 @@ class Event extends Component {
         </Breadcrumb>
         {loading ? (
           <div className="loading-card-placeholder">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
               <Card key={i} loading={loading}></Card>
             ))}
           </div>
@@ -121,7 +121,7 @@ class Event extends Component {
                   <PlusOutlined />
                   Agregar Evento
                 </Button>
-                {events.map((event) => {
+                {events.map(event => {
                   return (
                     <Card
                       className="event-card"

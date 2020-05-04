@@ -33,10 +33,7 @@ const Result = new Schema({
  */
 export function validateResult(result) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
     dateOfEvent: Joi.date().required(),
     questionsAnswered: Joi.array().items(Joi.objectId()),
   }).options({ stripUnknown: true });

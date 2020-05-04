@@ -27,9 +27,7 @@ const Event = new Schema({
 export function validateEvent(event) {
   const schema = Joi.object({
     name: Joi.string().required(),
-    dateOfEvent: Joi.date()
-      .raw()
-      .required(),
+    dateOfEvent: Joi.date().raw().required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(event);

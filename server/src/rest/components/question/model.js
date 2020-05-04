@@ -44,15 +44,9 @@ const Question = new Schema({
  */
 export function validateQuestion(question) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
     category: Joi.string().required(),
-    points: Joi.number()
-      .min(100)
-      .max(500)
-      .required(),
+    points: Joi.number().min(100).max(500).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);
