@@ -27,10 +27,7 @@ const Competitor = new Schema({
  */
 export function validateCompetitor(competitor) {
   const schema = Joi.object({
-    fullName: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    fullName: Joi.string().min(4).max(255).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(competitor);

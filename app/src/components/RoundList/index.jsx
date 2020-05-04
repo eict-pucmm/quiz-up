@@ -39,12 +39,12 @@ class RoundList extends Component {
     axios
       .get(`${URL_ROUNDS}/event/${this.props.gameEvent._id}`)
       .then(({ data }) =>
-        this.setState({ rounds: data.rounds, loading: false }),
+        this.setState({ rounds: data.rounds, loading: false })
       )
       .catch(({ response }) => console.log(response));
   };
 
-  showModal = (roundIndex) => {
+  showModal = roundIndex => {
     this.setState({ visible: true, selectedRound: roundIndex });
   };
 
@@ -82,7 +82,7 @@ class RoundList extends Component {
       });
   };
 
-  handleChange = (event) => {
+  handleChange = event => {
     const { name, value } = event.target;
 
     this.setState({ roundToAdd: { ...this.state.roundToAdd, [name]: value } });

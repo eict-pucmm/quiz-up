@@ -23,7 +23,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, rounds] = await wrapper(
-    Round.find().populate('event', 'name dateOfEvent'),
+    Round.find().populate('event', 'name dateOfEvent')
   );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -38,7 +38,7 @@ const list = async (req, res) => {
  */
 const roundByEvent = async (req, res) => {
   const [error, rounds] = await wrapper(
-    Round.find({ event: req.params.idOfEvent }),
+    Round.find({ event: req.params.idOfEvent })
   );
 
   return error
@@ -63,7 +63,7 @@ const findById = async (req, res) => {
         path: 'participants',
         select: 'name',
       },
-    ]),
+    ])
   );
 
   return error
@@ -111,8 +111,8 @@ const update = async (req, res) => {
     Round.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true },
-    ),
+      { new: true }
+    )
   );
 
   return errorUpdating

@@ -16,7 +16,7 @@ const AddEventModal = ({
 
   return (
     <MyModal {...props} title={'Agregar un nuevo Evento'} type="Evento">
-      {EVENT.map((attributes) => (
+      {EVENT.map(attributes => (
         <Form.Item label={attributes.label} key={attributes.id}>
           {attributes.id === 'dateOfEvent' ? (
             <DatePicker

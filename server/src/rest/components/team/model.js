@@ -35,13 +35,8 @@ const Team = new Schema({
  */
 export function validateTeam(team) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
-    competitors: Joi.array()
-      .items(Joi.objectId())
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
+    competitors: Joi.array().items(Joi.objectId()).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(team);

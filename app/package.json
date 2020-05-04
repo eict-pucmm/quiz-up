@@ -41,9 +41,6 @@
     "lint": "eslint --fix 'src/**/**/**/*.jsx'",
     "prettier": "prettier --write \"**/*.+(js|jsx|json|css|md)\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
