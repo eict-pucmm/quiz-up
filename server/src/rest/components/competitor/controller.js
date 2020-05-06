@@ -6,6 +6,11 @@ import {
   CREATED,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
+import validateData from '../../utils/validateData';
+
+const attributes = {
+  validate: validateCompetitor,
+};
 
 /**
  * List of Competitors
@@ -43,7 +48,7 @@ const findById = async (req, res) => {
  * @returns The saved Competitor
  */
 const create = async (req, res) => {
-  const { error, value } = await validateCompetitor(req.body);
+  const [error, value] = await validateData(req.body, attributes);
 
   if (error) {
     return res.status(error.status).send(error.message);

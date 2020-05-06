@@ -9,6 +9,11 @@ const Competitor = new Schema({
     required: true,
     minlength: 4,
   },
+  residence: {
+    type: String,
+    required: true,
+    minlength: 2,
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -28,6 +33,7 @@ const Competitor = new Schema({
 export function validateCompetitor(competitor) {
   const schema = Joi.object({
     fullName: Joi.string().min(4).max(255).required(),
+    residence: Joi.string().min(2).max(255).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(competitor);
