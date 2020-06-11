@@ -22,8 +22,6 @@ quiz-up
 |   |   |   ├── containers/          # React containers
 |   |   |   ├── components/          # React components
 |   |   |   └──  helpers/            # Helper functions used in the frontend section of the file
-└────── .gitignore                   # files ignored by git
-└────── .dockerignore                # files ignored by docker
 └────── Dockerfile                   # file that contains the commands needed to assemble an image
 └────── package.json                 # All dependencies and script to run the application
 ├───── server/                       # Source directory
@@ -35,9 +33,10 @@ quiz-up
 |   |   |   └── services/            # files for external services. E.g: sending mails
 |   |   |   └── index.js             # Initialize server and handle routes and services
 └───── babel.config,js               # Babel configuration file
-└───── .dockerignore                 # files ignored by docker
 └───── Dockerfile                    # file that contains the commands needed to assemble an image
 └── .docker-compose.yml              # file defining services, networks and volumes for docker containers
+└── .gitignore                       # files ignored by git
+└── .dockerignore                    # files ignored by docker
 └── README.md                        # README file
 ```
 
@@ -50,22 +49,38 @@ quiz-up
 You need to have `docker` and `docker-compose` installed to run this project. If you don't have it installed you can follow [this guide](https://docs.docker.com/install/) for `docker` and [this one](https://docs.docker.com/compose/install/) for `docker-compose`.
 
 - First clone this repository.
+  - ```bash
+    git clone https://github.com/ect-pucmm/quiz-up.git
+    ```
 - After that open your terminal of preference and navigate to the directory you cloned this project.
-- Add the neccessary environment variables for the server in its own `.env` file
-- type the command `docker-compose up`
+  - ```bash
+    cd quiz-up
+    ```
+- Add the neccessary environment variables for the server in its own `.env` file in `/server/.env`
+- When you're in the root directory type the command `npm run install-all` and then:
+  - To start the server in a local environment: `docker-compose up`
+  - To start the client admin app: `npm run react`
 
 ## Scripts used on the project
 
-### Server side
+### General scripts
 
-- `npm start`: starts the application
-- `npm run build`: Compiles the code from ES6 to ES5.
-- `npm run dev`: Starts the application in a development environment
+- `npm run burn`: Stops and removes all containers
+- `npm run install-all`: Install dependencies in all directories
 - `npm run lint`: Check the code based on `eslint` rules
 - `npm run prettier`: Check the code based on `prettier` rules
+- `npm run react`: Starts local client app
+- `npm run serve-react`: Run the local client as if it were on production
+- `npm run stop`: Stops all containers
+
+### Server side
+
+- `npm start`: Starts the application
+- `npm run build`: Compiles the code from ES6 to ES5.
+- `npm run dev`: Starts the application in a development environment
 
 ### Client side
 
-- `npm start`: run the app in development mode
-- `npm run build`: builds the app for production to the build folder
+- `npm start`: Run the app in development mode
+- `npm run build`: Builds the app for production to the build folder
 - `npm run test`: Runs the test watcher in an interactive mode.
