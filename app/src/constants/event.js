@@ -8,6 +8,7 @@ export default [
   {
     id: 'dateOfEvent',
     label: 'Fecha del Evento',
+    name: 'dateOfEvent',
     dateFormat: 'dd/MM/yyyy',
     placeholder: 'Click para selecctionar una fecha',
   },
