@@ -5,7 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getEvents, saveEvents } from '../../api/event';
 import { setEvents, clearEventFields } from '../../state/actions';
 import { useStateValue } from '../../state';
-import AddEventModal from '../../components/AddEventModal';
+import EventModal from '../../components/EventModal';
 import EventCardTitle from '../../components/EventCardTitle';
 import LoadingCards from '../../components/LoadingCards';
 import RoundList from '../../components/RoundList';
@@ -20,7 +20,7 @@ const Event = () => {
     const get = async () => {
       const { data } = await getEvents();
 
-      dispatch(setEvents({ data }));
+      dispatch(setEvents({ data: data || [] }));
       setLoading(false);
     };
 
@@ -90,7 +90,7 @@ const Event = () => {
             })}
           </>
         )}
-        <AddEventModal onSubmit={onSubmit} />
+        <EventModal onSubmit={onSubmit} />
       </div>
     </>
   );

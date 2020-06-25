@@ -10,7 +10,7 @@ import MyModal from '../MyModal';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AddEventModal = props => {
+const EventModal = props => {
   const {
     dispatch,
     state: { events, eventToAdd },
@@ -26,7 +26,7 @@ const AddEventModal = props => {
 
   const handleDateChange = debounce(date => {
     dispatch(addEvent({ dateOfEvent: date }));
-  }, 250);
+  }, 500);
 
   return (
     <MyModal
@@ -61,4 +61,4 @@ const AddEventModal = props => {
   );
 };
 
-export default AddEventModal;
+export default EventModal;
