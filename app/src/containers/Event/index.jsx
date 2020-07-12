@@ -16,6 +16,8 @@ const Event = () => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
 
+  const { saving, data } = state.events;
+
   useEffect(() => {
     const get = async () => {
       const { data } = await getEvents();
@@ -24,8 +26,8 @@ const Event = () => {
       setLoading(false);
     };
 
-    if (!state.events.saving) get();
-  }, [dispatch, state.events.saving]);
+    if (!saving) get();
+  }, [dispatch, saving]);
 
   const openModal = () => dispatch(setEvents({ openModal: true }));
 
@@ -59,7 +61,7 @@ const Event = () => {
         <Breadcrumb.Item>Eventos</Breadcrumb.Item>
       </Breadcrumb>
       <div className="outer-event-card">
-        {state.events.data.length === 0 ? (
+        {data.length === 0 ? (
           <Empty description={'No hay eventos creados!'}>
             <Button type="primary" onClick={openModal}>
               Crear Evento
@@ -76,7 +78,7 @@ const Event = () => {
               <PlusOutlined />
               Agregar Evento
             </Button>
-            {state.events.data.map(event => {
+            {data.map(event => {
               return (
                 <Card
                   className="event-card"
