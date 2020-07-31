@@ -9,21 +9,19 @@ import './styles.css';
 
 const { Header, Footer, Content } = Layout;
 
-const App = () => {
-  return (
-    <Layout>
-      <Router>
-        <Sidebar />
-        <Layout>
-          <Header className="app-header" />
-          <Content className="container">
-            <Routes />
-          </Content>
-          <Footer />
-        </Layout>
-      </Router>
-    </Layout>
-  );
-};
+const App = () => (
+  <Layout>
+    <Router>
+      <Sidebar />
+      <Layout>
+        <Header className="app-header" />
+        <Content className="container">
+          <Routes />
+        </Content>
+        <Footer />
+      </Layout>
+    </Router>
+  </Layout>
+);
 
 export default App;

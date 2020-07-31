@@ -1,13 +1,25 @@
 import React from 'react';
 import { Form, Input } from 'antd';
+
+import { addRound } from '../../state/actions';
+import { useStateValue } from '../../state';
 import ROUND from '../../constants/round';
 import MyModal from '../MyModal';
 
-const AddRoundModal = ({ roundToAdd, gameEvent, handleChange, ...props }) => {
+const RoundModal = ({ gameEvent, ...props }) => {
+  const {
+    dispatch,
+    state: { roundToAdd, rounds },
+  } = useStateValue();
   const { name } = roundToAdd;
+
+  const handleChange = ({ target: { name, value } }) =>
+    dispatch(addRound({ [name]: value }));
+
   return (
     <MyModal
       {...props}
+      saving={rounds.saving}
       type="Ronda"
       title={`Agregar nueva ronda al evento: ${gameEvent.name}`}
     >
@@ -20,4 +32,4 @@ const AddRoundModal = ({ roundToAdd, gameEvent, handleChange, ...props }) => {
   );
 };
 
-export default AddRoundModal;
+export default RoundModal;
