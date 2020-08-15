@@ -3,11 +3,13 @@ import Joi from '@hapi/joi';
 
 const Schema = moongose.Schema;
 
-const Competitor = new Schema({
-  fullName: {
+const MedicalCenter = new Schema({
+  name: {
     type: String,
     required: true,
     minlength: 4,
+    maxlength: 255,
+    unique: true,
   },
   createdAt: {
     type: Date,
@@ -17,20 +19,20 @@ const Competitor = new Schema({
 });
 
 /**
- * Validate the data sent to create a competitor.
- * @param {Object} competitor
+ * Validate the data sent to create a medical center.
+ * @param {Object} MedicalCenter
  * @returns {Promise} Promise-like object that
  * can be used as a promise, or as a simple object.
  *
  * To learn more you can head to:
  * https://github.com/hapijs/joi/blob/v13.1.2/API.md#validatevalue-schema-options-callback
  */
-export function validateCompetitor(competitor) {
+export function validateMedicalCenter(medicalCenter) {
   const schema = Joi.object({
-    fullName: Joi.string().min(4).max(255).required(),
+    name: Joi.string().min(4).max(255).required(),
   }).options({ stripUnknown: true });
 
-  return schema.validate(competitor);
+  return schema.validate(medicalCenter);
 }
 
-export default moongose.model('Competitor', Competitor);
+export default moongose.model('MedicalCenter', MedicalCenter);

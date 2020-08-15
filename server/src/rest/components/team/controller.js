@@ -21,7 +21,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, teams] = await wrapper(
-    Team.find().populate('competitors', 'fullName -_id')
+    Team.find().populate('residents', 'fullName -_id')
   );
 
   return error
@@ -37,10 +37,7 @@ const list = async (req, res) => {
  */
 const findById = async (req, res) => {
   const [error, team] = await wrapper(
-    Team.findOne({ _id: req.params.id }).populate(
-      'competitors',
-      'fullName -_id'
-    )
+    Team.findOne({ _id: req.params.id }).populate('residents', 'fullName -_id')
   );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
