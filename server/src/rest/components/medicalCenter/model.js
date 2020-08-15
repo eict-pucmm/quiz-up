@@ -3,23 +3,13 @@ import Joi from '@hapi/joi';
 
 const Schema = moongose.Schema;
 
-const Team = new Schema({
+const MedicalCenter = new Schema({
   name: {
     type: String,
     required: true,
     minlength: 4,
     maxlength: 255,
     unique: true,
-  },
-  residents: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Residents',
-    },
-  ],
-  medicalCenter: {
-    type: Schema.Types.ObjectId,
-    ref: 'MedicalCenter',
   },
   createdAt: {
     type: Date,
@@ -29,22 +19,20 @@ const Team = new Schema({
 });
 
 /**
- * Validate the data sent to create a team.
- * @param {Object} team
+ * Validate the data sent to create a medical center.
+ * @param {Object} MedicalCenter
  * @returns {Promise} Promise-like object that
  * can be used as a promise, or as a simple object.
  *
  * To learn more you can head to:
  * https://github.com/hapijs/joi/blob/v13.1.2/API.md#validatevalue-schema-options-callback
  */
-export function validateTeam(team) {
+export function validateMedicalCenter(medicalCenter) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
-    residents: Joi.array().items(Joi.objectId()).required(),
-    medicalCenter: Joi.objectId(),
   }).options({ stripUnknown: true });
 
-  return schema.validate(team);
+  return schema.validate(medicalCenter);
 }
 
-export default moongose.model('Team', Team);
+export default moongose.model('MedicalCenter', MedicalCenter);

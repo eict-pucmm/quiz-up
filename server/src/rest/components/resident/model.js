@@ -1,5 +1,5 @@
 import moongose from 'mongoose';
-import Joi, { number } from '@hapi/joi';
+import Joi from '@hapi/joi';
 
 const Schema = moongose.Schema;
 
