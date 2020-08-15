@@ -51,6 +51,7 @@ class CustomDropdown extends React.Component {
                   cursor: 'pointer',
                 }}
                 onClick={this.addItem}
+                href="/"
               >
                 <PlusOutlined /> Add item
               </a>

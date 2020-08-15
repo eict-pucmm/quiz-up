@@ -15,7 +15,7 @@ export default [
     Icon: TeamOutlined,
     subMenu: [
       { title: 'Equipos', route: '/teams' },
-      { title: 'Competidores', route: '/competitors' },
+      { title: 'Residentes', route: '/residents' },
     ],
   },
 ];

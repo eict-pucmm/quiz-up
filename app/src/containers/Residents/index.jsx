@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Breadcrumb, Button, notification, Input, Table } from 'antd';
 import axios from 'axios';
 
-import { URL_COMPETITORS } from '../../config/urls';
+import { URL_RESIDENTS } from '../../config/urls';
 import CustomDropdown from '../../components/CustomDropdown';
 
 class Competitors extends Component {
@@ -28,7 +28,7 @@ class Competitors extends Component {
 
   getCompetitors = () => {
     axios
-      .get(`${URL_COMPETITORS}/`)
+      .get(`${URL_RESIDENTS}/`)
       .then(({ data }) => {
         const competitors = data.competitors.map(el => ({
           ...el,
@@ -50,7 +50,7 @@ class Competitors extends Component {
   onSubmit = () => {
     this.setState({ saving: true, loading: true });
     axios
-      .post(`${URL_COMPETITORS}/`, { ...this.state.competitor })
+      .post(`${URL_RESIDENTS}/`, { ...this.state.competitor })
       .then(() => {
         this.setState({
           competitor: { fullName: '', residence: '' },

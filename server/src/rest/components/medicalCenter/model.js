@@ -11,11 +11,6 @@ const MedicalCenter = new Schema({
     maxlength: 255,
     unique: true,
   },
-  residence: {
-    type: String,
-    required: true,
-    minlength: 2,
-  },
   createdAt: {
     type: Date,
     required: true,
@@ -35,7 +30,6 @@ const MedicalCenter = new Schema({
 export function validateMedicalCenter(medicalCenter) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
-    residence: Joi.string().min(2).max(255).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(medicalCenter);
