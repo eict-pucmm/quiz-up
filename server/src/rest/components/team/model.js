@@ -11,10 +11,10 @@ const Team = new Schema({
     maxlength: 255,
     unique: true,
   },
-  competitors: [
+  residents: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Competitor',
+      ref: 'Residents',
     },
   ],
   createdAt: {
@@ -36,7 +36,7 @@ const Team = new Schema({
 export function validateTeam(team) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
-    competitors: Joi.array().items(Joi.objectId()).required(),
+    residents: Joi.array().items(Joi.objectId()).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(team);

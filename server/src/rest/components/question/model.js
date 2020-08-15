@@ -10,15 +10,17 @@ const Question = new Schema({
     minlength: 4,
     maxlength: 255,
   },
-  category: {
-    type: new Schema({
-      name: {
-        type: String,
-        required: true,
-      },
-    }),
-    required: true,
-  },
+  category: [
+    {
+      type: new Schema({
+        name: {
+          type: String,
+          required: true,
+        },
+      }),
+      required: true,
+    },
+  ],
   points: {
     type: Number,
     required: true,

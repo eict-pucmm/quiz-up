@@ -13,6 +13,10 @@ const Event = new Schema({
     type: Date,
     required: true,
   },
+  rounds: {
+    type: Schema.Types.ObjectId,
+    ref: 'Round',
+  },
 });
 
 /**
@@ -28,6 +32,7 @@ export function validateEvent(event) {
   const schema = Joi.object({
     name: Joi.string().required(),
     dateOfEvent: Joi.date().raw().required(),
+    rounds: Joi.array(),
   }).options({ stripUnknown: true });
 
   return schema.validate(event);
