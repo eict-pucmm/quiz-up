@@ -5,28 +5,28 @@ const router = express.Router();
 
 /**
  * @route GET '/'
- * @returns {JSON} of all competitors
+ * @returns {JSON} of all medical centers
  * @access Public
  */
 router.get('/', list);
 
 /**
  * @route GET '/:id'
- * @returns {JSON} of a specific competitor
+ * @returns {JSON} of a specific medical center
  * @access Public
  */
 router.get('/:id', findById);
 
 /**
  * @route POST '/'
- * @returns new instance of the competitor
+ * @returns new instance of the medical center
  * @access Public
  */
 router.post('/', create);
 
 /**
  * @route PUT '/:id'
- * @returns new instance of the competitor
+ * @returns new instance of the medical center
  * @access Public
  */
 router.put('/:id', update);

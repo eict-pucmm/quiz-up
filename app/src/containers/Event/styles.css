@@ -30,11 +30,12 @@
   font-size: 15px;
 }
 
-.loading-card-placeholder {
+.loading-card {
   height: 65%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  margin-top: 32px;
 }
 
 .add-event-btn {

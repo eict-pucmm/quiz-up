@@ -21,16 +21,26 @@ const Round = new Schema({
       ref: 'Question',
     },
   ],
-  participants: [
+  categories: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Team',
+      ref: 'Category',
     },
   ],
-  results: [
+  participants: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Results',
+      type: new Schema({
+        team: {
+          type: Schema.Types.ObjectId,
+          ref: 'Team',
+        },
+        answered: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: 'Question',
+          },
+        ],
+      }),
     },
   ],
 });
@@ -48,9 +58,9 @@ export function validateRound(round) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
     event: Joi.string().required(),
-    questions: Joi.array().items(Joi.objectId()),
-    participants: Joi.array().items(Joi.objectId()),
-    results: Joi.array().items(Joi.objectId()),
+    questions: Joi.array(),
+    categories: Joi.array(),
+    participants: Joi.array(),
   }).options({ stripUnknown: true });
 
   return schema.validate(round);
