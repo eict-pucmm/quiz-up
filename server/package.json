@@ -9,18 +9,11 @@
   "scripts": {
     "start": "npm run build && node dist/src/index.js",
     "dev": "babel-watch -L ./src/index.js",
-    "build": "rm -rf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules",
-    "lint": "eslint --fix 'src/**/*.js'",
-    "prettier": "prettier --write 'src/**/*.{js|json}'"
+    "build": "rm -rf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules"
   },
   "keywords": [],
   "author": "ECT PUCMM",
   "license": "ISC",
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
-  },
   "dependencies": {
     "@babel/core": "7.9.0",
     "@babel/polyfill": "7.8.7",
@@ -34,10 +27,6 @@
     "mongoose": "5.8.11"
   },
   "devDependencies": {
-    "babel-watch": "7.0.0",
-    "eslint": "6.8.0",
-    "husky": "4.2.1",
-    "prettier": "1.19.1",
-    "pretty-quick": "2.0.1"
+    "babel-watch": "7.0.0"
   }
 }

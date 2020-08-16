@@ -1,8 +1,9 @@
-import React from "react";
-import { Card, Col } from "antd";
+import React from 'react';
+import { Card, Col } from 'antd';
 
 const RoundCard = ({ round, showModal, loading, index }) => {
   const { _id, name } = round;
+
   return (
     <Col className="gutter-row" span={8}>
       <Card

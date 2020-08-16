@@ -39,7 +39,7 @@ const list = async (req, res) => {
  */
 const getRoundOfQuestions = async (req, res) => {
   const [error, questions] = await wrapper(
-    Question.find({ 'category.name': req.body.category }),
+    Question.find({ 'category.name': req.body.category })
   );
 
   return error
@@ -55,7 +55,7 @@ const getRoundOfQuestions = async (req, res) => {
  */
 const findById = async (req, res) => {
   const [error, question] = await wrapper(
-    Question.findOne({ _id: req.params.id }),
+    Question.findOne({ _id: req.params.id })
   );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })

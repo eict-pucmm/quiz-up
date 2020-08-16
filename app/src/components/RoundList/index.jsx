@@ -1,171 +1,129 @@
-import React, { Component, Fragment } from "react";
-import { Card, Modal, Row, Col, Empty, Button, notification } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { Card, Modal, Row, Col, Empty, Button, notification } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
-import { URL_ROUNDS } from "../../config/urls";
-import AddRoundModal from "../AddRoundModal";
-import RoundCard from "../RoundCard";
+import { getRoundsByEvent, saveRound } from '../../api/round';
+import { setRounds, clearRoundFields } from '../../state/actions';
+import { useStateValue } from '../../state';
+import RoundModal from '../RoundModal';
+import RoundCard from '../RoundCard';
 
-import "./styles.css";
+import './styles.css';
 
-class RoundList extends Component {
-  state = {
-    rounds: [],
-    selectedRound: 0,
-    loading: true,
-    visible: false,
-    addRound: false,
-    savingRound: false,
-    roundToAdd: {
-      name: ""
-    }
-  };
+const RoundList = props => {
+  const { state, dispatch } = useStateValue();
+  const [loading, setLoading] = useState(true);
+  const [addRound, setAddRound] = useState(false);
+  const { selectedRound, saving, openInfoModal, data } = state.rounds;
 
-  componentDidMount() {
-    this.getRoundsOfEvent();
-  }
+  useEffect(() => {
+    const get = async () => {
+      const { data: rounds } = await getRoundsByEvent(props.gameEvent._id);
 
-  componentDidUpdate(_, prevState) {
-    // this is to not reload the entire page again and only
-    // re-render the event that has a new round
-    if (prevState.savingRound !== this.state.savingRound) {
-      this.getRoundsOfEvent();
-    }
-  }
+      //TO-DO: fix issue with the structure of the rounds and events
+      dispatch(setRounds({ data: rounds || [] }));
+      setLoading(false);
+    };
 
-  getRoundsOfEvent = () => {
-    axios
-      .get(`${URL_ROUNDS}/event/${this.props.gameEvent._id}`)
-      .then(({ data }) =>
-        this.setState({ rounds: data.rounds, loading: false })
-      )
-      .catch(({ response }) => console.log(response));
-  };
+    if (!saving) get();
+  }, [dispatch, saving, props.gameEvent._id]);
 
-  showModal = roundIndex => {
-    this.setState({ visible: true, selectedRound: roundIndex });
-  };
+  const showModal = roundIndex =>
+    dispatch(setRounds({ openInfoModal: true, selectedRound: roundIndex }));
 
-  handleOk = () => {
-    this.setState({
-      visible: false
+  const showAddRound = () => setAddRound(true);
+  const closeAddRound = () => setAddRound(false);
+
+  const handleOk = () => dispatch(setRounds({ openInfoModal: false }));
+
+  const handleCancel = () => dispatch(setRounds({ openInfoModal: false }));
+
+  const onSubmit = async () => {
+    dispatch(setRounds({ saving: true }));
+
+    const { error } = await saveRound({
+      round: state.roundToAdd,
+      event: props.gameEvent._id,
     });
-  };
 
-  handleCancel = () => {
-    this.setState({ visible: false, addRound: false });
-  };
-
-  onSubmit = () => {
-    this.setState({ savingRound: true });
-    const { name } = this.state.roundToAdd;
-    axios
-      .post(`${URL_ROUNDS}/`, { name, event: this.props.gameEvent._id })
-      .then(({ data }) => {
-        this.setState({
-          visible: false,
-          addRound: false,
-          savingRound: false,
-          roundToAdd: { name: "" }
-        });
-        notification["success"]({
-          message: "La ronda ha sido creada con exito"
-        });
-      })
-      .catch(({ response }) => {
-        this.setState({ savingRound: false });
-        notification["error"]({
-          message: response.data
-        });
+    if (error) {
+      dispatch(setRounds({ saving: false }));
+      return notification['error']({
+        message: error.data.message || error.data,
       });
+    }
+
+    setTimeout(() => {
+      notification['success']({
+        message: 'El evento ha sido creada con exito',
+      });
+
+      dispatch(clearRoundFields());
+      dispatch(setRounds({ saving: false }));
+      setAddRound(false);
+    }, 600);
   };
 
-  handleChange = event => {
-    const { name, value } = event.target;
+  if (loading) return <Card loading={loading} />;
 
-    this.setState({ roundToAdd: { ...this.state.roundToAdd, [name]: value } });
-  };
-
-  render() {
-    const {
-      rounds,
-      loading,
-      selectedRound,
-      addRound,
-      roundToAdd,
-      savingRound
-    } = this.state;
-
-    return loading ? (
-      <Card loading={loading} />
-    ) : (
-      <Fragment>
-        {rounds.length === 0 ? (
-          <Fragment>
-            <Empty description="Este evento NO tiene rondas">
-              <Button onClick={() => this.setState({ addRound: true })}>
+  console.log('data', data);
+  return (
+    <>
+      {data.length === 0 ? (
+        <>
+          <Empty description="Este evento NO tiene rondas">
+            <Button onClick={showAddRound}>Agregar Ronda</Button>
+          </Empty>
+        </>
+      ) : (
+        <div>
+          <Row gutter={[40, 16]}>
+            <Col className="gutter-row" span={8}>
+              <Card hoverable className="add-round-card" onClick={showAddRound}>
+                <PlusOutlined />
                 Agregar Ronda
-              </Button>
-            </Empty>
-          </Fragment>
-        ) : (
-          <Fragment>
-            <Row gutter={[40, 16]}>
-              <Col className="gutter-row" span={8}>
-                <Card
-                  hoverable
-                  className="add-round-card"
-                  onClick={() => this.setState({ addRound: true })}
-                >
-                  <PlusOutlined />
-                  Agregar Ronda
-                </Card>
-              </Col>
-              {rounds.map((round, index) => {
-                return (
-                  <RoundCard
-                    index={index}
-                    key={round._id}
-                    loading={loading}
-                    round={round}
-                    showModal={this.showModal}
-                  />
-                );
-              })}
-            </Row>
-            <Modal
-              cancelText="Cancelar"
-              centered
-              onCancel={this.handleCancel}
-              onOk={this.handleOk}
-              title={rounds[selectedRound].name}
-              visible={this.state.visible}
+              </Card>
+            </Col>
+            {data.map((round, index) => {
+              return (
+                <RoundCard
+                  index={index}
+                  key={round._id}
+                  loading={loading}
+                  round={round}
+                  showModal={showModal}
+                />
+              );
+            })}
+          </Row>
+          <Modal
+            cancelText="Cancelar"
+            centered
+            onCancel={handleCancel}
+            onOk={handleOk}
+            title={data[selectedRound].name}
+            visible={openInfoModal}
+          >
+            <p>Some contents...</p>
+            <Link
+              className="start-round-btn"
+              to={`/event/round/${data[selectedRound]._id}`}
             >
-              <p>Some contents...</p>
-              <Link
-                className="start-round-btn"
-                to={`/event/round/${rounds[selectedRound]._id}`}
-              >
-                Empezar Ronda
-              </Link>
-            </Modal>
-          </Fragment>
-        )}
+              Empezar Ronda
+            </Link>
+          </Modal>
+        </div>
+      )}
 
-        <AddRoundModal
-          {...this.props}
-          handleChange={this.handleChange}
-          onCancel={this.handleCancel}
-          onSubmit={this.onSubmit}
-          roundToAdd={roundToAdd}
-          saving={savingRound}
-          visible={addRound}
-        />
-      </Fragment>
-    );
-  }
-}
+      <RoundModal
+        {...props}
+        onCancel={closeAddRound}
+        visible={addRound}
+        onSubmit={onSubmit}
+      />
+    </>
+  );
+};
 
 export default RoundList;

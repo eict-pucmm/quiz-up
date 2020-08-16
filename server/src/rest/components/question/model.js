@@ -10,15 +10,12 @@ const Question = new Schema({
     minlength: 4,
     maxlength: 255,
   },
-  category: {
-    type: new Schema({
-      name: {
-        type: String,
-        required: true,
-      },
-    }),
-    required: true,
-  },
+  categories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+    },
+  ],
   points: {
     type: Number,
     required: true,
@@ -44,15 +41,9 @@ const Question = new Schema({
  */
 export function validateQuestion(question) {
   const schema = Joi.object({
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
-    category: Joi.string().required(),
-    points: Joi.number()
-      .min(100)
-      .max(500)
-      .required(),
+    name: Joi.string().min(4).max(255).required(),
+    categories: Joi.array(),
+    points: Joi.number().min(100).max(500).required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);

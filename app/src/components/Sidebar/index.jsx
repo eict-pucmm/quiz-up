@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { Menu, Layout } from "antd";
-import useReactRouter from "use-react-router";
-import sidebarItems from "../../constants/sidebar";
-import Title from "antd/lib/typography/Title";
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, Layout } from 'antd';
+import useReactRouter from 'use-react-router';
+
+import sidebarItems from '../../constants/sidebar';
+import Title from 'antd/lib/typography/Title';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -11,7 +12,7 @@ const { Sider } = Layout;
 const Sidebar = () => {
   const { location } = useReactRouter();
 
-  return location.pathname.includes("/event/round/") ? (
+  return location.pathname.includes('/event/round/') ? (
     <Fragment />
   ) : (
     <Sider>
@@ -22,9 +23,9 @@ const Sidebar = () => {
       </div>
       <Menu
         className="sidebar-menu"
-        defaultSelectedKeys={["Eventos"]}
+        defaultSelectedKeys={['Eventos']}
         mode="inline"
-        style={{ height: "100vh" }}
+        style={{ height: '100vh' }}
         theme="dark"
       >
         {sidebarItems.map(({ title, route, subMenu, Icon }) => {

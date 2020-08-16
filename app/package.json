@@ -2,17 +2,15 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://quiz_up_api:8080/",
-  "@comment": {
-    "proxy": "the proxy route is the container name of the docker-compose.yml file",
-    "proxy-on-localhost": "http://localhost:8080/"
-  },
+  "proxy": "http://localhost:8080/",
   "dependencies": {
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.5.0",
     "@testing-library/user-event": "7.2.1",
     "antd": "4.0.3",
     "axios": "0.19.2",
+    "date-fns": "2.14.0",
+    "lodash.debounce": "4.0.8",
     "react": "16.13.0",
     "react-countdown": "2.2.1",
     "react-datepicker": "2.14.1",
@@ -27,9 +25,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

@@ -1,7 +1,7 @@
 import amqp from 'amqplib';
 import { AMQP_CONNECTION_URL } from '../config/dotenv';
 
-export default async function(flag = false) {
+export default async function (flag = false) {
   try {
     const exchange = 'answers';
     const connection = await amqp.connect(AMQP_CONNECTION_URL);
@@ -18,7 +18,7 @@ export default async function(flag = false) {
           message => {
             console.log(' [x] %s %s', message.content.toString(), new Date());
           },
-          { noAck: true },
+          { noAck: true }
         );
       } catch (error) {
         console.log(error);

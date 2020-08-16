@@ -1,0 +1,38 @@
+import { initialState } from './initialState';
+
+export const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_EVENTS':
+      return {
+        ...state,
+        events: Object.assign({}, state.events, { ...action.events }),
+      };
+
+    case 'ADD_EVENT':
+      return {
+        ...state,
+        eventToAdd: Object.assign({}, state.eventToAdd, { ...action.event }),
+      };
+
+    case 'SET_ROUNDS':
+      return {
+        ...state,
+        rounds: Object.assign({}, state.rounds, { ...action.rounds }),
+      };
+
+    case 'ADD_ROUND':
+      return {
+        ...state,
+        roundToAdd: Object.assign({}, state.roundToAdd, { ...action.round }),
+      };
+
+    case 'CLEAR_EVENT_FIELDS':
+      return { ...state, eventToAdd: initialState.eventToAdd };
+
+    case 'CLEAR_ROUND_FIELDS':
+      return { ...state, roundToAdd: initialState.roundToAdd };
+
+    default:
+      return state;
+  }
+};

@@ -79,8 +79,8 @@ const update = async (req, res) => {
     Event.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true },
-    ),
+      { new: true }
+    )
   );
 
   return errorUpdating

@@ -1,19 +1,19 @@
-import React, { Component, Fragment } from "react";
-import { Card, Modal, Button } from "antd";
-import axios from "axios";
-import Countdown from "react-countdown";
+import React, { Component, Fragment } from 'react';
+import { Card, Modal, Button } from 'antd';
+import axios from 'axios';
+import Countdown from 'react-countdown';
 
-import { URL_ROUNDS, URL_QUESTIONS } from "../../config/urls";
-import { OK } from "../../config/statusCodes";
+import { URL_ROUNDS, URL_QUESTIONS } from '../../config/urls';
+import { OK } from '../../config/statusCodes';
 
-import "./styles.css";
+import './styles.css';
 class Game extends Component {
   state = {
     questions: [],
     question: 0,
     loading: true,
     visible: false,
-    published: false
+    published: false,
   };
 
   componentDidMount() {
@@ -40,7 +40,7 @@ class Game extends Component {
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -111,7 +111,7 @@ class Game extends Component {
                     onClick={this.publishQuestion}
                   >
                     Abrir Pregunta
-                  </Button>
+                  </Button>,
                 ]}
               >
                 {questions[question].name}

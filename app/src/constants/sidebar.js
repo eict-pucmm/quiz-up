@@ -1,13 +1,13 @@
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export default [
-  { title: "Eventos", route: "/" },
+  { title: 'Eventos', route: '/' },
   {
-    title: "Preguntas",
+    title: 'Preguntas',
     Icon: QuestionCircleOutlined,
     subMenu: [
-      { title: "Preguntas", route: "/questions" },
-      { title: "Categorias", route: "/categories" }
-    ]
-  }
+      { title: 'Preguntas', route: '/questions' },
+      { title: 'Categorias', route: '/categories' },
+    ],
+  },
 ];

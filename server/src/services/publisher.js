@@ -1,7 +1,7 @@
 import amqp from 'amqplib/callback_api';
 import { AMQP_CONNECTION_URL } from '../config/dotenv';
 
-export default function(message = {}) {
+export default function (message = {}) {
   amqp.connect(AMQP_CONNECTION_URL, (err, connection) => {
     connection.createChannel((err, channel) => {
       const exchange = 'questions';

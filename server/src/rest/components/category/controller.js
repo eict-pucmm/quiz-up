@@ -36,7 +36,7 @@ const list = async (req, res) => {
  */
 const findById = async (req, res) => {
   const [error, category] = await wrapper(
-    Category.findById({ _id: req.params.id }),
+    Category.findById({ _id: req.params.id })
   );
 
   return error
@@ -84,8 +84,8 @@ const update = async (req, res) => {
     Category.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
-      { new: true },
-    ),
+      { new: true }
+    )
   );
 
   return errorUpdating
@@ -95,7 +95,7 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const [errorRemoving, removedCategory] = await wrapper(
-    Category.findByIdAndRemove({ _id: req.params.id }),
+    Category.findByIdAndRemove({ _id: req.params.id })
   );
 
   return errorRemoving
