@@ -9,6 +9,7 @@ import {
   Table,
   Select,
   InputNumber,
+  Tag,
 } from 'antd';
 import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
 import axios from 'axios';
@@ -16,13 +17,14 @@ import axios from 'axios';
 const { Option } = Select;
 
 class Questions extends Component {
-  categories = [
-    { categoryName: 'Sirugias' },
-    { categoryName: 'Farmacologia' },
-    { categoryName: 'Oftalmologia' },
-  ];
+
 
   state = {
+    allCategories: [
+      { name: 'Sirugias' },
+      { name: 'Farmacologia' },
+      { name: 'Oftalmologia' },
+    ],
     questions: [],
     questionName: '',
     questionCategories: [],
@@ -50,12 +52,11 @@ class Questions extends Component {
         axios
           .get(URL_CATEGORIES)
           .then(({ data }) => {
-            console.log('categories: ', data);
             const categories = data.categories.map(el => ({
               ...el,
               key: el._id,
             }));
-            setTimeout(() => (this.categories = categories), 1000);
+            setTimeout(() => (this.state.allCategories = categories), 1000);
           })
           .catch(({ response }) => {
             console.log(response);
@@ -85,11 +86,12 @@ class Questions extends Component {
   };
 
   onSubmit = () => {
+
+    
     this.setState({ savingQuestion: true, loading: true });
     axios
-      .post(`${URL_QUESTIONS}/`, { ...this.state })
+      .post(`${URL_QUESTIONS}/`, { name: this.state.questionName, categories: this.state.questionCategories, points: this.state.questionValue })
       .then(({ data }) => {
-        console.log(data);
         this.setState({
           questionName: '',
           questionCategories: [],
@@ -120,7 +122,7 @@ class Questions extends Component {
   };
 
   render() {
-    const { questions, questionName, questionCategories, loading } = this.state;
+    const { allCategories, questions, questionName, questionCategories, loading } = this.state;
 
     const columns = [
       {
@@ -131,11 +133,15 @@ class Questions extends Component {
       },
       {
         title: 'Categorias',
-        key: 'categoria',
-        render: () => (
-          <span>
-            <p>Categorias</p>
-          </span>
+        dataIndex: 'categories',
+        key: 'categories',
+        render: (text) => ( 
+          <>
+          {text.map(( cualquiera ) => 
+          (<Tag color="blue" key={cualquiera}>
+            {cualquiera}
+          </Tag> ))}
+          </>
         ),
       },
       {
@@ -185,12 +191,12 @@ class Questions extends Component {
             <Select
               style={{ width: '50%' }}
               mode="multiple"
-              placeholder="Please select favourite colors"
+              placeholder="Seleccione las categorias para la pregunta."
               onChange={this.onSelectChange}
             >
-              {this.categories.map(({ categoryName }) => (
-                <Option value={categoryName} key={categoryName}>
-                  {categoryName}
+              {allCategories.map(({ name }) => (
+                <Option value={name} key={name}>
+                  {name}
                 </Option>
               ))}
             </Select>

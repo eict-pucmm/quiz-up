@@ -1,5 +1,5 @@
 import express from 'express';
-import { list, findById, create, publish, subscribe } from './controller';
+import { list, findById, create, publish, subscribe , remove} from './controller';
 
 const router = express.Router();
 
@@ -25,6 +25,13 @@ router.get('/:id', findById);
 router.post('/', create);
 
 /**
+ * @route DELETE '/:id'
+ * @returns Message stating that the app it's subscribe
+ * @access Public
+ */
+router.delete('/:id', remove);
+
+/**
  * @route GET 'mq//publish'
  * @returns Message stating that the question was send
  * @access Public
@@ -37,5 +44,7 @@ router.post('/mq/publish', publish);
  * @access Public
  */
 router.post('/mq/subscribe/', subscribe);
+
+
 
 export default router;
