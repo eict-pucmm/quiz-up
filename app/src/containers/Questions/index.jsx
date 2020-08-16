@@ -17,9 +17,9 @@ const { Option } = Select;
 
 class Questions extends Component {
   categories = [
-    { label: 'Sirugias', value: 'Sirugias' },
-    { label: 'Farmacologia', value: 'Farmacologia' },
-    { label: 'Oftalmologia', value: 'Oftalmologia' },
+    { categoryName: 'Sirugias' },
+    { categoryName: 'Farmacologia' },
+    { categoryName: 'Oftalmologia' },
   ];
 
   state = {
@@ -188,9 +188,9 @@ class Questions extends Component {
               placeholder="Please select favourite colors"
               onChange={this.onSelectChange}
             >
-              {this.categories.map(({ label, value }) => (
-                <Option value={label} key={value}>
-                  {label}
+              {this.categories.map(({ categoryName }) => (
+                <Option value={categoryName} key={categoryName}>
+                  {categoryName}
                 </Option>
               ))}
             </Select>
