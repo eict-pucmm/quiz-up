@@ -10,20 +10,105 @@ import {
   Select,
   InputNumber,
 } from 'antd';
+import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
+import axios from 'axios';
 
 const { Option } = Select;
 
 class Questions extends Component {
+  categories = [
+    { label: 'Sirugias', value: 'Sirugias' },
+    { label: 'Farmacologia', value: 'Farmacologia' },
+    { label: 'Oftalmologia', value: 'Oftalmologia' },
+  ];
+
   state = {
     questions: [],
     questionName: '',
-    questionCategories: [
-      { label: 'Apple', value: 'Apple' },
-      { label: 'Pear', value: 'Pear' },
-      { label: 'Orange', value: 'Orange', disabled: false },
-    ],
+    questionCategories: [],
+    questionValue: '',
     savingQuestion: false,
     loading: true,
+  };
+
+  componentDidMount() {
+    this.getQuestions();
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.savingQuestion !== this.state.savingQuestion) {
+      this.getQuestions();
+    }
+  }
+
+  getQuestions = () => {
+    axios
+      .get(URL_QUESTIONS)
+      .then(({ data }) => {
+        console.log('got em questions');
+        const questions = data.questions.map(el => ({ ...el, key: el._id }));
+        setTimeout(() => this.setState({ questions, loading: false }), 1000);
+        axios
+          .get(URL_CATEGORIES)
+          .then(({ data }) => {
+            const categories = data.categories.map(el => ({
+              ...el,
+              key: el._id,
+            }));
+            setTimeout(() => (this.categories = categories), 1000);
+          })
+          .catch(({ response }) => {
+            console.log(response);
+          });
+      })
+      .catch(({ response }) => {
+        console.log(response);
+      });
+  };
+
+  onRemove = key => {
+    this.setState({ savingQuestion: true, loading: true });
+    axios
+      .delete(`${URL_QUESTIONS}/${key}`, { id: key })
+      .then(() => {
+        this.setState({
+          savingQuestion: false,
+          loading: false,
+        });
+        notification['success']({
+          message: 'La pregunta ha sido borrada con exito',
+        });
+      })
+      .catch(({ response }) => {
+        console.log(response);
+      });
+  };
+
+  onSubmit = () => {
+    this.setState({ savingQuestion: true, loading: true });
+    axios
+      .post(`${URL_QUESTIONS}/`, { ...this.state })
+      .then(({ data }) => {
+        console.log(data);
+        this.setState({
+          questionName: '',
+          questionCategories: [],
+          savingQuestion: false,
+          loading: false,
+        });
+        notification['success']({
+          message: 'La pregunta ha sido creada con exito',
+        });
+      })
+      .catch(({ response }) => {
+        notification['error']({
+          message: response.data,
+        });
+      });
+  };
+
+  onSelectChange = event => {
+    this.setState({ questionCategories: event });
   };
 
   handleNameChange = event => {
@@ -31,7 +116,7 @@ class Questions extends Component {
   };
 
   handleValueChange = event => {
-    this.setState({ questionValue: event.target.value });
+    this.setState({ questionValue: event });
   };
 
   render() {
@@ -41,15 +126,15 @@ class Questions extends Component {
       {
         title: 'Pregunta',
         dataIndex: 'name',
-        key: 'categoria',
+        key: 'pregunta',
         render: text => <p>{text}</p>,
       },
       {
         title: 'Categorias',
-        key: 'preguntas',
+        key: 'categoria',
         render: () => (
           <span>
-            <p>Preguntas</p>
+            <p>Categorias</p>
           </span>
         ),
       },
@@ -101,8 +186,9 @@ class Questions extends Component {
               style={{ width: '50%' }}
               mode="multiple"
               placeholder="Please select favourite colors"
+              onChange={this.onSelectChange}
             >
-              {questionCategories.map(({ label, value }) => (
+              {this.categories.map(({ label, value }) => (
                 <Option value={label} key={value}>
                   {label}
                 </Option>
@@ -121,11 +207,13 @@ class Questions extends Component {
               min={1}
               max={500}
               defaultValue={1}
-              // onChange={this.handleValueChange}
+              onChange={this.handleValueChange}
             />
           </div>
 
-          <Button key="submit">Agregar</Button>
+          <Button key="submit" onClick={this.onSubmit}>
+            Agregar
+          </Button>
         </div>
 
         <div className="outer-categories-card">
