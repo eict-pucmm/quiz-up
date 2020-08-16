@@ -4,7 +4,10 @@ export const addEvent = event => ({ type: 'ADD_EVENT', event });
 
 export const clearEventFields = () => ({ type: 'CLEAR_EVENT_FIELDS' });
 
-export const setRounds = rounds => ({ type: 'SET_ROUNDS', rounds });
+export const setRoundAttributes = attributes => ({
+  type: 'SET_ROUND_ATTRIBUTES',
+  round: attributes,
+});
 
 export const addRound = round => ({ type: 'ADD_ROUND', round });
 

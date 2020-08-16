@@ -14,10 +14,10 @@ export const reducer = (state, action) => {
         eventToAdd: Object.assign({}, state.eventToAdd, { ...action.event }),
       };
 
-    case 'SET_ROUNDS':
+    case 'SET_ROUND_ATTRIBUTES':
       return {
         ...state,
-        rounds: Object.assign({}, state.rounds, { ...action.rounds }),
+        round: Object.assign({}, state.round, { ...action.round }),
       };
 
     case 'ADD_ROUND':

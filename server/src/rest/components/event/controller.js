@@ -1,4 +1,4 @@
-import Event, { validateEvent } from './model';
+import Event, { validateEvent, validateUpdate } from './model';
 
 import {
   OK,
@@ -19,10 +19,27 @@ const attributes = {
  * @returns {JSON} of Event
  */
 const list = async (req, res) => {
-  const [error, events] = await wrapper(Event.find());
+  const [error, events] = await wrapper(
+    Event.find().populate('rounds', 'participants name')
+  );
+
+  const filteredEvents = events.filter(({ date }) => date >= new Date().now());
+
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ events });
+    : res.status(OK).json({ events: filteredEvents });
+};
+
+const listOldEvents = async (req, res) => {
+  const [error, events] = await wrapper(
+    Event.find().populate('rounds', 'participants name')
+  );
+
+  const filteredEvents = events.filter(({ date }) => date < new Date().now());
+
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ events: filteredEvents });
 };
 
 /**
@@ -69,7 +86,9 @@ const create = async (req, res) => {
  * @returns The Event updated
  */
 const update = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  const [error, value] = await validateData(req.body, {
+    validate: validateUpdate,
+  });
 
   if (error) {
     return res.status(error.status).send(error.message);
@@ -88,4 +107,4 @@ const update = async (req, res) => {
     : res.status(CREATED).send(updatedEvent);
 };
 
-export { list, findById, create, update };
+export { list, findById, create, update, listOldEvents };

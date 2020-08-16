@@ -19,7 +19,7 @@
   "plugins": ["react"],
   "rules": {
     "no-console": 1,
-    "no-unused-vars": 1,
+    "no-unused-vars": ["warning", "always"],
     "semi": ["error", "always"],
     "react/prop-types": 0
   },
