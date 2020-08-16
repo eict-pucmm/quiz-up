@@ -9,8 +9,10 @@ export const getEvents = async ({ oldEvents = false } = {}) => {
     } = await axios.get(`${URL_EVENTS}/`);
 
     const filteredEvents = events.filter(({ dateOfEvent }) => {
-      const eventDate = new Date(dateOfEvent).toDateString();
-      const today = new Date().toDateString();
+      const eventDate = new Date(dateOfEvent);
+      eventDate.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
       return oldEvents
         ? eventDate < today && eventDate !== today
