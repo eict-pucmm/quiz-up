@@ -45,12 +45,12 @@ class Questions extends Component {
     axios
       .get(URL_QUESTIONS)
       .then(({ data }) => {
-        console.log('got em questions');
         const questions = data.questions.map(el => ({ ...el, key: el._id }));
         setTimeout(() => this.setState({ questions, loading: false }), 1000);
         axios
           .get(URL_CATEGORIES)
           .then(({ data }) => {
+            console.log('categories: ', data);
             const categories = data.categories.map(el => ({
               ...el,
               key: el._id,
