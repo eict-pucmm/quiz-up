@@ -1,5 +1,4 @@
-import Event, { validateEvent } from './model';
-
+import Event, { validateEvent, validateUpdate } from './model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
@@ -19,7 +18,10 @@ const attributes = {
  * @returns {JSON} of Event
  */
 const list = async (req, res) => {
-  const [error, events] = await wrapper(Event.find());
+  const [error, events] = await wrapper(
+    Event.find().populate('rounds', 'participants name')
+  );
+
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ events });
@@ -69,7 +71,9 @@ const create = async (req, res) => {
  * @returns The Event updated
  */
 const update = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  const [error, value] = await validateData(req.body, {
+    validate: validateUpdate,
+  });
 
   if (error) {
     return res.status(error.status).send(error.message);
