@@ -1,5 +1,5 @@
 import express from 'express';
-import { list, findById, create, update, listOldEvents } from './controller';
+import { list, findById, create, update } from './controller';
 
 const router = express.Router();
 
@@ -9,13 +9,6 @@ const router = express.Router();
  * @access Public
  */
 router.get('/', list);
-
-/**
- * @route GET '/'
- * @returns {JSON} of all events that already passed
- * @access Public
- */
-router.get('/old', listOldEvents);
 
 /**
  * @route GET '/:id'

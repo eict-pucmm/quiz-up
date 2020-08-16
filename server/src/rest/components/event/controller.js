@@ -1,5 +1,4 @@
 import Event, { validateEvent, validateUpdate } from './model';
-
 import {
   OK,
   INTERNAL_SERVER_ERROR,
@@ -23,23 +22,9 @@ const list = async (req, res) => {
     Event.find().populate('rounds', 'participants name')
   );
 
-  const filteredEvents = events.filter(({ date }) => date >= new Date().now());
-
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ events: filteredEvents });
-};
-
-const listOldEvents = async (req, res) => {
-  const [error, events] = await wrapper(
-    Event.find().populate('rounds', 'participants name')
-  );
-
-  const filteredEvents = events.filter(({ date }) => date < new Date().now());
-
-  return error
-    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ events: filteredEvents });
+    : res.status(OK).json({ events });
 };
 
 /**
@@ -107,4 +92,4 @@ const update = async (req, res) => {
     : res.status(CREATED).send(updatedEvent);
 };
 
-export { list, findById, create, update, listOldEvents };
+export { list, findById, create, update };
