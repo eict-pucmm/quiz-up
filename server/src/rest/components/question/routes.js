@@ -1,5 +1,12 @@
 import express from 'express';
-import { list, findById, create, publish, subscribe , remove} from './controller';
+import {
+  list,
+  findById,
+  create,
+  publish,
+  subscribe,
+  remove,
+} from './controller';
 
 const router = express.Router();
 
@@ -44,7 +51,5 @@ router.post('/mq/publish', publish);
  * @access Public
  */
 router.post('/mq/subscribe/', subscribe);
-
-
 
 export default router;
