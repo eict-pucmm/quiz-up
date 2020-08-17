@@ -23,6 +23,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, categories] = await wrapper(Category.find());
+
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ categories });
