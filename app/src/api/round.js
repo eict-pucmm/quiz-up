@@ -12,6 +12,16 @@ export const getRoundsByEvent = async eventId => {
   }
 };
 
+export const getRoundById = async roundId => {
+  try {
+    const response = await axios.get(`${URL_ROUNDS}/${roundId}`);
+
+    return { data: response.data.round, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
 export const saveRound = async ({ round, event }) => {
   try {
     const response = await axios.post(`${URL_ROUNDS}/`, { ...round, event });
