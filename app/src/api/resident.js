@@ -19,11 +19,9 @@ export const getResidents = async () => {
 export const saveResident = async resident => {
   try {
     const response = await axios.post(`${URL_RESIDENTS}/`, { ...resident });
-    console.log('response', response);
 
     return { data: response, error: null };
   } catch (error) {
-    console.log('error', error);
     return { data: null, error: error.response };
   }
 };
