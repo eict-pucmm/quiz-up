@@ -28,7 +28,6 @@ class Categories extends Component {
       .then(({ data }) => {
         const categories = data.categories.map(el => ({ ...el, key: el._id }));
         setTimeout(() => this.setState({ categories, loading: false }), 1000);
-        console.log('Categories -> getCategories -> categories', categories);
       })
       .catch(({ response }) => {
         console.log(response);
@@ -87,15 +86,6 @@ class Categories extends Component {
         dataIndex: 'name',
         key: 'categoria',
         render: text => <p>{text}</p>,
-      },
-      {
-        title: 'Preguntas',
-        key: 'preguntas',
-        render: () => (
-          <span>
-            <p>Preguntas</p>
-          </span>
-        ),
       },
       {
         title: 'Acción',
