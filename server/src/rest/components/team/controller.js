@@ -20,9 +20,7 @@ const attributes = {
  * @returns {JSON} of Team
  */
 const list = async (req, res) => {
-  const [error, teams] = await wrapper(
-    Team.find()
-  );
+  const [error, teams] = await wrapper(Team.find());
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -67,7 +65,6 @@ const create = async (req, res) => {
     : res.status(CREATED).send(savedTeam);
 };
 
-
 const remove = async (req, res) => {
   const [errorRemoving, removedCategory] = await wrapper(
     Team.findByIdAndRemove({ _id: req.params.id })
@@ -76,8 +73,6 @@ const remove = async (req, res) => {
   return errorRemoving
     ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the question')
     : res.status(NO_CONTENT);
+};
 
-}
-
-
-export { list, findById, create , remove};
+export { list, findById, create, remove };
