@@ -1,4 +1,4 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, TeamOutlined } from '@ant-design/icons';
 
 export default [
   { title: 'Eventos', route: '/' },
@@ -8,6 +8,14 @@ export default [
     subMenu: [
       { title: 'Preguntas', route: '/questions' },
       { title: 'Categorias', route: '/categories' },
+    ],
+  },
+  {
+    title: 'Participantes',
+    Icon: TeamOutlined,
+    subMenu: [
+      { title: 'Equipos', route: '/teams' },
+      { title: 'Residentes', route: '/residents' },
     ],
   },
 ];
