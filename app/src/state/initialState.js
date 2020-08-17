@@ -1,5 +1,4 @@
 export const initialState = {
-  test: 'test',
   events: {
     data: [],
     saving: false,
@@ -9,11 +8,8 @@ export const initialState = {
     name: '',
     dateOfEvent: new Date(),
   },
-  rounds: {
-    data: [],
+  round: {
     event: '',
-    openInfoModal: false,
-    addRound: false,
     selectedRound: 0,
     saving: false,
   },

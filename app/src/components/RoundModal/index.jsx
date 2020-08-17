@@ -9,7 +9,7 @@ import MyModal from '../MyModal';
 const RoundModal = ({ gameEvent, ...props }) => {
   const {
     dispatch,
-    state: { roundToAdd, rounds },
+    state: { roundToAdd, round },
   } = useStateValue();
   const { name } = roundToAdd;
 
@@ -19,7 +19,7 @@ const RoundModal = ({ gameEvent, ...props }) => {
   return (
     <MyModal
       {...props}
-      saving={rounds.saving}
+      saving={round.saving}
       type="Ronda"
       title={`Agregar nueva ronda al evento: ${gameEvent.name}`}
     >

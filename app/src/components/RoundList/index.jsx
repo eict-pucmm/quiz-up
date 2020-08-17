@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 import { getRoundsByEvent, saveRound } from '../../api/round';
-import { setRounds, clearRoundFields } from '../../state/actions';
+import { setRoundAttributes, clearRoundFields } from '../../state/actions';
 import { useStateValue } from '../../state';
 import RoundModal from '../RoundModal';
 import RoundCard from '../RoundCard';
@@ -15,32 +15,35 @@ const RoundList = props => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
   const [addRound, setAddRound] = useState(false);
-  const { selectedRound, saving, openInfoModal, data } = state.rounds;
+  const [localRounds, setLocalRounds] = useState([]);
+  const [showInfo, setShowInfo] = useState(false);
+  const { selectedRound, saving } = state.round;
 
   useEffect(() => {
     const get = async () => {
       const { data: rounds } = await getRoundsByEvent(props.gameEvent._id);
 
-      //TO-DO: fix issue with the structure of the rounds and events
-      dispatch(setRounds({ data: rounds || [] }));
+      setLocalRounds(rounds);
       setLoading(false);
     };
 
     if (!saving) get();
   }, [dispatch, saving, props.gameEvent._id]);
 
-  const showModal = roundIndex =>
-    dispatch(setRounds({ openInfoModal: true, selectedRound: roundIndex }));
+  const showModal = roundIndex => {
+    setShowInfo(true);
+    dispatch(setRoundAttributes({ selectedRound: roundIndex }));
+  };
 
   const showAddRound = () => setAddRound(true);
   const closeAddRound = () => setAddRound(false);
 
-  const handleOk = () => dispatch(setRounds({ openInfoModal: false }));
+  const handleOk = () => setShowInfo(false);
 
-  const handleCancel = () => dispatch(setRounds({ openInfoModal: false }));
+  const handleCancel = () => setShowInfo(false);
 
   const onSubmit = async () => {
-    dispatch(setRounds({ saving: true }));
+    dispatch(setRoundAttributes({ saving: true }));
 
     const { error } = await saveRound({
       round: state.roundToAdd,
@@ -48,7 +51,7 @@ const RoundList = props => {
     });
 
     if (error) {
-      dispatch(setRounds({ saving: false }));
+      dispatch(setRoundAttributes({ saving: false }));
       return notification['error']({
         message: error.data.message || error.data,
       });
@@ -60,17 +63,16 @@ const RoundList = props => {
       });
 
       dispatch(clearRoundFields());
-      dispatch(setRounds({ saving: false }));
+      dispatch(setRoundAttributes({ saving: false }));
       setAddRound(false);
     }, 600);
   };
 
   if (loading) return <Card loading={loading} />;
 
-  console.log('data', data);
   return (
     <>
-      {data.length === 0 ? (
+      {localRounds.length === 0 ? (
         <>
           <Empty description="Este evento NO tiene rondas">
             <Button onClick={showAddRound}>Agregar Ronda</Button>
@@ -85,7 +87,7 @@ const RoundList = props => {
                 Agregar Ronda
               </Card>
             </Col>
-            {data.map((round, index) => {
+            {localRounds.map((round, index) => {
               return (
                 <RoundCard
                   index={index}
@@ -102,13 +104,13 @@ const RoundList = props => {
             centered
             onCancel={handleCancel}
             onOk={handleOk}
-            title={data[selectedRound].name}
-            visible={openInfoModal}
+            title={localRounds[selectedRound].name}
+            visible={showInfo}
           >
             <p>Some contents...</p>
             <Link
               className="start-round-btn"
-              to={`/event/round/${data[selectedRound]._id}`}
+              to={`/event/round/${localRounds[selectedRound]._id}`}
             >
               Empezar Ronda
             </Link>

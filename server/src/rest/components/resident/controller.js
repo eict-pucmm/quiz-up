@@ -4,6 +4,7 @@ import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
+  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 
@@ -46,7 +47,7 @@ const create = async (req, res) => {
   const { error, value } = await validateResident(req.body);
 
   if (error) {
-    return res.status(error.status).send(error.message);
+    return res.status(BAD_REQUEST).send(error.message);
   }
 
   const resident = new Resident(value);
@@ -56,7 +57,7 @@ const create = async (req, res) => {
     ? res
         .status(INTERNAL_SERVER_ERROR)
         .json({ message: 'Error creating the resident', error: errorSaving })
-    : res.status(CREATED).send(savedResident);
+    : res.status(CREATED).send({ resident: savedResident });
 };
 
 /**
