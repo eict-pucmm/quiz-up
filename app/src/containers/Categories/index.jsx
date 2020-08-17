@@ -82,13 +82,13 @@ class Categories extends Component {
 
     const columns = [
       {
-        title: 'Categorias',
+        title: 'Categoróas',
         dataIndex: 'name',
         key: 'categoria',
         render: text => <p>{text}</p>,
       },
       {
-        title: 'Accion',
+        title: 'Acción',
         key: 'action',
         render: record => (
           <Button danger type="text" onClick={() => this.onRemove(record.key)}>

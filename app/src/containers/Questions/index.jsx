@@ -8,6 +8,7 @@ import {
   Select,
   InputNumber,
   Tag,
+  Form,
 } from 'antd';
 import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
 import axios from 'axios';
@@ -133,7 +134,7 @@ class Questions extends Component {
         render: text => <p>{text}</p>,
       },
       {
-        title: 'Categorias',
+        title: 'Categorías',
         dataIndex: 'categories',
         key: 'categories',
         render: text => (
@@ -147,18 +148,12 @@ class Questions extends Component {
         ),
       },
       {
-        title: 'Action',
+        title: 'Acción',
         key: 'action',
         render: record => (
-          <span
-            style={{
-              cursor: 'pointer',
-              color: 'blue',
-              textDecoration: 'underline',
-            }}
-          >
-            <span onClick={() => this.onRemove(record.key)}>Borrar</span>
-          </span>
+          <Button danger type="text" onClick={() => this.onRemove(record.key)}>
+            Remover
+          </Button>
         ),
       },
     ];
@@ -168,61 +163,39 @@ class Questions extends Component {
         <Breadcrumb className="breadcrumb-title">
           <Breadcrumb.Item>Questions</Breadcrumb.Item>
         </Breadcrumb>
-        <div style={{ marginBottom: 8 }}>
-          <div style={{ marginBottom: 8 }}>
-            <span
-              className="ant-form-item-label"
-              style={{ fontWeight: 700, marginRight: 4 }}
-            >
-              Nueva Pregunta :
-            </span>
-            <Input
-              style={{ width: '60%' }}
-              value={questionName}
-              onChange={this.handleNameChange}
-            />
-          </div>
-          <div style={{ marginBottom: 8 }}>
-            <span
-              className="ant-form-item-label"
-              style={{ fontWeight: 700, marginRight: 4 }}
-            >
-              Categorias de la Pregunta :
-            </span>
-
-            <Select
-              style={{ width: '50%' }}
-              mode="multiple"
-              placeholder="Seleccione las categorias para la pregunta."
-              onChange={this.onSelectChange}
-            >
+        <Form
+          layout="horizontal"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          <Form.Item label="Agregar una pregunta" />
+          <Form.Item label="Nueva Pregunta:">
+            <Input value={questionName} onChange={this.handleNameChange} />
+          </Form.Item>
+          <Form.Item label="Categorias">
+            <Select mode="multiple" onChange={this.onSelectChange}>
               {allCategories.map(({ name }) => (
                 <Option value={name} key={name}>
                   {name}
                 </Option>
               ))}
             </Select>
-          </div>
-          <div>
-            <span
-              className="ant-form-item-label"
-              style={{ fontWeight: 700, marginRight: 4 }}
-            >
-              Valor de la Pregunta :
-            </span>
-
+          </Form.Item>
+          <Form.Item label="Valor en puntos: ">
             <InputNumber
-              min={1}
+              min={100}
               max={500}
-              defaultValue={1}
+              step={100}
+              defaultValue={100}
               onChange={this.handleValueChange}
             />
-          </div>
-
-          <Button key="submit" onClick={this.onSubmit}>
-            Agregar
-          </Button>
-        </div>
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
+            <Button key="submit" type="primary" onClick={this.onSubmit}>
+              Agregar
+            </Button>
+          </Form.Item>
+        </Form>
 
         <div className="outer-categories-card">
           <Table loading={loading} columns={columns} dataSource={questions} />
