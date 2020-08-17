@@ -1,25 +1,15 @@
-import React, { Fragment, Component } from "react";
-import {
-  Breadcrumb,
-  Card,
-  Empty,
-  Button,
-  notification,
-  Input,
-  Table
-} from "antd";
-import axios from "axios";
+import React, { Fragment, Component } from 'react';
+import { Breadcrumb, Button, notification, Input, Table } from 'antd';
+import axios from 'axios';
 
-import { URL_CATEGORIES } from "../../config/urls";
-
-const { Column, ColumnGroup } = Table;
+import { URL_CATEGORIES } from '../../config/urls';
 
 class Categories extends Component {
   state = {
     categories: [],
-    categoryName: "",
+    categoryName: '',
     savingCategory: false,
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -45,18 +35,16 @@ class Categories extends Component {
   };
 
   onRemove = key => {
-    // console.log("Key> >> >", key);
-    // console.log("e> >> >", e);
     this.setState({ savingCategory: true, loading: true });
     axios
       .delete(`${URL_CATEGORIES}/${key}`, { id: key })
       .then(() => {
         this.setState({
           savingCategory: false,
-          loading: false
+          loading: false,
         });
-        notification["success"]({
-          message: "La categoria ha sido borrada con exito"
+        notification['success']({
+          message: 'La categoria ha sido borrada con exito',
         });
       })
       .catch(({ response }) => {
@@ -74,17 +62,17 @@ class Categories extends Component {
       .post(`${URL_CATEGORIES}/`, { name: this.state.categoryName })
       .then(({ data }) => {
         this.setState({
-          categoryName: "",
+          categoryName: '',
           savingCategory: false,
-          loading: false
+          loading: false,
         });
-        notification["success"]({
-          message: "La categoria ha sido creada con exito"
+        notification['success']({
+          message: 'La categoria ha sido creada con exito',
         });
       })
       .catch(({ response }) => {
-        notification["error"]({
-          message: response.data
+        notification['error']({
+          message: response.data,
         });
       });
   };
@@ -94,35 +82,20 @@ class Categories extends Component {
 
     const columns = [
       {
-        title: "Categorias",
-        dataIndex: "name",
-        key: "categoria",
-        render: text => <p>{text}</p>
+        title: 'Categorias',
+        dataIndex: 'name',
+        key: 'categoria',
+        render: text => <p>{text}</p>,
       },
       {
-        title: "Preguntas",
-        key: "preguntas",
-        render: () => (
-          <span>
-            <p>Preguntas</p>
-          </span>
-        )
-      },
-      {
-        title: "Action",
-        key: "action",
+        title: 'Accion',
+        key: 'action',
         render: record => (
-          <span
-            style={{
-              cursor: "pointer",
-              color: "blue",
-              textDecoration: "underline"
-            }}
-          >
-            <span onClick={() => this.onRemove(record.key)}>Borrar</span>
-          </span>
-        )
-      }
+          <Button danger type="text" onClick={() => this.onRemove(record.key)}>
+            Remover
+          </Button>
+        ),
+      },
     ];
 
     return (
@@ -139,11 +112,11 @@ class Categories extends Component {
             Nueva Categoria :
           </span>
           <Input
-            style={{ width: "60%" }}
+            style={{ width: '40%' }}
             value={categoryName}
             onChange={this.handleChange}
           />
-          <Button key="submit" onClick={this.onSubmit}>
+          <Button key="submit" type="primary" onClick={this.onSubmit}>
             Agregar
           </Button>
         </div>
@@ -157,5 +130,3 @@ class Categories extends Component {
 }
 
 export default Categories;
-
-//findByIdandRem

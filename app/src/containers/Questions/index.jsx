@@ -1,8 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import {
   Breadcrumb,
-  Card,
-  Empty,
   Button,
   notification,
   Input,
@@ -17,8 +15,6 @@ import axios from 'axios';
 const { Option } = Select;
 
 class Questions extends Component {
-
-
   state = {
     allCategories: [
       { name: 'Sirugias' },
@@ -56,7 +52,10 @@ class Questions extends Component {
               ...el,
               key: el._id,
             }));
-            setTimeout(() => (this.state.allCategories = categories), 1000);
+            setTimeout(
+              () => this.setState({ allCategories: categories }),
+              1000
+            );
           })
           .catch(({ response }) => {
             console.log(response);
@@ -86,11 +85,13 @@ class Questions extends Component {
   };
 
   onSubmit = () => {
-
-    
     this.setState({ savingQuestion: true, loading: true });
     axios
-      .post(`${URL_QUESTIONS}/`, { name: this.state.questionName, categories: this.state.questionCategories, points: this.state.questionValue })
+      .post(`${URL_QUESTIONS}/`, {
+        name: this.state.questionName,
+        categories: this.state.questionCategories,
+        points: this.state.questionValue,
+      })
       .then(({ data }) => {
         this.setState({
           questionName: '',
@@ -109,20 +110,20 @@ class Questions extends Component {
       });
   };
 
-  onSelectChange = event => {
-    this.setState({ questionCategories: event });
+  onSelectChange = value => {
+    this.setState({ questionCategories: value });
   };
 
   handleNameChange = event => {
     this.setState({ questionName: event.target.value });
   };
 
-  handleValueChange = event => {
-    this.setState({ questionValue: event });
+  handleValueChange = value => {
+    this.setState({ questionValue: value });
   };
 
   render() {
-    const { allCategories, questions, questionName, questionCategories, loading } = this.state;
+    const { allCategories, questions, questionName, loading } = this.state;
 
     const columns = [
       {
@@ -135,12 +136,13 @@ class Questions extends Component {
         title: 'Categorias',
         dataIndex: 'categories',
         key: 'categories',
-        render: (text) => ( 
+        render: text => (
           <>
-          {text.map(( cualquiera ) => 
-          (<Tag color="blue" key={cualquiera}>
-            {cualquiera}
-          </Tag> ))}
+            {text.map(cualquiera => (
+              <Tag color="blue" key={cualquiera}>
+                {cualquiera}
+              </Tag>
+            ))}
           </>
         ),
       },
