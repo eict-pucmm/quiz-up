@@ -1,140 +1,156 @@
-import React, { Component } from 'react';
-import { Breadcrumb, Button, notification, Input, Table } from 'antd';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import {
+  Breadcrumb,
+  Button,
+  notification,
+  Input,
+  Table,
+  Select,
+  Form,
+} from 'antd';
 
-import { URL_RESIDENTS } from '../../config/urls';
-import CustomDropdown from '../../components/CustomDropdown';
+import { getResidents, saveResident } from '../../api/resident';
 
-class Competitors extends Component {
-  state = {
-    competitors: [],
-    competitor: {
-      fullName: '',
-      residence: '',
+const { Option } = Select;
+
+const Residents = () => {
+  const [form] = Form.useForm();
+  const [residents, setResidents] = useState([]);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [grade, setGrade] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const columns = [
+    {
+      title: 'Nombres',
+      dataIndex: 'firstName',
+      key: 'firstName',
+      width: 200,
+      render: text => <p>{text}</p>,
     },
-    saving: false,
-    loading: true,
-  };
+    {
+      title: 'Apellidos',
+      dataIndex: 'lastName',
+      key: 'lastName',
+      width: 200,
+      render: text => <p>{text}</p>,
+    },
+    {
+      title: 'Grado',
+      dataIndex: 'grade',
+      key: 'grade',
+      width: 100,
+      render: text => <p>{text}</p>,
+    },
+  ];
 
-  componentDidMount() {
-    this.getCompetitors();
-  }
+  useEffect(() => {
+    const get = async () => {
+      const { data } = await getResidents();
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.saving !== this.state.saving) {
-      this.getCompetitors();
+      setResidents(data || []);
+      setLoading(false);
+    };
+
+    if (!saving) get();
+  }, [saving]);
+
+  const onSubmit = async () => {
+    setSaving(true);
+    setLoading(true);
+
+    const { error } = await saveResident({ firstName, lastName, grade });
+
+    if (error) {
+      setSaving(false);
+      return notification['error']({
+        message: error.data.message || error.data,
+      });
     }
-  }
 
-  getCompetitors = () => {
-    axios
-      .get(`${URL_RESIDENTS}/`)
-      .then(({ data }) => {
-        const competitors = data.competitors.map(el => ({
-          ...el,
-          key: el._id,
-        }));
-        setTimeout(() => this.setState({ competitors, loading: false }), 1000);
-      })
-      .catch(({ response }) => {
-        console.log(response);
+    setTimeout(() => {
+      notification['success']({
+        message: 'El residente ha sido agregado con exito',
       });
+
+      setFirstName('');
+      setLastName('');
+      setGrade('');
+      setSaving(false);
+    }, 600);
   };
 
-  handleChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({ competitor: { ...this.state.competitor, [name]: value } });
-  };
-
-  onSubmit = () => {
-    this.setState({ saving: true, loading: true });
-    axios
-      .post(`${URL_RESIDENTS}/`, { ...this.state.competitor })
-      .then(() => {
-        this.setState({
-          competitor: { fullName: '', residence: '' },
-          saving: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'El competidor ha sido creada con exito',
-        });
-      })
-      .catch(({ response }) => {
-        this.setState({ saving: false });
-        notification['error']({
-          message: response.data,
-        });
-      });
-  };
-
-  render() {
-    const columns = [
-      {
-        title: 'Competidores',
-        dataIndex: 'fullName',
-        key: 'competidor',
-        width: 200,
-        render: text => <p>{text}</p>,
-      },
-      {
-        title: 'Residencia',
-        dataIndex: 'residence',
-        key: 'residencia',
-        width: 100,
-        render: text => <p>{text}</p>,
-      },
-    ];
-    const { competitors, competitor, loading } = this.state;
-
-    return (
-      <>
-        <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Competidores</Breadcrumb.Item>
-        </Breadcrumb>
-        <span
-          className="ant-form-item-label"
-          style={{ fontWeight: 700, margin: 8, marginLeft: 0 }}
+  return (
+    <>
+      <Breadcrumb className="breadcrumb-title">
+        <Breadcrumb.Item>Residentes</Breadcrumb.Item>
+      </Breadcrumb>
+      <Form
+        form={form}
+        layout="horizontal"
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 8 }}
+      >
+        <Form.Item label="Agregar Residente:" />
+        <Form.Item
+          label="Nombres: "
+          rules={[
+            {
+              required: true,
+              message: 'Favor de introducir su nombre',
+            },
+          ]}
         >
-          Nuevo competidor:
-        </span>
-        <div style={{ marginBottom: 8 }}>
-          <span className="ant-form-item-label">Nombre completo: </span>
           <Input
-            name="fullName"
-            style={{ width: '60%' }}
-            value={competitor.fullName}
-            onChange={this.handleChange}
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            name="firstName"
           />
-        </div>
-        <div style={{ marginBottom: 8 }}>
-          <span className="ant-form-item-label">Residencia: </span>
-          {/* <Input
-            name="residence"
-            style={{ width: '40%' }}
-            value={competitor.residence}
-            onChange={this.handleChange}
-          /> */}
-          <CustomDropdown />
+        </Form.Item>
+        <Form.Item label="Apellidos: " rules={[{ required: true }]}>
+          <Input
+            name="lastName"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item label="Grado: " rules={[{ required: true }]}>
+          <Select
+            defaultValue={'2do Año'}
+            optionFilterProp="children"
+            onChange={value => setGrade(value)}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {['2do Año', '3er Año'].map(value => (
+              <Option value={value} key={value}>
+                {value}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-          <Button key="submit" onClick={this.onSubmit}>
+        <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
+          <Button key="submit" type="primary" onClick={onSubmit}>
             Agregar
           </Button>
-        </div>
+        </Form.Item>
+      </Form>
 
-        <div className="outer-categories-card">
-          <Table
-            loading={loading}
-            columns={columns}
-            dataSource={competitors}
-            pagination={{ pageSize: 6 }}
-            scroll={{ y: 400 }}
-          />
-        </div>
-      </>
-    );
-  }
-}
+      <div className="outer-categories-card">
+        <Table
+          loading={loading}
+          columns={columns}
+          dataSource={residents}
+          pagination={{ pageSize: 6 }}
+          scroll={{ y: 400 }}
+        />
+      </div>
+    </>
+  );
+};
 
-export default Competitors;
+export default Residents;
