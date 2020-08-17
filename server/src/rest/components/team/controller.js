@@ -21,7 +21,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, teams] = await wrapper(
-    Team.find().populate('residents', 'fullName -_id')
+    Team.find()
   );
 
   return error
@@ -67,4 +67,17 @@ const create = async (req, res) => {
     : res.status(CREATED).send(savedTeam);
 };
 
-export { list, findById, create };
+
+const remove = async (req, res) => {
+  const [errorRemoving, removedCategory] = await wrapper(
+    Team.findByIdAndRemove({ _id: req.params.id })
+  );
+
+  return errorRemoving
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the question')
+    : res.status(NO_CONTENT);
+
+}
+
+
+export { list, findById, create , remove};

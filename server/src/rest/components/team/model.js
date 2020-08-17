@@ -13,13 +13,13 @@ const Team = new Schema({
   },
   residents: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Residents',
+      type: String,
+      required: true,
     },
   ],
   medicalCenter: {
-    type: Schema.Types.ObjectId,
-    ref: 'MedicalCenter',
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -40,8 +40,8 @@ const Team = new Schema({
 export function validateTeam(team) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
-    residents: Joi.array().items(Joi.objectId()).required(),
-    medicalCenter: Joi.objectId(),
+    residents: Joi.array(),
+    medicalCenter: Joi.string(),
   }).options({ stripUnknown: true });
 
   return schema.validate(team);

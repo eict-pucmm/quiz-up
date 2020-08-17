@@ -1,5 +1,5 @@
 import express from 'express';
-import { list, findById, create } from './controller';
+import { list, findById, create, remove } from './controller';
 
 const router = express.Router();
 
@@ -23,5 +23,13 @@ router.get('/:id', findById);
  * @access Public
  */
 router.post('/', create);
+
+/**
+ * @route DELETE '/:id'
+ * @returns Message stating that the app it's subscribe
+ * @access Public
+ */
+router.delete('/:id', remove);
+
 
 export default router;
