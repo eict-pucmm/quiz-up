@@ -1,5 +1,12 @@
 import express from 'express';
-import { list, findById, create, publish, subscribe } from './controller';
+import {
+  list,
+  findById,
+  create,
+  publish,
+  subscribe,
+  remove,
+} from './controller';
 
 const router = express.Router();
 
@@ -25,7 +32,14 @@ router.get('/:id', findById);
 router.post('/', create);
 
 /**
- * @route GET 'mq//publish'
+ * @route DELETE '/:id'
+ * @returns NO_CONTENT status code
+ * @access Public
+ */
+router.delete('/:id', remove);
+
+/**
+ * @route GET 'mq/publish'
  * @returns Message stating that the question was send
  * @access Public
  */

@@ -76,16 +76,8 @@ const create = async (req, res) => {
       return res.status(error.status).send(error.message);
     }
 
-    const category = await Category.findOne({ name: value.category });
-    if (!category) return res.status(BAD_REQUEST).send('Invalid category name');
 
-    let question = new Question({
-      name: value.name,
-      category: {
-        name: category.name,
-      },
-      points: value.points,
-    });
+    let question = new Question(value);
 
     question = await question.save();
 
@@ -95,6 +87,17 @@ const create = async (req, res) => {
       .status(INTERNAL_SERVER_ERROR)
       .json({ message: 'Error creating the question', error });
   }
+};
+
+
+const remove = async (req, res) => {
+  const [errorRemoving, removedCategory] = await wrapper(
+    Question.findByIdAndRemove({ _id: req.params.id })
+  );
+
+  return errorRemoving
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the question')
+    : res.status(NO_CONTENT);
 };
 
 /**
@@ -121,4 +124,4 @@ const subscribe = async (req, res) => {
   return res.status(OK).send('subscribed');
 };
 
-export { list, findById, create, publish, subscribe };
+export { list, findById, create, publish, subscribe, remove };

@@ -94,15 +94,7 @@ const Residents = () => {
         wrapperCol={{ span: 8 }}
       >
         <Form.Item label="Agregar Residente:" />
-        <Form.Item
-          label="Nombres: "
-          rules={[
-            {
-              required: true,
-              message: 'Favor de introducir su nombre',
-            },
-          ]}
-        >
+        <Form.Item label="Nombres: ">
           <Input
             value={firstName}
             onChange={e => setFirstName(e.target.value)}

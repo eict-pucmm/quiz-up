@@ -1,5 +1,5 @@
 import express from 'express';
-import { list, findById, create, update } from './controller';
+import { list, findById, create, update, remove } from './controller';
 
 const router = express.Router();
 
@@ -30,5 +30,12 @@ router.post('/', create);
  * @access Public
  */
 router.put('/:id', update);
+
+/**
+ * @route DELETE '/:id'
+ * @returns NO_CONTENT status
+ * @access Public
+ */
+router.delete('/:id', remove);
 
 export default router;

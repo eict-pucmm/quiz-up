@@ -47,6 +47,7 @@ quiz-up
 ## Minimum setup needed to run the project
 
 ### Node
+
 - Node.js v10: Strongly recommend to use `nvm` to manage different versions of `node` and take advantage of the `.nvmrc` file. [Installation guide](https://github.com/nvm-sh/nvm#installation)
 
 ### Docker
@@ -54,7 +55,7 @@ quiz-up
 You need to have `docker` and `docker-compose` installed to run this project. If you don't have it installed you can follow [this guide](https://docs.docker.com/install/) for `docker` and [this one](https://docs.docker.com/compose/install/) for `docker-compose`.
 
 - First clone this repository.
-  
+
   - ```bash
     git clone git@github.com:ect-pucmm/quiz-up.git
     ```
@@ -65,11 +66,11 @@ You need to have `docker` and `docker-compose` installed to run this project. If
     ```
 - Add the neccessary environment variables for the server in its own `.env` file in `/server/.env` (More info on the [this](https://github.com/ect-pucmm/quiz-up#environment-variables) section)
 - When you're in the root directory type the command `npm run install-all` and then:
-  - To start the server in a local environment:   
+  - To start the server in a local environment:
     ```bash
     docker-compose up
     ```
-  - To start the client admin app: 
+  - To start the client admin app:
     ```bash
     npm run react
     ```
