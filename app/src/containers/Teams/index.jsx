@@ -41,7 +41,9 @@ class Teams extends Component {
       .get(`${URL_TEAMS}/`)
       .then(({ data }) => {
         const teams = data.teams.map(el => ({ ...el, key: el._id }));
+
         setTimeout(() => this.setState({ teams, loading: false }), 1000);
+
         axios
           .get(`${URL_RESIDENTS}/`)
           .then(({ data }) => {
@@ -64,42 +66,23 @@ class Teams extends Component {
     this.setState({ teamResidents: value });
   };
 
-  handleMedChange = event => {
-    this.setState({ teamMedicalCenter: event.target.value });
-  };
-
-  onRemove = key => {
-    this.setState({ savingTeam: true, loading: true });
-    axios
-      .delete(`${URL_TEAMS}/${key}`, { id: key })
-      .then(() => {
-        this.setState({
-          savingTeam: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'El equipo ha sido borrado con exito',
-        });
-      })
-      .catch(({ response }) => {
-        console.log(response);
-      });
-  };
+  handleMedChange = value => this.setState({ teamMedicalCenter: value });
 
   onSubmit = () => {
-    this.setState({ savingQuestion: true, loading: true });
+    const { teamName, teamResidents, teamMedicalCenter } = this.state;
+    this.setState({ savingTeam: true, loading: true });
     axios
       .post(`${URL_TEAMS}/`, {
-        name: this.state.teamName,
-        residents: this.state.teamResidents,
-        medicalCenter: this.state.teamMedicalCenter,
+        name: teamName,
+        residents: teamResidents,
+        medicalCenter: teamMedicalCenter,
       })
       .then(({ data }) => {
         this.setState({
           teamName: '',
           teamResidents: [],
           teamMedicalCenter: '',
-          savingQuestion: false,
+          savingTeam: false,
           loading: false,
         });
         notification['success']({
@@ -114,13 +97,7 @@ class Teams extends Component {
   };
 
   render() {
-    const {
-      allResidents,
-      teams,
-      teamName,
-      teamMedicalCenter,
-      loading,
-    } = this.state;
+    const { allResidents, teams, teamName, loading } = this.state;
 
     const columns = [
       {
@@ -178,7 +155,17 @@ class Teams extends Component {
             </Select>
           </Form.Item>
           <Form.Item label="Nombre del Centro Medico: ">
-            <Input value={teamMedicalCenter} onChange={this.handleMedChange} />
+            {/* <Input value={teamMedicalCenter} onChange={this.handleMedChange} /> */}
+            <Select
+              defaultValue={'Centro Medico #1'}
+              onChange={this.handleMedChange}
+            >
+              {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
+                <Option value={cm} key={cm}>
+                  {cm}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
             <Button key="submit" type="primary" onClick={this.onSubmit}>

@@ -99,6 +99,7 @@ class Questions extends Component {
           questionCategories: [],
           savingQuestion: false,
           loading: false,
+          questionValues: 100,
         });
         notification['success']({
           message: 'La pregunta ha sido creada con exito',

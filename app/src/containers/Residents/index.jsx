@@ -18,7 +18,7 @@ const Residents = () => {
   const [residents, setResidents] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [grade, setGrade] = useState('');
+  const [grade, setGrade] = useState('2do Año');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -77,7 +77,7 @@ const Residents = () => {
 
       setFirstName('');
       setLastName('');
-      setGrade('');
+      setGrade('2do Año');
       setSaving(false);
     }, 600);
   };
