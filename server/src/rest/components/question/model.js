@@ -13,8 +13,8 @@ const Question = new Schema({
   categories: [
     {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   ],
   points: {
     type: Number,

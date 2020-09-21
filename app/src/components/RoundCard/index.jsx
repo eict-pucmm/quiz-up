@@ -32,12 +32,10 @@ const RoundCard = ({ round, showModal, index }) => {
         extra={
           <span
             onClick={() => showModal(index)}
-            className="more-info-label cursor-pointer"
-          >
+            className="more-info-label cursor-pointer">
             Mas Informacion
           </span>
-        }
-      >
+        }>
         <p>Categorias:</p>
         {fetchedRound.categories &&
           fetchedRound.categories.map(({ name, _id }) => (

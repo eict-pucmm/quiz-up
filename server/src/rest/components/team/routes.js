@@ -31,5 +31,4 @@ router.post('/', create);
  */
 router.delete('/:id', remove);
 
-
 export default router;

@@ -135,8 +135,7 @@ class Teams extends Component {
         <Form
           layout="horizontal"
           labelCol={{ span: 4 }}
-          wrapperCol={{ span: 8 }}
-        >
+          wrapperCol={{ span: 8 }}>
           <Form.Item label="Agregar un equipo" />
           <Form.Item label="Nuevo Equipo: ">
             <Input value={teamName} onChange={this.handleNameChange} />
@@ -145,8 +144,7 @@ class Teams extends Component {
             <Select
               mode="multiple"
               onChange={this.onSelectChange}
-              placeholder="Selecionar residente"
-            >
+              placeholder="Selecionar residente">
               {allResidents.map(({ firstName, lastName, key }) => (
                 <Option value={firstName + ' ' + lastName} key={key}>
                   {firstName + ' ' + lastName}
@@ -158,8 +156,7 @@ class Teams extends Component {
             {/* <Input value={teamMedicalCenter} onChange={this.handleMedChange} /> */}
             <Select
               defaultValue={'Centro Medico #1'}
-              onChange={this.handleMedChange}
-            >
+              onChange={this.handleMedChange}>
               {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
                 <Option value={cm} key={cm}>
                   {cm}

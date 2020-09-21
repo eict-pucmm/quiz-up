@@ -7,10 +7,13 @@
     "burn": "npm run stop && docker-compose down --remove-orphans -v",
     "stop": "docker-compose stop",
     "react": "npm --prefix ./app start",
-    "serve-react": "npm --prefix ./app run build && npx serve -s app/build",
+    "pwa": "npm --prefix ./pwa start",
+    "serve-react-app": "npm --prefix ./app run build && npx serve -s app/build",
+    "serve-react-pwa": "npm --prefix ./pwa run build && npx serve -s pwa/build",
     "lint": "eslint --fix \"**/*.+(js|jsx)\"",
     "prettier": "prettier --write \"**/*.+(js|jsx|css|scss|yml)\"",
-    "install-all": "npm install && npm --prefix ./app install && npm --prefix ./server install"
+    "pretty-quick": "pretty-quick",
+    "install-all": "npm install && npm --prefix ./app install && npm --prefix ./server install && npm --prefix ./pwa install"
   },
   "repository": {
     "type": "git",
@@ -30,10 +33,10 @@
   },
   "devDependencies": {
     "babel-eslint": "10.0.3",
-    "eslint": "6.8.0",
-    "eslint-plugin-react": "7.19.0",
-    "husky": "4.2.5",
-    "prettier": "2.0.5",
-    "pretty-quick": "2.0.1"
+    "eslint": "7.10.0",
+    "eslint-plugin-react": "7.21.2",
+    "husky": "4.3.0",
+    "prettier": "2.1.2",
+    "pretty-quick": "3.0.2"
   }
 }
