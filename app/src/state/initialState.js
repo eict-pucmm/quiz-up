@@ -16,5 +16,6 @@ export const initialState = {
   roundToAdd: {
     name: '',
     categories: [],
+    teams: [],
   },
 };

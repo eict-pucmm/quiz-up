@@ -15,19 +15,20 @@ import './styles.css';
 const Event = () => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
+  const [viewOldies, setViewOldies] = useState(false);
 
   const { saving, data } = state.events;
 
   useEffect(() => {
     const get = async () => {
-      const { data } = await getEvents();
+      const { data } = await getEvents({ oldEvents: viewOldies });
 
       dispatch(setEvents({ data: data || [] }));
       setLoading(false);
     };
 
     if (!saving) get();
-  }, [dispatch, saving]);
+  }, [dispatch, saving, viewOldies]);
 
   const openModal = () => dispatch(setEvents({ openModal: true }));
 
@@ -60,6 +61,9 @@ const Event = () => {
       <Breadcrumb className="breadcrumb-title">
         <Breadcrumb.Item>Eventos</Breadcrumb.Item>
       </Breadcrumb>
+      <span className="old-events" onClick={() => setViewOldies(!viewOldies)}>
+        Ver eventos anteriores
+      </span>
       <div className="outer-event-card">
         {data.length === 0 ? (
           <Empty description={'No hay eventos creados!'}>

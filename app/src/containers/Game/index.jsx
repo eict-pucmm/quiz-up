@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { Card, Modal, Button } from 'antd';
 import axios from 'axios';
 import Countdown from 'react-countdown';
+import openSocket from 'socket.io-client';
 
-import { URL_ROUNDS, URL_QUESTIONS } from '../../config/urls';
-import { OK } from '../../config/statusCodes';
+import { URL_ROUNDS } from '../../config/urls';
 
 import './styles.css';
 class Game extends Component {
@@ -24,14 +24,7 @@ class Game extends Component {
       )
       .catch(({ response }) => console.log(response));
 
-    this.subscribe();
-  }
-
-  componentWillUnmount() {
-    axios
-      .post(`${URL_QUESTIONS}/mq/subscribe/`, { unsubscribe: true })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    openSocket('/');
   }
 
   showModal = selectedQuestion => {
@@ -48,28 +41,8 @@ class Game extends Component {
     this.setState({ visible: false, published: false });
   };
 
-  publishQuestion = event => {
-    axios
-      .post(`${URL_QUESTIONS}/mq/publish/`, { question: event.target.value })
-      .then(res => {
-        console.log(res);
-
-        if (res.status === OK) {
-          this.setState({ published: true });
-        }
-      })
-      .catch(err => console.log(err));
-  };
-
   handlePublished = () => {
     this.setState({ published: false });
-  };
-
-  subscribe = () => {
-    axios
-      .post(`${URL_QUESTIONS}/mq/subscribe/`)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
   };
 
   renderer = ({ seconds }) => <span>{seconds}</span>;
@@ -78,23 +51,22 @@ class Game extends Component {
     const { loading, questions, visible, question, published } = this.state;
 
     return (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ height: '100vh', width: '15%' }}>hello</div>
         {loading ? (
           <Card loading={true}></Card>
         ) : (
-          <Fragment>
+          <>
             <Card loading={loading}>
-              {questions.map((question, index) => {
-                return (
-                  <Card.Grid
-                    className="question-card"
-                    key={question._id}
-                    onClick={() => this.showModal(index)}
-                  >
-                    {question.points}
-                  </Card.Grid>
-                );
-              })}
+              {questions.map((question, index) => (
+                <Card.Grid
+                  className="question-card"
+                  key={question._id}
+                  onClick={() => this.showModal(index)}
+                >
+                  {question.points}
+                </Card.Grid>
+              ))}
             </Card>
             {questions.length === 0 ? (
               <Fragment />
@@ -126,7 +98,7 @@ class Game extends Component {
                 )}
               </Modal>
             )}
-          </Fragment>
+          </>
         )}
       </div>
     );

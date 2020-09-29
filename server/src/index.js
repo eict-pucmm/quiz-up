@@ -20,6 +20,7 @@ import {
 } from './config/urls';
 import connectToDB from './services/mongo';
 import joiValidation from './services/joiValidation';
+import io from './services/socket';
 
 connectToDB(MONGO);
 joiValidation();
@@ -48,6 +49,10 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`)
 );
+const socketio = io.init(server);
+socketio.on('connection', socket => {
+  console.log('Client connected');
+});

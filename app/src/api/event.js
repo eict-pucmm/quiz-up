@@ -4,11 +4,10 @@ import { URL_EVENTS } from '../config/urls';
 
 export const getEvents = async ({ oldEvents = false } = {}) => {
   try {
-    const {
-      data: { events },
-    } = await axios.get(`${URL_EVENTS}/`);
+    const { data } = await axios.get(`${URL_EVENTS}/`);
+    console.log('getEvents -> data', data);
 
-    const filteredEvents = events.filter(({ dateOfEvent }) => {
+    const filteredEvents = data.events.filter(({ dateOfEvent }) => {
       const eventDate = new Date(dateOfEvent);
       eventDate.setHours(0, 0, 0, 0);
       const today = new Date();
