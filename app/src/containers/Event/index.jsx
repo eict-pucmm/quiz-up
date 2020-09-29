@@ -77,8 +77,7 @@ const Event = () => {
               className="add-event-btn"
               type="dashed"
               size="large"
-              onClick={openModal}
-            >
+              onClick={openModal}>
               <PlusOutlined />
               Agregar Evento
             </Button>
@@ -87,8 +86,7 @@ const Event = () => {
                 <Card
                   className="event-card"
                   title={<EventCardTitle gameEvent={event} />}
-                  key={event._id}
-                >
+                  key={event._id}>
                   <p className="event-rounds-label">Rondas del evento</p>
                   <RoundList gameEvent={event} />
                 </Card>

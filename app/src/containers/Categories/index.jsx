@@ -107,8 +107,7 @@ class Categories extends Component {
         <div style={{ marginBottom: 8 }}>
           <span
             className="ant-form-item-label"
-            style={{ fontWeight: 700, marginRight: 4 }}
-          >
+            style={{ fontWeight: 700, marginRight: 4 }}>
             Nueva Categoria :
           </span>
           <Input

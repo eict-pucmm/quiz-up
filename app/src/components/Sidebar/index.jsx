@@ -26,8 +26,7 @@ const Sidebar = () => {
         defaultSelectedKeys={['Eventos']}
         mode="inline"
         style={{ height: '100vh' }}
-        theme="dark"
-      >
+        theme="dark">
         {sidebarItems.map(({ title, route, subMenu, Icon }) => {
           return !subMenu ? (
             <Menu.Item key={title}>
@@ -41,8 +40,7 @@ const Sidebar = () => {
                   <Icon />
                   {title}
                 </span>
-              }
-            >
+              }>
               <Menu.ItemGroup key={title}>
                 {subMenu.map(({ title, route }) => (
                   <Menu.Item key={title}>

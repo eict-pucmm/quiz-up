@@ -91,8 +91,7 @@ const Residents = () => {
         form={form}
         layout="horizontal"
         labelCol={{ span: 4 }}
-        wrapperCol={{ span: 8 }}
-      >
+        wrapperCol={{ span: 8 }}>
         <Form.Item label="Agregar Residente:" />
         <Form.Item label="Nombres: ">
           <Input
@@ -115,8 +114,7 @@ const Residents = () => {
             onChange={value => setGrade(value)}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
+            }>
             {['2do Año', '3er Año'].map(value => (
               <Option value={value} key={value}>
                 {value}

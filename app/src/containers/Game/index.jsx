@@ -62,8 +62,7 @@ class Game extends Component {
                 <Card.Grid
                   className="question-card"
                   key={question._id}
-                  onClick={() => this.showModal(index)}
-                >
+                  onClick={() => this.showModal(index)}>
                   {question.points}
                 </Card.Grid>
               ))}
@@ -80,12 +79,10 @@ class Game extends Component {
                   <Button
                     key="submit"
                     value={questions[question].name}
-                    onClick={this.publishQuestion}
-                  >
+                    onClick={this.publishQuestion}>
                     Abrir Pregunta
                   </Button>,
-                ]}
-              >
+                ]}>
                 {questions[question].name}
                 <br />
                 {published ? (

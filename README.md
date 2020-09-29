@@ -15,16 +15,15 @@ Manager for panel based questions games.
 
 ```bash
 quiz-up
-├───── app/                          # All public assets
-|   |  ├── public/                   # All of the client side code
-|   |  ├── src/                      # All of the client side code
+├───── app/                          #  All of the client side code
+|   |  ├── public/                   # All public assets
+|   |  ├── src/
 |   |   |   ├── config/              # Configuration files
 |   |   |   ├── constants/           # Constant files for the forms and components
 |   |   |   ├── containers/          # React containers
 |   |   |   ├── components/          # React components
 |   |   |   └──  helpers/            # Helper functions used in the frontend section of the file
-└────── Dockerfile                   # file that contains the commands needed to assemble an image
-└────── package.json                 # All dependencies and script to run the application
+├───── pwa/                          # All of the mobile app side code - same structure as app/
 ├───── server/                       # All server side code
 |   |   ├── src/                     # Source directory for the server
 |   |   |   ├── config/              # Configuration files
@@ -33,8 +32,9 @@ quiz-up
 |   |   |   |   └── utils            # API's utils
 |   |   |   └── services/            # files for external services. E.g: sending mails
 |   |   |   └── index.js             # Initialize server and handle routes and services
-└─────── babel.config.js             # Babel configuration file
-└─────── Dockerfile                  # file that contains the commands needed to assemble an image
+└── package.json                     # All dependencies and script to run the application
+└── babel.config.js                  # Babel configuration file
+└── Dockerfile                       # file that contains the commands needed to assemble an image
 └── .docker-compose.yml              # file defining services, networks and volumes for docker containers
 └── .gitignore                       # files ignored by git
 └── .dockerignore                    # files ignored by docker
@@ -74,6 +74,11 @@ You need to have `docker` and `docker-compose` installed to run this project. If
     ```bash
     npm run react
     ```
+    -To start the mobile app:
+    ```bash
+    npm run pwa
+    ```
+    - To `install` the app you need to run `npm run serve-pwa` and after that run `ngrok` on port 5000 and open the app in the `https` URL.
 
 ### Environment variables
 
@@ -92,7 +97,9 @@ You need to have `docker` and `docker-compose` installed to run this project. If
 - `npm run lint`: Check the code based on `eslint` rules
 - `npm run prettier`: Check the code based on `prettier` rules
 - `npm run react`: Starts local client app
+- `npm run pwa`: Start the mobile app locally
 - `npm run serve-react`: Run the local client as if it were on production
+- `npm run serve-pwa`: Run the mobile app as if it were on production
 - `npm run stop`: Stops all containers
 
 #### Server side
@@ -102,6 +109,11 @@ You need to have `docker` and `docker-compose` installed to run this project. If
 - `npm run dev`: Starts the application in a development environment
 
 #### Client side
+
+- `npm start`: Run the app in development mode
+- `npm run build`: Builds the app for production to the build folder
+
+#### Mobile app
 
 - `npm start`: Run the app in development mode
 - `npm run build`: Builds the app for production to the build folder

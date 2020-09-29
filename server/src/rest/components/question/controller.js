@@ -76,7 +76,6 @@ const create = async (req, res) => {
       return res.status(error.status).send(error.message);
     }
 
-
     let question = new Question(value);
 
     question = await question.save();
@@ -88,7 +87,6 @@ const create = async (req, res) => {
       .json({ message: 'Error creating the question', error });
   }
 };
-
 
 const remove = async (req, res) => {
   const [errorRemoving, removedCategory] = await wrapper(

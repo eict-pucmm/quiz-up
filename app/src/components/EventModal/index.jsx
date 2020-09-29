@@ -35,8 +35,7 @@ const EventModal = props => {
       saving={events.saving}
       title="Agregar un nuevo Evento"
       type="Evento"
-      {...props}
-    >
+      {...props}>
       {EVENT.map(({ label, id, name, ...attributes }) => (
         <Form.Item label={label} key={id}>
           {id === 'dateOfEvent' ? (

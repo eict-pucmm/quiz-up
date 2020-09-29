@@ -105,13 +105,11 @@ const RoundList = props => {
             onCancel={handleCancel}
             onOk={handleOk}
             title={localRounds[selectedRound].name}
-            visible={showInfo}
-          >
+            visible={showInfo}>
             <p>Some contents...</p>
             <Link
               className="start-round-btn"
-              to={`/event/round/${localRounds[selectedRound]._id}`}
-            >
+              to={`/event/round/${localRounds[selectedRound]._id}`}>
               Empezar Ronda
             </Link>
           </Modal>
