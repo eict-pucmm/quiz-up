@@ -37,8 +37,7 @@ const RoundModal = ({ gameEvent, ...props }) => {
       {...props}
       saving={round.saving}
       type="Ronda"
-      title={`Agregar nueva ronda al evento: ${gameEvent.name}`}
-    >
+      title={`Agregar nueva ronda al evento: ${gameEvent.name}`}>
       {ROUND.map(attributes => (
         <Form.Item label={attributes.label} key={attributes.id}>
           <Input {...attributes} value={name} onChange={handleChange} />

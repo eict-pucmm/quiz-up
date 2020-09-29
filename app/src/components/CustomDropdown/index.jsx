@@ -51,14 +51,12 @@ class CustomDropdown extends React.Component {
                   cursor: 'pointer',
                 }}
                 onClick={this.addItem}
-                href="/"
-              >
+                href="/">
                 <PlusOutlined /> Add item
               </a>
             </div>
           </div>
-        )}
-      >
+        )}>
         {items.map(item => (
           <Option key={item}>{item}</Option>
         ))}

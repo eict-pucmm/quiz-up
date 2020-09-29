@@ -5,7 +5,7 @@ import Categories from '../../containers/Categories';
 import Residents from '../../containers/Residents';
 import Event from '../../containers/Event';
 import Game from '../../containers/Game';
-import Teams from '../../containers/Teams'
+import Teams from '../../containers/Teams';
 import NotFound from '../NotFound';
 import Questions from '../../containers/Questions';
 

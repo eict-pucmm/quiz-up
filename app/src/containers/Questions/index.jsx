@@ -167,8 +167,7 @@ class Questions extends Component {
         <Form
           layout="horizontal"
           labelCol={{ span: 4 }}
-          wrapperCol={{ span: 8 }}
-        >
+          wrapperCol={{ span: 8 }}>
           <Form.Item label="Agregar una pregunta" />
           <Form.Item label="Nueva Pregunta:">
             <Input value={questionName} onChange={this.handleNameChange} />

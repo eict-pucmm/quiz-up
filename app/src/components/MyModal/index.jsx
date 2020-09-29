@@ -20,8 +20,7 @@ const MyModal = ({
         <Button key="submit" loading={saving} onClick={onSubmit}>
           Crear {type}
         </Button>,
-      ]}
-    >
+      ]}>
       <Form layout="vertical" size="medium" labelCol={{ span: 12 }}>
         {children}
       </Form>

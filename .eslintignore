@@ -14,3 +14,8 @@ app/.pnp
 app/.pnp.js
 app/coverage
 app/build
+
+pwa/.pnp
+pwa/.pnp.js
+pwa/coverage
+pwa/build
