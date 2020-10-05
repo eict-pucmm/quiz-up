@@ -100,18 +100,20 @@ const RoundList = props => {
             })}
           </Row>
           <Modal
-            cancelText="Cancelar"
             centered
+            cancelText="Cancelar"
             onCancel={handleCancel}
             onOk={handleOk}
             title={localRounds[selectedRound].name}
             visible={showInfo}>
             <p>Some contents...</p>
-            <Link
-              className="start-round-btn"
-              to={`/event/round/${localRounds[selectedRound]._id}`}>
-              Empezar Ronda
-            </Link>
+            {!state.viewOldEvents && (
+              <Link
+                className="start-round-btn"
+                to={`/event/round/${localRounds[selectedRound]._id}`}>
+                Empezar Ronda
+              </Link>
+            )}
           </Modal>
         </div>
       )}

@@ -54,8 +54,11 @@ const RoundModal = ({ gameEvent, ...props }) => {
           <Input {...attributes} value={name} onChange={handleChange} />
         </Form.Item>
       ))}
-      <Form.Item label="Categorías del evento">
-        <Select mode="multiple" onChange={onSelectEvents}>
+      <Form.Item label="Categorías">
+        <Select
+          mode="multiple"
+          onChange={onSelectEvents}
+          placeholder="Categorías de esta ronda">
           {categories.map(({ name, _id }) => (
             <Option value={_id} key={_id}>
               {name}
@@ -63,8 +66,11 @@ const RoundModal = ({ gameEvent, ...props }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Equipos disponibles">
-        <Select mode="multiple" onChange={onSelectTeams}>
+      <Form.Item label="Equipos">
+        <Select
+          mode="multiple"
+          onChange={onSelectTeams}
+          placeholder="Equipos que participaran en esta ronda">
           {teams.map(({ name, _id }) => (
             <Option value={_id} key={_id}>
               {name}

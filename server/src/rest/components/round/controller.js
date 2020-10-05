@@ -78,20 +78,33 @@ const findById = async (req, res) => {
  * @returns The saved Round
  */
 const create = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  try {
+    let roomId = String(Math.floor(100000 + Math.random() * 900000));
+    let roundExists = await Round.findOne({ roomId });
 
-  if (error) {
-    return res.status(error.status).send(error.message);
+    while (!!roundExists) {
+      roomId = String(Math.floor(100000 + Math.random() * 900000));
+      roundExists = await Round.findOne({ roomId });
+    }
+
+    const [error, value] = await validateData(
+      { ...req.body, roomId },
+      attributes
+    );
+
+    if (error) {
+      return res.status(error.status).send(error.message);
+    }
+
+    const round = new Round(value);
+    await round.save();
+
+    return res.status(CREATED).send(round);
+  } catch (error) {
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: 'Error creating the Round', error: errorSaving });
   }
-
-  const round = new Round(value);
-  const [errorSaving, savedRound] = await wrapper(round.save());
-
-  return errorSaving
-    ? res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: 'Error creating the Round', error: errorSaving })
-    : res.status(CREATED).send(savedRound);
 };
 
 /**

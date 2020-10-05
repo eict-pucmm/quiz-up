@@ -1,45 +1,30 @@
 import express from 'express';
+import http from 'http';
 import bodyParser from 'body-parser';
 import path from 'path';
-import { MONGO, PORT } from './config/dotenv';
-import {
-  questions,
-  categories,
-  residents,
-  teams,
-  events,
-  rounds,
-} from './config/routes';
-import {
-  URL_QUESTIONS,
-  URL_CATEGORIES,
-  URL_RESIDENTS,
-  URL_TEAMS,
-  URL_EVENTS,
-  URL_ROUNDS,
-} from './config/urls';
+import { MONGO, PORT, NODE_ENV } from './config/dotenv';
+
 import connectToDB from './services/mongo';
 import joiValidation from './services/joiValidation';
 import io from './services/socket';
+import setRoutes from './config/routes';
+import { socketMagic } from './services/socketMagic';
 
 connectToDB(MONGO);
 joiValidation();
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(URL_QUESTIONS, questions);
-app.use(URL_CATEGORIES, categories);
-app.use(URL_RESIDENTS, residents);
-app.use(URL_TEAMS, teams);
-app.use(URL_ROUNDS, rounds);
-app.use(URL_EVENTS, events);
+//using all API routes
+setRoutes(app);
 
 app.get('/', (req, res) => res.send('Hello World!🌎'));
 
-if (process.env.NODE_ENV === 'production') {
+if (NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'app/build')));
 
@@ -49,10 +34,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const server = app.listen(PORT, () =>
+const socketio = io.init(server);
+socketMagic(socketio);
+
+server.listen(PORT, () =>
   console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`)
 );
-const socketio = io.init(server);
-socketio.on('connection', socket => {
-  console.log('Client connected');
-});

@@ -1,105 +1,131 @@
-import React, { Component, Fragment } from 'react';
-import { Card, Modal, Button } from 'antd';
-import axios from 'axios';
-import Countdown from 'react-countdown';
-import openSocket from 'socket.io-client';
+import React, { useState, Fragment, useEffect } from 'react';
+import { Card, Spin } from 'antd';
+import { useMediaQuery } from 'react-responsive';
+import io from 'socket.io-client';
 
-import { URL_ROUNDS } from '../../config/urls';
+import QUESTIONS from '../../constants/questions';
+import QuestionsTable from '../../components/QuestionsTable';
+import RoundController from '../../components/RoundController';
+import AnswersModal from '../../components/AnswersModal';
 
 import './styles.css';
-class Game extends Component {
-  state = {
-    questions: [],
-    question: 0,
-    loading: true,
-    visible: false,
-    published: false,
-  };
 
-  componentDidMount() {
-    axios
-      .get(`${URL_ROUNDS}/${this.props.match.params.idOfRound}`)
-      .then(({ data }) =>
-        this.setState({ questions: data.round.questions, loading: false })
-      )
-      .catch(({ response }) => console.log(response));
+const socket = io('/');
 
-    openSocket('/');
-  }
+const Game = () => {
+  const [questions, setQuestions] = useState(QUESTIONS);
+  const [visible, setVisible] = useState(false);
+  const [published, setPublished] = useState(false);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [teams, setTeams] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1024 });
+  const HEADERS =
+    questions.length > 0
+      ? [
+          questions[0].category,
+          questions[5].category,
+          questions[10].category,
+          questions[15].category,
+        ]
+      : [];
 
-  showModal = selectedQuestion => {
-    this.setState({ visible: true, question: selectedQuestion });
-  };
+  const uniqueArray = array => Array.from(new Set(array));
 
-  handleOk = () => {
-    this.setState({
-      visible: false,
+  useEffect(() => {
+    socket.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
+    return () => socket.emit('leaveRoom', { roomId: '668435' });
+  }, []);
+
+  useEffect(() => {
+    socket.on('welcomeTeam', team => {
+      if (!teams.includes(team)) {
+        setTeams(prevTeams => uniqueArray([...prevTeams, team]));
+      }
     });
+  }, [teams]);
+
+  useEffect(() => {
+    socket.on('answer', answers =>
+      setAnswers(prev => uniqueArray([...prev, answers]))
+    );
+  }, [answers]);
+
+  const showModal = selectedQuestion => {
+    setVisible(true);
+    setQuestionIndex(selectedQuestion);
   };
 
-  handleCancel = () => {
-    this.setState({ visible: false, published: false });
+  const openQuestion = e => {
+    e.preventDefault();
+    socket.emit('question', questions[questionIndex].name);
+    questions[questionIndex].disabled = true;
+    setPublished(true);
   };
 
-  handlePublished = () => {
-    this.setState({ published: false });
+  const handleCancel = () => {
+    setVisible(false);
+    setPublished(false);
+    setAnswers([]);
   };
 
-  renderer = ({ seconds }) => <span>{seconds}</span>;
-
-  render() {
-    const { loading, questions, visible, question, published } = this.state;
-
-    return (
+  return (
+    <div className="game-container">
+      <div className="header-game">
+        <div className="game-title-placeholder"></div>
+        <h1 className="round-title">Ronda X</h1>
+        <span>id: 668435</span>
+      </div>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div style={{ height: '100vh', width: '15%' }}>hello</div>
+        {isDesktopOrLaptop && (
+          <div className="teams-container">
+            {teams.map(team => (
+              <div className="team-name" key={team}>
+                <p>{team}</p>
+                <p>0</p>
+              </div>
+            ))}
+          </div>
+        )}
         {loading ? (
-          <Card loading={true}></Card>
+          <Spin tip="Cargando..." size="large">
+            <Card className="question-loading" />
+          </Spin>
         ) : (
           <>
-            <Card loading={loading}>
-              {questions.map((question, index) => (
-                <Card.Grid
-                  className="question-card"
-                  key={question._id}
-                  onClick={() => this.showModal(index)}>
-                  {question.points}
-                </Card.Grid>
-              ))}
-            </Card>
+            {isDesktopOrLaptop ? (
+              <QuestionsTable
+                questions={questions}
+                showModal={showModal}
+                headers={HEADERS}
+              />
+            ) : (
+              <RoundController
+                questions={questions}
+                showModal={showModal}
+                headers={HEADERS}
+              />
+            )}
+
             {questions.length === 0 ? (
               <Fragment />
             ) : (
-              <Modal
+              <AnswersModal
+                published={published}
+                openQuestion={openQuestion}
                 visible={visible}
-                onOk={this.handleOk}
-                onCancel={this.handleCancel}
-                centered
-                footer={[
-                  <Button
-                    key="submit"
-                    value={questions[question].name}
-                    onClick={this.publishQuestion}>
-                    Abrir Pregunta
-                  </Button>,
-                ]}>
-                {questions[question].name}
-                <br />
-                {published ? (
-                  <Countdown
-                    date={Date.now() + 15000}
-                    renderer={this.renderer}
-                  />
-                ) : (
-                  <Fragment />
-                )}
-              </Modal>
+                handleCancel={handleCancel}
+                questions={questions}
+                questionIndex={questionIndex}
+                answers={answers}
+              />
             )}
           </>
         )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Game;

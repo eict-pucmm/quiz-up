@@ -1,0 +1,14 @@
+.question-countdown {
+  color: red !important;
+  font-size: 45px;
+}
+
+.question-content {
+  font-size: 50px;
+  font-weight: bold;
+  color: dodgerblue !important;
+}
+
+.question-wrapper {
+  text-align: center;
+}

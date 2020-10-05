@@ -10,9 +10,7 @@ const InstallButton = () => {
     dispatch,
   } = useStateValue();
   const [isAppInstalled, setIsAppInstalled] = useState(false);
-  console.log('InstallButton -> isAppInstalled', isAppInstalled);
   const [promptEvent, setPromptEvent] = useState(null);
-  console.log('InstallButton -> promptEvent', promptEvent);
 
   useEffect(
     function () {
@@ -47,13 +45,8 @@ const InstallButton = () => {
     }
   };
 
-  console.log(
-    'InstallButton -> !isAppInstalled && !!promptEvent',
-    !isAppInstalled && !!promptEvent
-  );
   return (
     <>
-      hello
       {!isAppInstalled && !!promptEvent && (
         <Zoom
           in={isInstallable}

@@ -3,7 +3,11 @@ import { Breadcrumb, Card, Empty, Button, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { getEvents, saveEvents } from '../../api/event';
-import { setEvents, clearEventFields } from '../../state/actions';
+import {
+  setEvents,
+  clearEventFields,
+  viewOldEvents,
+} from '../../state/actions';
 import { useStateValue } from '../../state';
 import EventModal from '../../components/EventModal';
 import EventCardTitle from '../../components/EventCardTitle';
@@ -15,20 +19,19 @@ import './styles.css';
 const Event = () => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
-  const [viewOldies, setViewOldies] = useState(false);
 
   const { saving, data } = state.events;
 
   useEffect(() => {
     const get = async () => {
-      const { data } = await getEvents({ oldEvents: viewOldies });
+      const { data } = await getEvents({ oldEvents: state.viewOldEvents });
 
       dispatch(setEvents({ data: data || [] }));
       setLoading(false);
     };
 
     if (!saving) get();
-  }, [dispatch, saving, viewOldies]);
+  }, [dispatch, saving, state.viewOldEvents]);
 
   const openModal = () => dispatch(setEvents({ openModal: true }));
 
@@ -61,8 +64,12 @@ const Event = () => {
       <Breadcrumb className="breadcrumb-title">
         <Breadcrumb.Item>Eventos</Breadcrumb.Item>
       </Breadcrumb>
-      <span className="old-events" onClick={() => setViewOldies(!viewOldies)}>
-        Ver eventos anteriores
+      <span
+        className="old-events"
+        onClick={() => dispatch(viewOldEvents(!state.viewOldEvents))}>
+        {state.viewOldEvents
+          ? 'Ver eventos recientes'
+          : 'Ver eventos anteriores'}
       </span>
       <div className="outer-event-card">
         {data.length === 0 ? (

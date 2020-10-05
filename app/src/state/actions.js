@@ -12,3 +12,5 @@ export const setRoundAttributes = attributes => ({
 export const addRound = round => ({ type: 'ADD_ROUND', round });
 
 export const clearRoundFields = () => ({ type: 'CLEAR_ROUND_FIELDS' });
+
+export const viewOldEvents = status => ({ type: 'VIEW_OLD_EVENTS', status });

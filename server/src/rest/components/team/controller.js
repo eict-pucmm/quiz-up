@@ -13,6 +13,11 @@ const attributes = {
   validate: validateTeam,
 };
 
+const updateAttributes = {
+  Model: Team,
+  validate: validateTeam,
+};
+
 /**
  * List of Teams
  * @param {Object} req
@@ -34,12 +39,25 @@ const list = async (req, res) => {
  * @returns {JSON} of a Team
  */
 const findById = async (req, res) => {
-  const [error, team] = await wrapper(
-    Team.findOne({ _id: req.params.id }).populate('residents', 'fullName -_id')
-  );
+  const [error, team] = await wrapper(Team.findOne({ _id: req.params.id }));
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ team });
+};
+
+/**
+ * Finds all teams under a medical center
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of Teams
+ */
+const findByMedicalCenter = async (req, res) => {
+  const [error, teams] = await wrapper(
+    Team.find({ medicalCenter: req.query.center })
+  );
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ teams });
 };
 
 /**
@@ -65,6 +83,32 @@ const create = async (req, res) => {
     : res.status(CREATED).send(savedTeam);
 };
 
+/**
+ * Updates a Team
+ * @param {Object} req
+ * @param {Object} res
+ * @returns The team updated
+ */
+const update = async (req, res) => {
+  const [error, value] = await validateData(req.body, updateAttributes);
+
+  if (error) {
+    return res.status(error.status).send(error.message);
+  }
+
+  const [errorUpdating, updatedTeam] = await wrapper(
+    Team.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: value },
+      { new: true }
+    )
+  );
+
+  return errorUpdating
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the team')
+    : res.status(CREATED).send(updatedTeam);
+};
+
 const remove = async (req, res) => {
   const [errorRemoving, removedCategory] = await wrapper(
     Team.findByIdAndRemove({ _id: req.params.id })
@@ -75,4 +119,4 @@ const remove = async (req, res) => {
     : res.status(NO_CONTENT);
 };
 
-export { list, findById, create, remove };
+export { list, findById, create, remove, findByMedicalCenter, update };

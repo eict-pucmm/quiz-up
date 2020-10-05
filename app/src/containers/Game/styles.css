@@ -1,4 +1,26 @@
-.question-card {
+.header-game {
+  align-items: center;
+  color: dodgerblue;
+  display: flex;
+  justify-content: space-around;
+}
+
+.round-title {
+  color: dodgerblue;
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.teams-container {
+  background-color: whitesmoke;
+  color: dodgerblue;
+  height: 100vh;
+  width: 25%;
+}
+
+.team-name {
+  border-bottom: 1px solid black;
+  font-size: 19.5px;
   text-align: center;
-  width: 25% !important;
 }

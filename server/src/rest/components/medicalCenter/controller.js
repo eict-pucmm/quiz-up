@@ -21,10 +21,10 @@ const attributes = {
  * @returns {JSON} of MedicalCenter
  */
 const list = async (req, res) => {
-  const [error, categories] = await wrapper(MedicalCenter.find());
+  const [error, medicalCenters] = await wrapper(MedicalCenter.find());
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ categories });
+    : res.status(OK).json({ medicalCenters });
 };
 
 /**

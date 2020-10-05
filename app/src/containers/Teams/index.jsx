@@ -130,7 +130,7 @@ class Teams extends Component {
     return (
       <Fragment>
         <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Questions</Breadcrumb.Item>
+          <Breadcrumb.Item>Equipos</Breadcrumb.Item>
         </Breadcrumb>
         <Form
           layout="horizontal"
@@ -138,13 +138,18 @@ class Teams extends Component {
           wrapperCol={{ span: 8 }}>
           <Form.Item label="Agregar un equipo" />
           <Form.Item label="Nuevo Equipo: ">
-            <Input value={teamName} onChange={this.handleNameChange} />
+            <Input
+              value={teamName}
+              onChange={this.handleNameChange}
+              placeholder="Nombre del equipo"
+            />
           </Form.Item>
           <Form.Item label="Residentes">
             <Select
+              showArrow
               mode="multiple"
               onChange={this.onSelectChange}
-              placeholder="Selecionar residente">
+              placeholder="Selecionar residentes">
               {allResidents.map(({ firstName, lastName, key }) => (
                 <Option value={firstName + ' ' + lastName} key={key}>
                   {firstName + ' ' + lastName}
@@ -152,10 +157,10 @@ class Teams extends Component {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Nombre del Centro Medico: ">
-            {/* <Input value={teamMedicalCenter} onChange={this.handleMedChange} /> */}
+          <Form.Item label="Centro Medico: ">
             <Select
-              defaultValue={'Centro Medico #1'}
+              showArrow
+              placeholder="Seleccionar centro medico del equipo"
               onChange={this.handleMedChange}>
               {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
                 <Option value={cm} key={cm}>
