@@ -13,8 +13,10 @@ app/.pnp
 app/.pnp.js
 app/coverage
 app/build
+app/.env
 
 pwa/build
 pwa/coverage
 pwa/.pnp
 pwa/.pnp.js
+pwa/.env
