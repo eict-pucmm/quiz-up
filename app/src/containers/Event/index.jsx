@@ -3,7 +3,11 @@ import { Breadcrumb, Card, Empty, Button, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { getEvents, saveEvents } from '../../api/event';
-import { setEvents, clearEventFields } from '../../state/actions';
+import {
+  setEvents,
+  clearEventFields,
+  viewOldEvents,
+} from '../../state/actions';
 import { useStateValue } from '../../state';
 import EventModal from '../../components/EventModal';
 import EventCardTitle from '../../components/EventCardTitle';
@@ -20,14 +24,14 @@ const Event = () => {
 
   useEffect(() => {
     const get = async () => {
-      const { data } = await getEvents();
+      const { data } = await getEvents({ oldEvents: state.viewOldEvents });
 
       dispatch(setEvents({ data: data || [] }));
       setLoading(false);
     };
 
     if (!saving) get();
-  }, [dispatch, saving]);
+  }, [dispatch, saving, state.viewOldEvents]);
 
   const openModal = () => dispatch(setEvents({ openModal: true }));
 
@@ -60,6 +64,13 @@ const Event = () => {
       <Breadcrumb className="breadcrumb-title">
         <Breadcrumb.Item>Eventos</Breadcrumb.Item>
       </Breadcrumb>
+      <span
+        className="old-events"
+        onClick={() => dispatch(viewOldEvents(!state.viewOldEvents))}>
+        {state.viewOldEvents
+          ? 'Ver eventos recientes'
+          : 'Ver eventos anteriores'}
+      </span>
       <div className="outer-event-card">
         {data.length === 0 ? (
           <Empty description={'No hay eventos creados!'}>

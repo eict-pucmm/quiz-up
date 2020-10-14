@@ -9,16 +9,6 @@ services:
     logging:
       driver: 'none'
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - '15672:15672'
-      - '5672:5672'
-    volumes:
-      - 'rabbitmq_data:/data'
-    logging:
-      driver: 'none'
-
   api:
     container_name: quiz_up_api
     build:
@@ -31,7 +21,3 @@ services:
       - /opt/app/node_modules
     depends_on:
       - mongo
-      - rabbitmq
-
-volumes:
-  rabbitmq_data:

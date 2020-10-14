@@ -32,6 +32,9 @@ export const reducer = (state, action) => {
     case 'CLEAR_ROUND_FIELDS':
       return { ...state, roundToAdd: initialState.roundToAdd };
 
+    case 'VIEW_OLD_EVENTS':
+      return { ...state, viewOldEvents: action.status };
+
     default:
       return state;
   }

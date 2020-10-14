@@ -1,0 +1,45 @@
+h1 {
+  color: dodgerblue !important;
+}
+
+.container-game-room {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  justify-content: center;
+  justify-content: space-evenly;
+}
+
+.btn-answer {
+  box-shadow: 0 6px #ab3c3c !important;
+  transition: none;
+  width: 290px !important;
+  height: 290px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-disabled {
+  box-shadow: 0 6px lightgrey !important;
+}
+
+.btn-answer:active {
+  background: #e43838;
+  outline: none;
+  -webkit-box-shadow: inset 0px 0px 5px #bd3535;
+  -moz-box-shadow: inset 0px 0px 5px #bd3535;
+  box-shadow: inset 0px 0px 5px #bd3535;
+}
+
+/* @media only screen and (min-width: 768px) {
+  .container {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .container {
+    width: 60%;
+  }
+} */

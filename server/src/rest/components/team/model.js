@@ -41,7 +41,7 @@ export function validateTeam(team) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
     residents: Joi.array(),
-    medicalCenter: Joi.string(),
+    medicalCenter: Joi.string().required(),
   }).options({ stripUnknown: true });
 
   return schema.validate(team);

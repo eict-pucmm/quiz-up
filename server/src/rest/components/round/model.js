@@ -10,6 +10,16 @@ const Round = new Schema({
     minlength: 4,
     maxlength: 255,
   },
+  finished: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  roomId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   event: {
     type: Schema.Types.ObjectId,
     ref: 'Event',
@@ -61,6 +71,8 @@ export function validateRound(round) {
     questions: Joi.array(),
     categories: Joi.array(),
     participants: Joi.array(),
+    roomId: Joi.string().required(),
+    finished: Joi.boolean(),
   }).options({ stripUnknown: true });
 
   return schema.validate(round);

@@ -1,5 +1,12 @@
 import express from 'express';
-import { list, findById, create, remove } from './controller';
+import {
+  list,
+  findById,
+  create,
+  remove,
+  findByMedicalCenter,
+  update,
+} from './controller';
 
 const router = express.Router();
 
@@ -18,11 +25,25 @@ router.get('/', list);
 router.get('/:id', findById);
 
 /**
+ * @route GET '/mc?center=:CENTER_NAME'
+ * @returns {JSON} of all teams under a medical center
+ * @access Public
+ */
+router.get('/find/mc', findByMedicalCenter);
+
+/**
  * @route POST '/'
  * @returns new instance of the Team
  * @access Public
  */
 router.post('/', create);
+
+/**
+ * @route PUT '/:id'
+ * @returns new instance of the Team
+ * @access Public
+ */
+router.put('/:id', update);
 
 /**
  * @route DELETE '/:id'

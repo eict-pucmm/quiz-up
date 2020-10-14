@@ -5,6 +5,11 @@ export const reducer = (state, action) => {
         ...state,
         isInstalable: false,
       };
+    case 'USER_INFO':
+      return {
+        ...state,
+        userInfo: Object.assign({}, state.userInfo, { ...action.userInfo }),
+      };
     default:
       return state;
   }

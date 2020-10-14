@@ -1,0 +1,10 @@
+svg {
+  margin-bottom: 10px;
+}
+
+.accordion-container {
+  font-weight: bold !important;
+  height: 100vh;
+  text-align: center;
+  width: 100%;
+}

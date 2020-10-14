@@ -1,4 +1,5 @@
 export const initialState = {
+  viewOldEvents: false,
   events: {
     data: [],
     saving: false,
@@ -16,5 +17,6 @@ export const initialState = {
   roundToAdd: {
     name: '',
     categories: [],
+    teams: [],
   },
 };

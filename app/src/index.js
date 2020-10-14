@@ -7,6 +7,7 @@ import { StateProvider } from './state';
 import { initialState } from './state/initialState';
 import { reducer } from './state/reducer';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 ReactDOM.render(

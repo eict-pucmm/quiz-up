@@ -17,9 +17,9 @@
 }
 
 .title-quiz-up {
-  color: white !important;
+  margin-left: 50px;
   margin-top: 15px !important;
-  text-align: center;
+  text-align: start;
 }
 .App {
   text-align: center;
