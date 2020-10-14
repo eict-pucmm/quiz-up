@@ -52,7 +52,11 @@ const InstallButton = () => {
           in={isInstallable}
           timeout={1000}
           style={{
-            transitionDelay: `1500ms`,
+            transitionDelay: `1000ms`,
+            position: 'fixed',
+            left: 0,
+            bottom: 0,
+            margin: '15px',
           }}>
           <Fab
             color="primary"
