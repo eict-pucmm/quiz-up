@@ -82,7 +82,7 @@ class Categories extends Component {
 
     const columns = [
       {
-        title: 'Categoróas',
+        title: 'Categorías',
         dataIndex: 'name',
         key: 'categoria',
         render: text => <p>{text}</p>,

@@ -18,11 +18,11 @@ const RoundModal = ({ gameEvent, ...props }) => {
   const { name } = roundToAdd;
   const [categories, setCategories] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [error, setError] = useState();
 
   useEffect(() => {
     const loadCategories = async () => {
       const { data } = await getCategories();
-
       setCategories(data || []);
     };
 
@@ -36,8 +36,10 @@ const RoundModal = ({ gameEvent, ...props }) => {
     loadTeams();
   }, []);
 
-  const handleChange = ({ target: { name, value } }) =>
+  const handleChange = ({ target: { name, value } }) => {
     dispatch(addRound({ [name]: value }));
+    setError(value.length < 3);
+  };
 
   const onSelectEvents = value => dispatch(addRound({ categories: value }));
 
@@ -49,16 +51,24 @@ const RoundModal = ({ gameEvent, ...props }) => {
       saving={round.saving}
       type="Ronda"
       title={`Agregar nueva ronda al evento: ${gameEvent.name}`}>
-      {ROUND.map(attributes => (
-        <Form.Item label={attributes.label} key={attributes.id}>
-          <Input {...attributes} value={name} onChange={handleChange} />
+      {ROUND.map(({ label, id, ...attr }) => (
+        <Form.Item label={label} key={id}>
+          <Input {...attr} value={name} onChange={handleChange} />
+          {error && (
+            <p style={{ color: 'red' }}>Favor introducir más de 3 carácteres</p>
+          )}
         </Form.Item>
       ))}
       <Form.Item label="Categorías">
         <Select
+          showArrow
           mode="multiple"
           onChange={onSelectEvents}
-          placeholder="Categorías de esta ronda">
+          placeholder="Categorías de esta ronda"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }>
           {categories.map(({ name, _id }) => (
             <Option value={_id} key={_id}>
               {name}

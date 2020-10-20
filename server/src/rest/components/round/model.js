@@ -7,7 +7,7 @@ const Round = new Schema({
   name: {
     type: String,
     required: true,
-    minlength: 4,
+    minlength: 3,
     maxlength: 255,
   },
   finished: {
@@ -66,7 +66,7 @@ const Round = new Schema({
  */
 export function validateRound(round) {
   const schema = Joi.object({
-    name: Joi.string().min(4).max(255).required(),
+    name: Joi.string().min(3).max(255).required(),
     event: Joi.string().required(),
     questions: Joi.array(),
     categories: Joi.array(),
