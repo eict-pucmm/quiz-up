@@ -46,6 +46,11 @@ const Game = () => {
     });
   }, [teams]);
 
+  //TODO: why do I have to render the modal for changes to appear on both sides
+  useEffect(() => {
+    socket.on('index', index => (questions[index].disabled = true));
+  }, [questions]);
+
   useEffect(() => {
     socket.on('answer', answers =>
       setAnswers(prev => uniqueArray([...prev, answers]))
@@ -59,7 +64,10 @@ const Game = () => {
 
   const openQuestion = e => {
     e.preventDefault();
-    socket.emit('question', questions[questionIndex].name);
+    socket.emit('question', {
+      name: questions[questionIndex].name,
+      index: questionIndex,
+    });
     questions[questionIndex].disabled = true;
     setPublished(true);
   };

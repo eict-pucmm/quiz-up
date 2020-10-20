@@ -8,7 +8,10 @@ export const socketMagic = socketio => {
       socket.to(roomId).emit('welcomeTeam', teamName);
 
       //listen for question opening
-      socket.on('question', q => socketio.to(roomId).emit('question', q));
+      socket.on('question', ({ question, index }) => {
+        socketio.to(roomId).emit('question', question);
+        socketio.to(roomId).emit('index', index);
+      });
     });
 
     socket.on('answer', ({ teamInfo, roomId }) => {
