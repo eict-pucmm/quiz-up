@@ -142,12 +142,4 @@ const subscribe = async (req, res) => {
   return res.status(OK).send('subscribed');
 };
 
-export {
-  list,
-  findById,
-  create,
-  publish,
-  subscribe,
-  remove,
-  getQuestionFromCategoryAndPoints,
-};
+export { list, findById, create, publish, subscribe, remove };

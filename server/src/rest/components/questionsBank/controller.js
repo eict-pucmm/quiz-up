@@ -28,20 +28,20 @@ const create = async (req, res) => {
 };
 
 const createQuestionBank = questions => {
-  let orderedPoints = {};
+  let orderedPoints = { oneH: [], twoH: [], threeH: [], fourH: [], fiveH: [] };
   questions.forEach((question, index) => {
     let arr = [];
     console.log('QUESTIONS !!!!', question);
     if (question.points == 100) {
-      orderedPoints.oneH = { ...orderedPoints.oneH };
+      orderedPoints.oneH.push(question);
     } else if (question.points == 200) {
-      orderedPoints['200 pts'] = question;
+      orderedPoints.twoH.push(question);
     } else if (question.points == 300) {
-      orderedPoints['300 pts'] = question;
+      orderedPoints.threeH.push(question);
     } else if (question.points == 400) {
-      orderedPoints['400 pts'] = question;
+      orderedPoints.fourH.push(question);
     } else if (question.points == 500) {
-      orderedPoints['500 pts'] = question;
+      orderedPoints.fiveH.push(question);
     }
 
     console.log('>>>>>>>>>>>>>>>>>\n', orderedPoints.oneH);
