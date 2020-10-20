@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
 import useReactRouter from 'use-react-router';
+import { useMediaQuery } from 'react-responsive';
 
 import sidebarItems from '../../constants/sidebar';
 import Title from 'antd/lib/typography/Title';
@@ -11,14 +12,24 @@ const { Sider } = Layout;
 
 const Sidebar = () => {
   const { location } = useReactRouter();
+  const [collapsed, setCollapsed] = useState(false);
+  const isDesktop = useMediaQuery({ minDeviceWidth: 1024 });
+
+  useEffect(() => {
+    if (!isDesktop) setCollapsed(true);
+  }, [isDesktop]);
+
+  const onCollapse = () => {
+    setCollapsed(!collapsed);
+  };
 
   return location.pathname.includes('/event/round/') ? (
     <Fragment />
   ) : (
-    <Sider>
+    <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
       <div>
         <Title className="title-quiz-up" level={3}>
-          <a href="/">Quiz Up</a>
+          <a href="/">{collapsed ? 'QU' : 'Quiz Up'}</a>
         </Title>
       </div>
       <Menu
@@ -29,18 +40,11 @@ const Sidebar = () => {
         theme="dark">
         {sidebarItems.map(({ title, route, subMenu, Icon }) => {
           return !subMenu ? (
-            <Menu.Item key={title}>
+            <Menu.Item key={title} icon={<Icon />}>
               <Link to={route}>{title}</Link>
             </Menu.Item>
           ) : (
-            <SubMenu
-              key={title}
-              title={
-                <span>
-                  <Icon />
-                  {title}
-                </span>
-              }>
+            <SubMenu key={title} title={title} icon={<Icon />}>
               <Menu.ItemGroup key={title}>
                 {subMenu.map(({ title, route }) => (
                   <Menu.Item key={title}>

@@ -51,6 +51,7 @@ const Home = () => {
         />
       )}
       <Select
+        showSearch
         className="input-join"
         onChange={handleCenterChange}
         placeholder="Centro al que representa"
@@ -62,6 +63,7 @@ const Home = () => {
         ))}
       </Select>
       <Select
+        showSearch
         className="input-join"
         disabled={teams.length === 0}
         onChange={v => dispatch(setUserInfo({ teamName: v }))}

@@ -162,7 +162,7 @@ class Questions extends Component {
     return (
       <Fragment>
         <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Questions</Breadcrumb.Item>
+          <Breadcrumb.Item>Preguntas</Breadcrumb.Item>
         </Breadcrumb>
         <Form
           layout="horizontal"

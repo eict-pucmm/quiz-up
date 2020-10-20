@@ -1,7 +1,11 @@
-import { QuestionCircleOutlined, TeamOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  TeamOutlined,
+  BookOutlined,
+} from '@ant-design/icons';
 
 export default [
-  { title: 'Eventos', route: '/' },
+  { title: 'Eventos', route: '/', Icon: BookOutlined },
   {
     title: 'Preguntas',
     Icon: QuestionCircleOutlined,

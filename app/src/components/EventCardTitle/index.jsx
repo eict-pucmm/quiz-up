@@ -1,15 +1,24 @@
 import React from 'react';
 import formatDate from 'date-fns/format';
 import { es } from 'date-fns/locale';
+import { useMediaQuery } from 'react-responsive';
 
-const EventCardTitle = ({ gameEvent: { name, dateOfEvent } }) => (
-  <div className="row">
-    {name}
-    <span className="event-date-label">
-      Fecha del evento:{' '}
-      {formatDate(new Date(dateOfEvent), 'PPP', { locale: es })}
-    </span>
-  </div>
-);
+import './styles.css';
+
+const EventCardTitle = ({ gameEvent: { name, dateOfEvent } }) => {
+  const isDesktop = useMediaQuery({ minDeviceWidth: 1024 });
+
+  return (
+    <div className="row">
+      <p className="event-title">{name}</p>
+      <span className="event-date-label">
+        {isDesktop ? 'Fecha del evento: ' : 'Fecha: '}
+        {formatDate(new Date(dateOfEvent), isDesktop ? 'PPP' : 'P', {
+          locale: es,
+        })}
+      </span>
+    </div>
+  );
+};
 
 export default EventCardTitle;
