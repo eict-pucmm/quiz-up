@@ -6,6 +6,7 @@ import {
   publish,
   subscribe,
   remove,
+  getQuestionFromCategoryAndPoints,
 } from './controller';
 
 const router = express.Router();
@@ -23,6 +24,13 @@ router.get('/', list);
  * @access Public
  */
 router.get('/:id', findById);
+
+/**
+ * @route GET '/:id'
+ * @returns {JSON} of a specific question
+ * @access Public
+ */
+router.get('/questcatp', getQuestionFromCategoryAndPoints);
 
 /**
  * @route POST '/'
