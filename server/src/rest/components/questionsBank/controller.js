@@ -55,8 +55,6 @@ const createQuestionBank = (questions, categories) => {
 /* THIS FUNCTION WILL HELP GET ONE RANDOM QUESTION FROM THE ORDERED BY POINTS QUESTIONS*/
 
 function pickRandomQuestion(categories) {
-  console.log(categories);
-
   let questionBank = {};
   let actualCatQuestions = {
     oneH: [],
@@ -78,6 +76,24 @@ function pickRandomQuestion(categories) {
 
   for (let [key, val] of Object.entries(categories)) {
     val.forEach(question => {
+      if (question.category.length > 1) {
+        question.category.forEach(category => {
+          let bankCat = questionBank[category];
+          Object.values(bankCat).forEach(val => {
+            if (val != null && val != undefined) {
+              if (val._id == question._id) {
+                console.log(
+                  'ommited a question because theres another>>>',
+                  val.name,
+                  '\nQuestion repeated ?',
+                  question.name
+                );
+                return;
+              }
+            }
+          });
+        });
+      }
       if (question.points == 100) {
         actualCatQuestions.oneH.push(question);
       } else if (question.points == 200) {
@@ -111,7 +127,6 @@ function pickRandomQuestion(categories) {
       actualCatQuestions.fiveH[
         Math.floor(Math.random() * actualCatQuestions.fiveH.length)
       ];
-    console.log('SUPPOSED QUESTION SELECTED >>>>\n\n', questionBank);
 
     actualCatQuestions = {
       oneH: [],
@@ -121,11 +136,6 @@ function pickRandomQuestion(categories) {
       fiveH: [],
     };
   }
-
-  console.log(
-    '||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n'
-  );
-  console.log(questionBank);
 
   return questionBank;
 }
