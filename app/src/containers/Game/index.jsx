@@ -20,7 +20,7 @@ const Game = () => {
   const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1024 });
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const HEADERS =
     questions.length > 0
       ? [

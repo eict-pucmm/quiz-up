@@ -6,7 +6,7 @@ import { useMediaQuery } from 'react-responsive';
 import './styles.css';
 
 const EventCardTitle = ({ gameEvent: { name, dateOfEvent } }) => {
-  const isDesktop = useMediaQuery({ minDeviceWidth: 1024 });
+  const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   return (
     <div className="row">

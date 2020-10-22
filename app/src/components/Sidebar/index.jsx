@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
-import useReactRouter from 'use-react-router';
 import { useMediaQuery } from 'react-responsive';
+import useReactRouter from 'use-react-router';
 
 import sidebarItems from '../../constants/sidebar';
 import Title from 'antd/lib/typography/Title';
@@ -13,10 +13,10 @@ const { Sider } = Layout;
 const Sidebar = () => {
   const { location } = useReactRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const isDesktop = useMediaQuery({ minDeviceWidth: 1024 });
+  const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   useEffect(() => {
-    if (!isDesktop) setCollapsed(true);
+    setCollapsed(!isDesktop);
   }, [isDesktop]);
 
   const onCollapse = () => {
