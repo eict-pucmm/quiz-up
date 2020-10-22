@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const Event = new Schema({
   name: {
     type: String,
-    minlength: 4,
+    minlength: 3,
     required: true,
   },
   dateOfEvent: {

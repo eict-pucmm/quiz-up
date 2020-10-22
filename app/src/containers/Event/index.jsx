@@ -36,6 +36,14 @@ const Event = () => {
   const openModal = () => dispatch(setEvents({ openModal: true }));
 
   const onSubmit = async () => {
+    const { name, dateOfEvent } = state.eventToAdd;
+
+    if (!name || name.length < 3 || !dateOfEvent) {
+      return notification['error']({
+        message: 'Por favor ingrese un nombre para el evento y una fecha',
+      });
+    }
+
     dispatch(setEvents({ saving: true }));
 
     const { error } = await saveEvents(state.eventToAdd);
@@ -43,7 +51,8 @@ const Event = () => {
     if (error) {
       dispatch(setEvents({ saving: false }));
       return notification['error']({
-        message: error.data.message || error.data,
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 
