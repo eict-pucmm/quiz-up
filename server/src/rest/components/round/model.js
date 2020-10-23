@@ -50,6 +50,12 @@ const Round = new Schema({
             ref: 'Question',
           },
         ],
+        failed: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: 'Question',
+          },
+        ],
       }),
     },
   ],

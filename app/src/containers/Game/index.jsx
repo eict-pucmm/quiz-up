@@ -1,16 +1,22 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { Card, Spin } from 'antd';
 import { useMediaQuery } from 'react-responsive';
-import io from 'socket.io-client';
 
 import QUESTIONS from '../../constants/questions';
 import QuestionsTable from '../../components/QuestionsTable';
 import RoundController from '../../components/RoundController';
 import AnswersModal from '../../components/AnswersModal';
+import {
+  disconnectSocket,
+  initiateSocket,
+  sendQuestionToServer,
+  subscribeToAnswers,
+  subscribeToTeams,
+} from '../../helpers/socket';
 
 import './styles.css';
 
-const socket = io('/');
+const roomId = '668435';
 
 const Game = () => {
   const [questions, setQuestions] = useState(QUESTIONS);
@@ -34,27 +40,36 @@ const Game = () => {
   const uniqueArray = array => Array.from(new Set(array));
 
   useEffect(() => {
-    socket.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
-    return () => socket.emit('leaveRoom', { roomId: '668435' });
+    if (roomId) initiateSocket(roomId);
+    return () => disconnectSocket();
   }, []);
 
   useEffect(() => {
-    socket.on('welcomeTeam', team => {
+    subscribeToTeams((err, team) => {
+      if (err) return;
+
       if (!teams.includes(team)) {
         setTeams(prevTeams => uniqueArray([...prevTeams, team]));
       }
     });
   }, [teams]);
 
-  //TODO: why do I have to render the modal for changes to appear on both sides
-  useEffect(() => {
-    socket.on('index', index => (questions[index].disabled = true));
-  }, [questions]);
+  // useEffect(() => {
+  //   socket.on('index', index =>{
+  //     questions[index].disabled = true;
+  //     showModal(index);
+  //   });
+  //   console.log('klk')
+
+  //   return () => showModal(-1)
+  // }, [questions]);
+  // console.log('klk afuera')
 
   useEffect(() => {
-    socket.on('answer', answers =>
-      setAnswers(prev => uniqueArray([...prev, answers]))
-    );
+    subscribeToAnswers((err, answer) => {
+      if (err) return;
+      setAnswers(prev => uniqueArray([...prev, answer]));
+    });
   }, [answers]);
 
   const showModal = selectedQuestion => {
@@ -64,7 +79,7 @@ const Game = () => {
 
   const openQuestion = e => {
     e.preventDefault();
-    socket.emit('question', {
+    sendQuestionToServer({
       name: questions[questionIndex].name,
       index: questionIndex,
     });

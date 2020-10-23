@@ -43,7 +43,10 @@ const RoundModal = ({ gameEvent, ...props }) => {
 
   const onSelectEvents = value => dispatch(addRound({ categories: value }));
 
-  const onSelectTeams = value => dispatch(addRound({ teams: value }));
+  const onSelectTeams = value => {
+    const participants = value.map(v => ({ team: v }));
+    dispatch(addRound({ participants }));
+  };
 
   return (
     <MyModal
