@@ -1,27 +1,15 @@
 import React, { Fragment, Component } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  notification,
-  Input,
-  Table,
-  Select,
-  InputNumber,
-  Tag,
-  Form,
-} from 'antd';
-import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
+import { Breadcrumb, notification, Table, Tag } from 'antd';
 import axios from 'axios';
 
-const { Option } = Select;
+import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
+import QuestionsForm from '../../components/FormQuestions';
+import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
+import ActionButtons from '../../components/ActionButtons';
 
 class Questions extends Component {
   state = {
-    allCategories: [
-      { name: 'Sirugias' },
-      { name: 'Farmacologia' },
-      { name: 'Oftalmologia' },
-    ],
+    allCategories: [],
     questions: [],
     questionName: '',
     questionCategories: [],
@@ -105,9 +93,10 @@ class Questions extends Component {
           message: 'La pregunta ha sido creada con exito',
         });
       })
-      .catch(({ response }) => {
+      .catch(() => {
         notification['error']({
-          message: response.data,
+          message:
+            '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
         });
       });
   };
@@ -127,6 +116,7 @@ class Questions extends Component {
   render() {
     const { allCategories, questions, questionName, loading } = this.state;
 
+    //TODO: add points column
     const columns = [
       {
         title: 'Pregunta',
@@ -140,9 +130,9 @@ class Questions extends Component {
         key: 'categories',
         render: text => (
           <>
-            {text.map(cualquiera => (
-              <Tag color="blue" key={cualquiera}>
-                {cualquiera}
+            {text.map(category => (
+              <Tag color="blue" key={category}>
+                {category}
               </Tag>
             ))}
           </>
@@ -152,9 +142,14 @@ class Questions extends Component {
         title: 'Acción',
         key: 'action',
         render: record => (
-          <Button danger type="text" onClick={() => this.onRemove(record.key)}>
-            Remover
-          </Button>
+          <ActionButtons
+            onUpdate={() => {
+              /*TODO: add function to update */
+            }}
+            onRemove={() => this.onRemove(record.key)}
+            update
+            remove
+          />
         ),
       },
     ];
@@ -164,42 +159,17 @@ class Questions extends Component {
         <Breadcrumb className="breadcrumb-title">
           <Breadcrumb.Item>Preguntas</Breadcrumb.Item>
         </Breadcrumb>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 8 }}>
-          <Form.Item label="Agregar una pregunta" />
-          <Form.Item label="Nueva Pregunta:">
-            <Input value={questionName} onChange={this.handleNameChange} />
-          </Form.Item>
-          <Form.Item label="Categorias">
-            <Select mode="multiple" onChange={this.onSelectChange}>
-              {allCategories.map(({ name }) => (
-                <Option value={name} key={name}>
-                  {name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Valor en puntos: ">
-            <InputNumber
-              min={100}
-              max={500}
-              step={100}
-              defaultValue={100}
-              onChange={this.handleValueChange}
-            />
-          </Form.Item>
-          <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
-            <Button key="submit" type="primary" onClick={this.onSubmit}>
-              Agregar
-            </Button>
-          </Form.Item>
-        </Form>
-
-        <div className="outer-categories-card">
-          <Table loading={loading} columns={columns} dataSource={questions} />
-        </div>
+        <CollapsableFormWrapper header={'Agregar una pregunta'}>
+          <QuestionsForm
+            questionName={questionName}
+            allCategories={allCategories}
+            handleNameChange={this.handleNameChange}
+            handleValueChange={this.handleValueChange}
+            onSelectChange={this.onSelectChange}
+            onSubmit={this.onSubmit}
+          />
+        </CollapsableFormWrapper>
+        <Table loading={loading} columns={columns} dataSource={questions} />
       </Fragment>
     );
   }

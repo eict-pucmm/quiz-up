@@ -1,19 +1,13 @@
 import React, { Fragment, Component } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  notification,
-  Input,
-  Table,
-  Select,
-  Tag,
-  Form,
-} from 'antd';
+import { Breadcrumb, notification, Table, Tag } from 'antd';
 import axios from 'axios';
-import { URL_TEAMS, URL_RESIDENTS } from '../../config/urls';
-import './styles.css';
 
-const { Option } = Select;
+import { URL_TEAMS, URL_RESIDENTS } from '../../config/urls';
+import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
+import FormTeams from '../../components/FormTeams';
+import ActionButtons from '../../components/ActionButtons';
+
+import './styles.css';
 
 class Teams extends Component {
   state = {
@@ -126,59 +120,35 @@ class Teams extends Component {
         key: 'medicalCenter',
         render: text => <p>{text}</p>,
       },
+      {
+        title: 'Acción',
+        key: 'action',
+        render: record => (
+          <ActionButtons
+            onUpdate={() => {
+              /*TODO: add function to update */
+            }}
+            update
+          />
+        ),
+      },
     ];
     return (
       <Fragment>
         <Breadcrumb className="breadcrumb-title">
           <Breadcrumb.Item>Equipos</Breadcrumb.Item>
         </Breadcrumb>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 8 }}>
-          <Form.Item label="Agregar un equipo" />
-          <Form.Item label="Nuevo Equipo: ">
-            <Input
-              value={teamName}
-              onChange={this.handleNameChange}
-              placeholder="Nombre del equipo"
-            />
-          </Form.Item>
-          <Form.Item label="Residentes">
-            <Select
-              showArrow
-              mode="multiple"
-              onChange={this.onSelectChange}
-              placeholder="Selecionar residentes">
-              {allResidents.map(({ firstName, lastName, key }) => (
-                <Option value={firstName + ' ' + lastName} key={key}>
-                  {firstName + ' ' + lastName}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Centro Medico: ">
-            <Select
-              showArrow
-              placeholder="Seleccionar centro medico del equipo"
-              onChange={this.handleMedChange}>
-              {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
-                <Option value={cm} key={cm}>
-                  {cm}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
-            <Button key="submit" type="primary" onClick={this.onSubmit}>
-              Agregar
-            </Button>
-          </Form.Item>
-        </Form>
-
-        <div className="outer-team-card">
-          <Table loading={loading} columns={columns} dataSource={teams} />
-        </div>
+        <CollapsableFormWrapper header="Agregar un equipo">
+          <FormTeams
+            allResidents={allResidents}
+            teamName={teamName}
+            onSelectChange={this.onSelectChange}
+            handleMedChange={this.handleMedChange}
+            handleNameChange={this.handleNameChange}
+            onSubmit={this.onSubmit}
+          />
+        </CollapsableFormWrapper>
+        <Table loading={loading} columns={columns} dataSource={teams} />
       </Fragment>
     );
   }

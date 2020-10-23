@@ -36,6 +36,7 @@ const RoundList = props => {
   };
 
   const showAddRound = () => setAddRound(true);
+
   const closeAddRound = () => setAddRound(false);
 
   const handleOk = () => setShowInfo(false);
@@ -43,6 +44,17 @@ const RoundList = props => {
   const handleCancel = () => setShowInfo(false);
 
   const onSubmit = async () => {
+    const { name, categories, teams } = state.roundToAdd;
+    if (
+      !name ||
+      name.length < 3 ||
+      categories.length !== 4 ||
+      teams.length !== 4
+    ) {
+      return notification['error']({
+        message: 'Por favor revise los datos de la ronda.',
+      });
+    }
     dispatch(setRoundAttributes({ saving: true }));
 
     const { error } = await saveRound({
@@ -53,7 +65,8 @@ const RoundList = props => {
     if (error) {
       dispatch(setRoundAttributes({ saving: false }));
       return notification['error']({
-        message: error.data.message || error.data,
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor de comunicarse con su administrador.',
       });
     }
 

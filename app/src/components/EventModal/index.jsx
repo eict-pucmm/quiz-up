@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input } from 'antd';
 import DatePicker from 'react-datepicker';
 import debounce from 'lodash/debounce';
@@ -15,11 +15,14 @@ const EventModal = props => {
     dispatch,
     state: { events, eventToAdd },
   } = useStateValue();
+  const [error, setError] = useState(false);
 
   const onClose = () => dispatch(setEvents({ openModal: false }));
 
   const handleChange = event => {
     const { name, value } = event.target;
+
+    setError(value.length < 3);
 
     dispatch(addEvent({ [name]: value }));
   };
@@ -47,12 +50,19 @@ const EventModal = props => {
               selected={eventToAdd[name]}
             />
           ) : (
-            <Input
-              {...attributes}
-              name={name}
-              value={eventToAdd[name]}
-              onChange={handleChange}
-            />
+            <>
+              <Input
+                {...attributes}
+                name={name}
+                value={eventToAdd[name]}
+                onChange={handleChange}
+              />
+              {error && (
+                <p style={{ color: 'red' }}>
+                  {'Favor introducir mas de 3 caracteres'}
+                </p>
+              )}
+            </>
           )}
         </Form.Item>
       ))}

@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  notification,
-  Input,
-  Table,
-  Select,
-  Form,
-} from 'antd';
+import { Breadcrumb, notification, Table } from 'antd';
 
 import { getResidents, saveResident } from '../../api/resident';
-
-const { Option } = Select;
+import ResidentsForm from '../../components/FormResidents';
+import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
 
 const Residents = () => {
-  const [form] = Form.useForm();
   const [residents, setResidents] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -58,6 +49,11 @@ const Residents = () => {
   }, [saving]);
 
   const onSubmit = async () => {
+    if (!firstName || !lastName) {
+      return notification['error']({
+        message: 'Favor completar todos los campos',
+      });
+    }
     setSaving(true);
     setLoading(true);
 
@@ -87,58 +83,23 @@ const Residents = () => {
       <Breadcrumb className="breadcrumb-title">
         <Breadcrumb.Item>Residentes</Breadcrumb.Item>
       </Breadcrumb>
-      <Form
-        form={form}
-        layout="horizontal"
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 8 }}>
-        <Form.Item label="Agregar Residente:" />
-        <Form.Item label="Nombres: ">
-          <Input
-            value={firstName}
-            onChange={e => setFirstName(e.target.value)}
-            name="firstName"
-          />
-        </Form.Item>
-        <Form.Item label="Apellidos: " rules={[{ required: true }]}>
-          <Input
-            name="lastName"
-            value={lastName}
-            onChange={e => setLastName(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Grado: " rules={[{ required: true }]}>
-          <Select
-            defaultValue={'2do Año'}
-            optionFilterProp="children"
-            onChange={value => setGrade(value)}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }>
-            {['2do Año', '3er Año'].map(value => (
-              <Option value={value} key={value}>
-                {value}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
-          <Button key="submit" type="primary" onClick={onSubmit}>
-            Agregar
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <div className="outer-categories-card">
-        <Table
-          loading={loading}
-          columns={columns}
-          dataSource={residents}
-          pagination={{ pageSize: 6 }}
-          scroll={{ y: 400 }}
+      <CollapsableFormWrapper header={'Agregar residente'}>
+        <ResidentsForm
+          onSubmit={onSubmit}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+          setGrade={setGrade}
+          firstName={firstName}
+          lastName={lastName}
         />
-      </div>
+      </CollapsableFormWrapper>
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={residents}
+        pagination={{ pageSize: 6 }}
+        scroll={{ y: 400 }}
+      />
     </>
   );
 };
