@@ -11,6 +11,8 @@ class Categories extends Component {
     categoryName: '',
     savingCategory: false,
     loading: true,
+    editing: false,
+    id: '',
   };
 
   componentDidMount() {
@@ -53,33 +55,67 @@ class Categories extends Component {
       });
   };
 
+  onUpdate = key => {
+    this.setState({ loading: true, editing: true, id: key });
+    axios
+      .get(`${URL_CATEGORIES}/${key}`)
+      .then(({ data }) => {
+        this.setState({ categoryName: data.category.name, loading: false });
+      })
+      .catch(({ response }) => console.log(response));
+  };
+
   handleChange = event => {
     this.setState({ categoryName: event.target.value });
   };
 
+  cancelUpdate = e => {
+    e.preventDefault();
+    this.setState({ editing: false, categoryName: '' });
+  };
+
   onSubmit = () => {
     this.setState({ savingCategory: true, loading: true });
+
+    const success = () => {
+      this.setState({
+        categoryName: '',
+        savingCategory: false,
+        loading: false,
+        editing: false,
+      });
+      notification['success']({
+        message: `La categoria ha sido ${
+          this.state.editing ? 'actualizada' : 'creada'
+        } con exito`,
+      });
+    };
+
+    if (this.state.editing) {
+      axios
+        .put(`${URL_CATEGORIES}/${this.state.id}`, {
+          name: this.state.categoryName,
+        })
+        .then(() => success())
+        .catch(() => {
+          notification['error']({
+            message: 'Error del servidor',
+          });
+        });
+      return;
+    }
     axios
       .post(`${URL_CATEGORIES}/`, { name: this.state.categoryName })
-      .then(({ data }) => {
-        this.setState({
-          categoryName: '',
-          savingCategory: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'La categoria ha sido creada con exito',
-        });
-      })
-      .catch(({ response }) => {
+      .then(() => success())
+      .catch(() => {
         notification['error']({
-          message: response.data,
+          message: 'Error del servidor',
         });
       });
   };
 
   render() {
-    const { categories, categoryName, loading } = this.state;
+    const { categories, categoryName, loading, editing } = this.state;
 
     const columns = [
       {
@@ -93,9 +129,7 @@ class Categories extends Component {
         key: 'action',
         render: record => (
           <ActionButtons
-            onUpdate={() => {
-              /*TODO: add function to update */
-            }}
+            onUpdate={() => this.onUpdate(record.key)}
             onRemove={() => this.onRemove(record.key)}
             update
             remove
@@ -122,8 +156,13 @@ class Categories extends Component {
             onChange={this.handleChange}
           />
           <Button key="submit" type="primary" onClick={this.onSubmit}>
-            Agregar
+            {editing ? 'Actualizar' : 'Agregar'}
           </Button>
+          {editing && (
+            <Button type="danger" onClick={this.cancelUpdate}>
+              Cancelar
+            </Button>
+          )}
         </Card>
 
         <Table loading={loading} columns={columns} dataSource={categories} />
