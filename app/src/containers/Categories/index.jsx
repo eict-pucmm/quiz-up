@@ -1,8 +1,9 @@
 import React, { Fragment, Component } from 'react';
-import { Breadcrumb, Button, notification, Input, Table } from 'antd';
+import { Breadcrumb, Button, notification, Input, Table, Card } from 'antd';
 import axios from 'axios';
 
 import { URL_CATEGORIES } from '../../config/urls';
+import ActionButtons from '../../components/ActionButtons';
 
 class Categories extends Component {
   state = {
@@ -91,9 +92,14 @@ class Categories extends Component {
         title: 'Acción',
         key: 'action',
         render: record => (
-          <Button danger type="text" onClick={() => this.onRemove(record.key)}>
-            Remover
-          </Button>
+          <ActionButtons
+            onUpdate={() => {
+              /*TODO: add function to update */
+            }}
+            onRemove={() => this.onRemove(record.key)}
+            update
+            remove
+          />
         ),
       },
     ];
@@ -104,7 +110,7 @@ class Categories extends Component {
           <Breadcrumb.Item>Categorias</Breadcrumb.Item>
         </Breadcrumb>
 
-        <div style={{ marginBottom: 8 }}>
+        <Card style={{ marginBottom: 8 }}>
           <span
             className="ant-form-item-label"
             style={{ fontWeight: 700, marginRight: 4 }}>
@@ -118,11 +124,9 @@ class Categories extends Component {
           <Button key="submit" type="primary" onClick={this.onSubmit}>
             Agregar
           </Button>
-        </div>
+        </Card>
 
-        <div className="outer-categories-card">
-          <Table loading={loading} columns={columns} dataSource={categories} />
-        </div>
+        <Table loading={loading} columns={columns} dataSource={categories} />
       </Fragment>
     );
   }

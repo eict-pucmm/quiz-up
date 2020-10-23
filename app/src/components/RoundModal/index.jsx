@@ -10,6 +10,14 @@ import { getTeams } from '../../api/teams';
 
 const { Option } = Select;
 
+const SHARED_PROPS = {
+  showArrow: true,
+  mode: 'multiple',
+  optionFilterProp: 'children',
+  filterOption: (input, option) =>
+    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+};
+
 const RoundModal = ({ gameEvent, ...props }) => {
   const {
     dispatch,
@@ -18,7 +26,9 @@ const RoundModal = ({ gameEvent, ...props }) => {
   const { name } = roundToAdd;
   const [categories, setCategories] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [error, setError] = useState();
+  const [errorName, setErrorName] = useState();
+  const [errorCategories, setErrorCategories] = useState();
+  const [errorTeams, setErrorTeams] = useState();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -28,7 +38,6 @@ const RoundModal = ({ gameEvent, ...props }) => {
 
     const loadTeams = async () => {
       const { data } = await getTeams();
-
       setTeams(data);
     };
 
@@ -38,14 +47,18 @@ const RoundModal = ({ gameEvent, ...props }) => {
 
   const handleChange = ({ target: { name, value } }) => {
     dispatch(addRound({ [name]: value }));
-    setError(value.length < 3);
+    setErrorName(value.length < 3);
   };
 
-  const onSelectEvents = value => dispatch(addRound({ categories: value }));
+  const onSelectEvents = value => {
+    setErrorCategories(value.length !== 4);
+    dispatch(addRound({ categories: value }));
+  };
 
   const onSelectTeams = value => {
     const participants = value.map(v => ({ team: v }));
     dispatch(addRound({ participants }));
+    setErrorTeams(value.length !== 4);
   };
 
   return (
@@ -57,21 +70,19 @@ const RoundModal = ({ gameEvent, ...props }) => {
       {ROUND.map(({ label, id, ...attr }) => (
         <Form.Item label={label} key={id}>
           <Input {...attr} value={name} onChange={handleChange} />
-          {error && (
+          {errorName && (
             <p style={{ color: 'red' }}>Favor introducir más de 3 carácteres</p>
           )}
         </Form.Item>
       ))}
       <Form.Item label="Categorías">
+        {errorCategories && (
+          <p style={{ color: 'red' }}>Favor de seleccionar 4 categorías</p>
+        )}
         <Select
-          showArrow
-          mode="multiple"
+          {...SHARED_PROPS}
           onChange={onSelectEvents}
-          placeholder="Categorías de esta ronda"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }>
+          placeholder="Categorías de esta ronda">
           {categories.map(({ name, _id }) => (
             <Option value={_id} key={_id}>
               {name}
@@ -80,8 +91,11 @@ const RoundModal = ({ gameEvent, ...props }) => {
         </Select>
       </Form.Item>
       <Form.Item label="Equipos">
+        {errorTeams && (
+          <p style={{ color: 'red' }}>Favor de seleccionar 4 equipos</p>
+        )}
         <Select
-          mode="multiple"
+          {...SHARED_PROPS}
           onChange={onSelectTeams}
           placeholder="Equipos que participaran en esta ronda">
           {teams.map(({ name, _id }) => (
