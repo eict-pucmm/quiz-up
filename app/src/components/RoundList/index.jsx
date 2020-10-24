@@ -44,12 +44,12 @@ const RoundList = props => {
   const handleCancel = () => setShowInfo(false);
 
   const onSubmit = async () => {
-    const { name, categories, teams } = state.roundToAdd;
+    const { name, categories, participants } = state.roundToAdd;
     if (
       !name ||
       name.length < 3 ||
       categories.length !== 4 ||
-      teams.length !== 4
+      participants.length !== 4
     ) {
       return notification['error']({
         message: 'Por favor revise los datos de la ronda.',
