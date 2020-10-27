@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Categories from '../../containers/Categories';
 import Residents from '../../containers/Residents';
@@ -8,9 +8,15 @@ import Game from '../../containers/Game';
 import Teams from '../../containers/Teams';
 import NotFound from '../NotFound';
 import Questions from '../../containers/Questions';
+import Login from '../../containers/Login';
+
+import {getUser} from '../../api/user.js'
+
 
 const Routes = () => (
   <Switch>
+    <Route path="/login" component={Login} />
+    {!getUser() && <Redirect to="/login"/> }
     <Route exact path="/" component={Event} />
     <Route path="/categories" component={Categories} />
     <Route path="/questions" component={Questions} />
@@ -19,7 +25,7 @@ const Routes = () => (
     <Route
       path="/event/round/:idOfRound"
       render={props => <Game {...props} />}
-    />
+      />
     <Route component={NotFound} />
   </Switch>
 );
