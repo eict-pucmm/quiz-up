@@ -9,6 +9,7 @@ const FormQuestions = ({ questionName, allCategories, ...props }) => {
 
   return (
     <Form
+      form={props.form}
       layout={isDesktop ? 'horizontal' : 'vertical'}
       labelCol={{ span: isDesktop ? 4 : 8 }}
       wrapperCol={{ span: isDesktop ? 8 : 0 }}>
@@ -18,7 +19,7 @@ const FormQuestions = ({ questionName, allCategories, ...props }) => {
       </Form.Item>
 
       {/** TODO: add error message when value is not 100 || 200 || 300 || 400 || 500 */}
-      <Form.Item label="Categorias:">
+      <Form.Item label="Categorias:" name="categories">
         <Select mode="multiple" onChange={props.onSelectChange}>
           {allCategories.map(({ name }) => (
             <Option value={name} key={name}>
@@ -37,7 +38,7 @@ const FormQuestions = ({ questionName, allCategories, ...props }) => {
         />
       </Form.Item>
       <Form.Item wrapperCol={{ span: 14, offset: isDesktop ? 4 : 0 }}>
-        <Button key="submit" type="primary" onClick={props.onSubmit}>
+        <Button type="primary" htmlType="submit" onClick={props.onSubmit}>
           Agregar
         </Button>
       </Form.Item>
