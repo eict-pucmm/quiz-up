@@ -12,9 +12,31 @@ export const getQuestions = async () => {
   }
 };
 
+export const getQuestionById = async id => {
+  try {
+    const response = await axios.get(`${URL_QUESTIONS}/${id}`);
+
+    return { data: response.data.question, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
 export const saveQuestion = async question => {
   try {
     const response = await axios.post(`${URL_QUESTIONS}/`, { ...question });
+
+    return { data: response, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
+export const updateQuestion = async (id, question) => {
+  try {
+    const response = await axios.put(`${URL_QUESTIONS}/${id}`, {
+      ...question,
+    });
 
     return { data: response, error: null };
   } catch (error) {

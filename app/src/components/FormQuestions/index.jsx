@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const { Option } = Select;
 
-const FormQuestions = ({ questionName, allCategories, ...props }) => {
+const FormQuestions = ({ questionName, allCategories, editing, ...props }) => {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   return (
@@ -28,7 +28,7 @@ const FormQuestions = ({ questionName, allCategories, ...props }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Valor en puntos: ">
+      <Form.Item label="Valor en puntos: " name="points">
         <InputNumber
           min={100}
           max={500}
@@ -39,8 +39,16 @@ const FormQuestions = ({ questionName, allCategories, ...props }) => {
       </Form.Item>
       <Form.Item wrapperCol={{ span: 14, offset: isDesktop ? 4 : 0 }}>
         <Button type="primary" htmlType="submit" onClick={props.onSubmit}>
-          Agregar
+          {editing ? 'Actualizar' : 'Agregar'}
         </Button>
+        {editing && (
+          <Button
+            type="danger"
+            onClick={props.cancelUpdate}
+            className="cancel-btn-form">
+            Cancelar
+          </Button>
+        )}
       </Form.Item>
     </Form>
   );
