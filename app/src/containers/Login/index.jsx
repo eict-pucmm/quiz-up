@@ -16,8 +16,9 @@ const Login = () => {
 
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(async res => {
-        setUser(res.user.getIdToken(true));
+      .then(async () => {
+        const token = await auth.currentUser.getIdToken(true);
+        setUser(token);
         window.location.replace('/');
       })
       .catch(error => {
