@@ -4,6 +4,7 @@ import { Layout, Avatar, Menu, Dropdown } from 'antd';
 import { AntDesignOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import { auth } from '../../constants/firebase';
+import { removeUser } from '../../api/user';
 
 import './styles.css';
 
@@ -14,7 +15,7 @@ const MyHeader = () => {
     auth
       .signOut()
       .then(() => {
-        localStorage.removeItem('USER');
+        removeUser();
         window.location.replace('/login');
       })
       .catch(error => {

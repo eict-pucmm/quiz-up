@@ -3,6 +3,7 @@ import { Modal, Button, Input, Form } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 
 import { auth } from '../../constants/firebase';
+import { setUser } from '../../api/user';
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -16,7 +17,7 @@ const Login = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(async res => {
-        localStorage.setItem('USER', res.user.getIdToken(true));
+        setUser(res.user.getIdToken(true));
         window.location.replace('/');
       })
       .catch(error => {
