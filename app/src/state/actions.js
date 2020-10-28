@@ -14,3 +14,12 @@ export const addRound = round => ({ type: 'ADD_ROUND', round });
 export const clearRoundFields = () => ({ type: 'CLEAR_ROUND_FIELDS' });
 
 export const viewOldEvents = status => ({ type: 'VIEW_OLD_EVENTS', status });
+
+export const setQuestionsAttributes = questions => ({
+  type: 'SET_QUESTIONS',
+  questions,
+});
+
+export const addQuestion = question => ({ type: 'ADD_QUESTION', question });
+
+export const clearQuestionForm = () => ({ type: 'CLEAR_QUESTION_FORM' });

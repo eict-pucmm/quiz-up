@@ -26,6 +26,23 @@ export const reducer = (state, action) => {
         roundToAdd: Object.assign({}, state.roundToAdd, { ...action.round }),
       };
 
+    case 'SET_QUESTIONS':
+      return {
+        ...state,
+        questions: Object.assign({}, state.questions, { ...action.questions }),
+      };
+
+    case 'ADD_QUESTION':
+      return {
+        ...state,
+        questionToAdd: Object.assign({}, state.questionToAdd, {
+          ...action.question,
+        }),
+      };
+
+    case 'CLEAR_QUESTION_FORM':
+      return { ...state, questionToAdd: initialState.questionToAdd };
+
     case 'CLEAR_EVENT_FIELDS':
       return { ...state, eventToAdd: initialState.eventToAdd };
 
