@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, Form } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 
 import { auth } from '../../constants/firebase';
 
@@ -20,6 +21,7 @@ const Login = () => {
       })
       .catch(error => {
         setError(true);
+        console.error('Error signing in with password and email', error);
       });
   };
 
@@ -32,7 +34,7 @@ const Login = () => {
         background: 'linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff)',
       }}>
       {error && (
-        <p style={{ color: 'red' }}>¡Clave o nombre de usuario incorrecto!</p>
+        <p style={{ color: 'red' }}>¡Correo electronico o clave incorrecta!</p>
       )}
       <Form
         form={form}
@@ -61,7 +63,7 @@ const Login = () => {
             onClick={event => {
               signInWithEmailAndPasswordHandler(event, email, password);
             }}>
-            Iniciar Sesión
+            <LoginOutlined /> Iniciar Sesión
           </Button>
         </Form.Item>
       </Form>
