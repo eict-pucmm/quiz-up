@@ -1,13 +1,11 @@
-const getUser = () => {
+export const getUser = () => {
   return localStorage.getItem('USER');
 };
 
-const setUser = user => {
+export const setUser = user => {
   localStorage.setItem('USER', user);
 };
 
-const removeUser = () => {
+export const removeUser = () => {
   localStorage.removeItem('USER');
 };
-
-export { getUser, setUser, removeUser };

@@ -1,10 +1,9 @@
-import axios from 'axios';
-
 import { URL_CATEGORIES } from '../config/urls';
+import { apiClient } from './axios';
 
 export const getCategories = async () => {
   try {
-    const response = await axios.get(`${URL_CATEGORIES}/`);
+    const response = await apiClient.get(`${URL_CATEGORIES}/`);
 
     return { data: response.data.categories, error: null };
   } catch (error) {
