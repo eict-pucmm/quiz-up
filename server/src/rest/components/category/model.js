@@ -8,7 +8,13 @@ const Category = new Schema({
     type: String,
     required: true,
     maxlength: 255,
-    unique: true,
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
   },
   createdAt: {
     type: Date,
@@ -29,6 +35,16 @@ const Category = new Schema({
 export function validateCategory(category) {
   const schema = Joi.object({
     name: Joi.string().max(255).required(),
+    deleted: Joi.boolean(),
+  }).options({ stripUnknown: true });
+
+  return schema.validate(category);
+}
+
+export function validateForUpdate(category) {
+  const schema = Joi.object({
+    name: Joi.string().max(255),
+    deleted: Joi.boolean(),
   }).options({ stripUnknown: true });
 
   return schema.validate(category);
