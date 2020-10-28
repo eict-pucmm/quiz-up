@@ -39,7 +39,7 @@ const Categories = () => {
       });
     }
     setSaving(false);
-    setLoading(true);
+    setLoading(false);
   };
 
   const clearAndReturn = error => {

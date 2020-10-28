@@ -1,178 +1,156 @@
-import React, { Fragment, Component } from 'react';
-import { Breadcrumb, notification, Table, Tag } from 'antd';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Breadcrumb, notification, Table, Form } from 'antd';
 
-import { URL_QUESTIONS, URL_CATEGORIES } from '../../config/urls';
 import QuestionsForm from '../../components/FormQuestions';
 import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
-import ActionButtons from '../../components/ActionButtons';
+import { COLUMNS } from './Columns';
+import { getCategories } from '../../api/categories';
+import { useStateValue } from '../../state';
+import {
+  getQuestionById,
+  getQuestions,
+  removeQuestion,
+  saveQuestion,
+  updateQuestion,
+} from '../../api/questions';
+import {
+  addQuestion,
+  clearQuestionForm,
+  setQuestionsAttributes,
+} from '../../state/actions';
 
-class Questions extends Component {
-  state = {
-    allCategories: [],
-    questions: [],
-    questionName: '',
-    questionCategories: [],
-    questionValue: '',
-    savingQuestion: false,
-    loading: true,
-  };
+const Questions = () => {
+  const { state, dispatch } = useStateValue();
+  const [loading, setLoading] = useState(true);
+  const [id, setId] = useState('');
+  const [form] = Form.useForm();
 
-  componentDidMount() {
-    this.getQuestions();
-  }
+  const { saving, data, editing, nameChanged } = state.questions;
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.savingQuestion !== this.state.savingQuestion) {
-      this.getQuestions();
+  useEffect(() => {
+    const get = async () => {
+      const { data } = await getQuestions();
+      const questions = data.map(el => ({ ...el, key: el._id }));
+      const { data: d } = await getCategories();
+      const categories = d.map(el => ({ ...el, key: el._id }));
+
+      dispatch(
+        setQuestionsAttributes({
+          data: questions || [],
+          allCategories: categories || [],
+        })
+      );
+      setLoading(false);
+    };
+
+    if (!saving) get();
+  }, [saving, dispatch]);
+
+  const onRemove = async key => {
+    dispatch(setQuestionsAttributes({ saving: true }));
+    const { error } = await removeQuestion(key);
+    if (!error) {
+      notification['success']({
+        message: 'La pregunta ha sido removida con exito',
+      });
     }
-  }
+    dispatch(setQuestionsAttributes({ saving: false }));
+  };
 
-  getQuestions = () => {
-    axios
-      .get(URL_QUESTIONS)
-      .then(({ data }) => {
-        const questions = data.questions.map(el => ({ ...el, key: el._id }));
-        setTimeout(() => this.setState({ questions, loading: false }), 1000);
-        axios
-          .get(URL_CATEGORIES)
-          .then(({ data }) => {
-            const categories = data.categories.map(el => ({
-              ...el,
-              key: el._id,
-            }));
-            setTimeout(
-              () => this.setState({ allCategories: categories }),
-              1000
-            );
-          })
-          .catch(({ response }) => {
-            console.log(response);
-          });
+  const onUpdate = async key => {
+    setId(key);
+    setLoading(true);
+    dispatch(setQuestionsAttributes({ editing: true }));
+
+    const { data } = await getQuestionById(key);
+    dispatch(
+      addQuestion({
+        name: data.name,
+        points: data.points,
+        categories: data.categories,
       })
-      .catch(({ response }) => {
-        console.log(response);
-      });
-  };
-
-  onRemove = key => {
-    this.setState({ savingQuestion: true, loading: true });
-    axios
-      .delete(`${URL_QUESTIONS}/${key}`, { id: key })
-      .then(() => {
-        this.setState({
-          savingQuestion: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'La pregunta ha sido borrada con exito',
-        });
-      })
-      .catch(({ response }) => {
-        console.log(response);
-      });
-  };
-
-  onSubmit = () => {
-    this.setState({ savingQuestion: true, loading: true });
-    axios
-      .post(`${URL_QUESTIONS}/`, {
-        name: this.state.questionName,
-        categories: this.state.questionCategories,
-        points: this.state.questionValue,
-      })
-      .then(({ data }) => {
-        this.setState({
-          questionName: '',
-          questionCategories: [],
-          savingQuestion: false,
-          loading: false,
-          questionValues: 100,
-        });
-        notification['success']({
-          message: 'La pregunta ha sido creada con exito',
-        });
-      })
-      .catch(() => {
-        notification['error']({
-          message:
-            '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
-        });
-      });
-  };
-
-  onSelectChange = value => {
-    this.setState({ questionCategories: value });
-  };
-
-  handleNameChange = event => {
-    this.setState({ questionName: event.target.value });
-  };
-
-  handleValueChange = value => {
-    this.setState({ questionValue: value });
-  };
-
-  render() {
-    const { allCategories, questions, questionName, loading } = this.state;
-
-    //TODO: add points column
-    const columns = [
-      {
-        title: 'Pregunta',
-        dataIndex: 'name',
-        key: 'pregunta',
-        render: text => <p>{text}</p>,
-      },
-      {
-        title: 'Categorías',
-        dataIndex: 'categories',
-        key: 'categories',
-        render: text => (
-          <>
-            {text.map(category => (
-              <Tag color="blue" key={category}>
-                {category}
-              </Tag>
-            ))}
-          </>
-        ),
-      },
-      {
-        title: 'Acción',
-        key: 'action',
-        render: record => (
-          <ActionButtons
-            onUpdate={() => {
-              /*TODO: add function to update */
-            }}
-            onRemove={() => this.onRemove(record.key)}
-            update
-            remove
-          />
-        ),
-      },
-    ];
-
-    return (
-      <Fragment>
-        <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Preguntas</Breadcrumb.Item>
-        </Breadcrumb>
-        <CollapsableFormWrapper header={'Agregar una pregunta'}>
-          <QuestionsForm
-            questionName={questionName}
-            allCategories={allCategories}
-            handleNameChange={this.handleNameChange}
-            handleValueChange={this.handleValueChange}
-            onSelectChange={this.onSelectChange}
-            onSubmit={this.onSubmit}
-          />
-        </CollapsableFormWrapper>
-        <Table loading={loading} columns={columns} dataSource={questions} />
-      </Fragment>
     );
-  }
-}
+    form.setFieldsValue({ categories: data.categories, points: data.points });
+    setLoading(false);
+  };
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    const { errorName, errorPoints, categories } = state.questionToAdd;
+    if (errorName || errorPoints || categories.length === 0) {
+      dispatch(addQuestion({ errorCategories: categories.length === 0 }));
+      return notification['error']({
+        message: 'Por favor revise los datos del formulario.',
+      });
+    }
+
+    setLoading(true);
+    dispatch(setQuestionsAttributes({ saving: true }));
+
+    const QUESTION = { ...state.questionToAdd };
+
+    if (editing) {
+      if (!nameChanged) delete QUESTION.name;
+      const { error } = await updateQuestion(id, { ...QUESTION });
+      return clearAndReturn(error);
+    }
+
+    const { error } = await saveQuestion({ ...QUESTION });
+
+    return clearAndReturn(error);
+  };
+
+  const clearAndReturn = error => {
+    if (error) {
+      return notification['error']({
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+      });
+    }
+
+    form.resetFields();
+    dispatch(
+      setQuestionsAttributes({
+        editing: false,
+        saving: false,
+        nameChanged: false,
+      })
+    );
+    dispatch(clearQuestionForm());
+
+    return notification['success']({
+      message: `La pregunta ha sido ${
+        editing ? 'actualizada' : 'creada'
+      } con exito`,
+    });
+  };
+
+  const cancelUpdate = e => {
+    e.preventDefault();
+    form.resetFields();
+    dispatch(clearQuestionForm());
+    dispatch(setQuestionsAttributes({ editing: false, nameChanged: false }));
+  };
+
+  return (
+    <>
+      <Breadcrumb className="breadcrumb-title">
+        <Breadcrumb.Item>Preguntas</Breadcrumb.Item>
+      </Breadcrumb>
+      <CollapsableFormWrapper header={'Agregar una pregunta'}>
+        <QuestionsForm
+          form={form}
+          cancelUpdate={cancelUpdate}
+          onSubmit={onSubmit}
+        />
+      </CollapsableFormWrapper>
+      <Table
+        loading={loading}
+        columns={COLUMNS({ onRemove, onUpdate })}
+        dataSource={data}
+      />
+    </>
+  );
+};
 
 export default Questions;
