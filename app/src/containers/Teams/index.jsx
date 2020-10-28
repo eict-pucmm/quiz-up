@@ -3,6 +3,7 @@ import { Breadcrumb, notification, Table, Tag } from 'antd';
 import axios from 'axios';
 
 import { URL_TEAMS, URL_RESIDENTS } from '../../config/urls';
+import { getMedicalCenters } from '../../api/medialCenters';
 import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
 import FormTeams from '../../components/FormTeams';
 import ActionButtons from '../../components/ActionButtons';
@@ -16,12 +17,14 @@ class Teams extends Component {
     teamName: '',
     teamResidents: [],
     teamMedicalCenter: '',
+    allMedicalCenters: [],
     savingTeam: false,
     loading: false,
   };
 
   componentDidMount() {
     this.getTeams();
+    this.getCenters();
   }
 
   componentDidUpdate(_, prevState) {
@@ -50,6 +53,12 @@ class Teams extends Component {
           .catch(({ response }) => console.log(response));
       })
       .catch(({ response }) => console.log(response));
+  };
+
+  getCenters = async () => {
+    const { data } = await getMedicalCenters();
+
+    this.setState({ allMedicalCenters: data || [] });
   };
 
   handleNameChange = event => {
@@ -91,7 +100,13 @@ class Teams extends Component {
   };
 
   render() {
-    const { allResidents, teams, teamName, loading } = this.state;
+    const {
+      allResidents,
+      teams,
+      teamName,
+      loading,
+      allMedicalCenters,
+    } = this.state;
 
     const columns = [
       {
@@ -140,8 +155,9 @@ class Teams extends Component {
         </Breadcrumb>
         <CollapsableFormWrapper header="Agregar un equipo">
           <FormTeams
-            allResidents={allResidents}
             teamName={teamName}
+            allResidents={allResidents}
+            allMedicalCenters={allMedicalCenters}
             onSelectChange={this.onSelectChange}
             handleMedChange={this.handleMedChange}
             handleNameChange={this.handleNameChange}

@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const { Option } = Select;
 
-const FormTeams = ({ allResidents, teamName, ...props }) => {
+const FormTeams = ({ allResidents, teamName, allMedicalCenters, ...props }) => {
   const { handleNameChange, handleMedChange, onSelectChange, onSubmit } = props;
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
@@ -39,10 +39,9 @@ const FormTeams = ({ allResidents, teamName, ...props }) => {
           showArrow
           placeholder="Seleccionar centro medico del equipo"
           onChange={handleMedChange}>
-          {/*TODO: add request for the medical centers*/}
-          {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
-            <Option value={cm} key={cm}>
-              {cm}
+          {allMedicalCenters.map(({ name, _id }) => (
+            <Option value={name} key={_id}>
+              {name}
             </Option>
           ))}
         </Select>
