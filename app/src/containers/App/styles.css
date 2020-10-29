@@ -5,11 +5,19 @@
   overflow: initial;
 }
 
+.app-header {
+  padding: 0;
+}
+
+.cancel-btn-form {
+  margin-left: 15px;
+}
+
 .header {
   height: 6vh;
 }
 .red {
-  background-color: red;
+  color: red;
 }
 
 .title-quiz-up {
