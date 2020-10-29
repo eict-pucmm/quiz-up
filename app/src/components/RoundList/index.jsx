@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Modal, Row, Col, Empty, Button, notification } from 'antd';
+import { Card, Modal, Empty, Button, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -70,15 +70,13 @@ const RoundList = props => {
       });
     }
 
-    setTimeout(() => {
-      notification['success']({
-        message: 'El evento ha sido creada con exito',
-      });
+    notification['success']({
+      message: 'El evento ha sido creada con exito',
+    });
 
-      dispatch(clearRoundFields());
-      dispatch(setRoundAttributes({ saving: false }));
-      setAddRound(false);
-    }, 600);
+    dispatch(clearRoundFields());
+    dispatch(setRoundAttributes({ saving: false }));
+    setAddRound(false);
   };
 
   if (loading) return <Card loading={loading} />;
@@ -92,26 +90,25 @@ const RoundList = props => {
           </Empty>
         </>
       ) : (
-        <div>
-          <Row gutter={[40, 16]}>
-            <Col className="gutter-row" span={8}>
-              <Card hoverable className="add-round-card" onClick={showAddRound}>
-                <PlusOutlined />
-                Agregar Ronda
-              </Card>
-            </Col>
-            {localRounds.map((round, index) => {
-              return (
-                <RoundCard
-                  index={index}
-                  key={round._id}
-                  loading={loading}
-                  round={round}
-                  showModal={showModal}
-                />
-              );
-            })}
-          </Row>
+        <div className="round-list-container">
+          <Card
+            hoverable
+            className="add-round-card event-rounds-card"
+            onClick={showAddRound}>
+            <PlusOutlined />
+            Agregar Ronda
+          </Card>
+          {localRounds.map((round, index) => {
+            return (
+              <RoundCard
+                index={index}
+                key={round._id}
+                loading={loading}
+                round={round}
+                showModal={showModal}
+              />
+            );
+          })}
           <Modal
             centered
             cancelText="Cancelar"
