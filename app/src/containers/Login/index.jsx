@@ -10,9 +10,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const signInWithEmailAndPasswordHandler = (event, email, password) => {
     event.preventDefault();
+    setLoading(true);
 
     auth
       .signInWithEmailAndPassword(email, password)
@@ -24,6 +26,9 @@ const Login = () => {
       .catch(error => {
         setError(true);
         console.error('Error signing in with password and email', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -35,9 +40,7 @@ const Login = () => {
       maskStyle={{
         background: 'linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff)',
       }}>
-      {error && (
-        <p style={{ color: 'red' }}>¡Correo electronico o clave incorrecta!</p>
-      )}
+      {error && <p className="red">¡Correo electronico o clave incorrecta!</p>}
       <Form
         form={form}
         layout="vertical"
@@ -61,11 +64,12 @@ const Login = () => {
         <Form.Item wrapperCol={{ span: 14 }}>
           <Button
             key="submit"
+            loading={loading}
             type="primary"
             onClick={event => {
               signInWithEmailAndPasswordHandler(event, email, password);
             }}>
-            <LoginOutlined /> Iniciar Sesión
+            Iniciar Sesión <LoginOutlined />
           </Button>
         </Form.Item>
       </Form>
