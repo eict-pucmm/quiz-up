@@ -1,6 +1,4 @@
 .app-header {
   align-items: center;
-  display: flex;
-  flex-direction: row-reverse;
   padding: 0;
 }

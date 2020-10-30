@@ -33,9 +33,16 @@ const MyHeader = () => {
     </Menu>
   );
 
+  const atGameWindow = window.location.pathname.includes('/event/round/');
+
   return (
-    <Header className="app-header">
-      {window.location.pathname.includes('/event/round/') ? (
+    <Header
+      className="app-header"
+      style={{
+        display: 'flex',
+        flexDirection: atGameWindow ? 'row' : 'row-reverse',
+      }}>
+      {atGameWindow ? (
         <Title className="title-quiz-up" level={3}>
           <a href="/">Quiz Up</a>
         </Title>
