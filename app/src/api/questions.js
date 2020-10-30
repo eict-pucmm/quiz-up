@@ -1,10 +1,10 @@
-import axios from 'axios';
+import { apiClient } from './axios';
 
 import { URL_QUESTIONS } from '../config/urls';
 
 export const getQuestions = async () => {
   try {
-    const response = await axios.get(`${URL_QUESTIONS}/`);
+    const response = await apiClient.get(`${URL_QUESTIONS}/`);
 
     return { data: response.data.questions, error: null };
   } catch (error) {
@@ -14,7 +14,7 @@ export const getQuestions = async () => {
 
 export const getQuestionById = async id => {
   try {
-    const response = await axios.get(`${URL_QUESTIONS}/${id}`);
+    const response = await apiClient.get(`${URL_QUESTIONS}/${id}`);
 
     return { data: response.data.question, error: null };
   } catch (error) {
@@ -24,7 +24,7 @@ export const getQuestionById = async id => {
 
 export const saveQuestion = async question => {
   try {
-    const response = await axios.post(`${URL_QUESTIONS}/`, { ...question });
+    const response = await apiClient.post(`${URL_QUESTIONS}/`, { ...question });
 
     return { data: response, error: null };
   } catch (error) {
@@ -34,7 +34,7 @@ export const saveQuestion = async question => {
 
 export const updateQuestion = async (id, question) => {
   try {
-    const response = await axios.put(`${URL_QUESTIONS}/${id}`, {
+    const response = await apiClient.put(`${URL_QUESTIONS}/${id}`, {
       ...question,
     });
 
@@ -46,7 +46,7 @@ export const updateQuestion = async (id, question) => {
 
 export const removeQuestion = async id => {
   try {
-    const response = await axios.put(`${URL_QUESTIONS}/${id}`, {
+    const response = await apiClient.put(`${URL_QUESTIONS}/${id}`, {
       deleted: true,
       deletedAt: new Date(),
     });

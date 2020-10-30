@@ -29,6 +29,7 @@ const Question = new Schema({
   },
   deletedAt: {
     type: Date,
+    default: Date.now,
   },
   createdAt: {
     type: Date,
@@ -63,6 +64,7 @@ export function validateForUpdate(question) {
     categories: Joi.array(),
     points: Joi.number().min(100).max(500),
     deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);
