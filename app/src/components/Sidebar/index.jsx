@@ -23,7 +23,9 @@ const Sidebar = () => {
     setCollapsed(!collapsed);
   };
 
-  return location.pathname.includes('/event/round/') ? (
+  const path = location.pathname;
+
+  return path.includes('/event/round/') || path.includes('/login') ? (
     <Fragment />
   ) : (
     <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
