@@ -14,5 +14,17 @@
 }
 
 .add-round-card {
+  max-height: 70px;
   text-align: center;
+}
+
+@media only screen and (min-width: 1024px) {
+  .add-round-card {
+    width: 211px;
+  }
+
+  .round-list-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
