@@ -1,32 +1,22 @@
 import React from 'react';
-import Title from 'antd/lib/typography/Title';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import Routes from '../../components/Routes';
 import Sidebar from '../../components/Sidebar';
+import MyHeader from '../../components/MyHeader';
 
 import './styles.css';
 
-const { Header, Footer, Content } = Layout;
+const { Footer, Content } = Layout;
 
 const App = () => {
-  const HEADER = window.location.pathname.includes('/event/round/') ? (
-    <Header className="app-header">
-      <Title className="title-quiz-up" level={3}>
-        <a href="/">Quiz Up</a>
-      </Title>
-    </Header>
-  ) : (
-    <Header className="app-header" />
-  );
-
   return (
     <Layout>
       <Router>
         <Sidebar />
         <Layout>
-          {HEADER}
+          <MyHeader />
           <Content className="container">
             <Routes />
           </Content>
