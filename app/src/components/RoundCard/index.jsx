@@ -46,15 +46,13 @@ const RoundCard = ({ round, showModal, index }) => {
         ))}
       <Divider />
       <p>Equipos:</p>
-      <>
-        {['A', 'B', 'C', 'D'].map(letter => (
-          <Tooltip title={`Equipo ${letter}`} placement="top" key={letter}>
-            <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
-              E{letter}
-            </Avatar>
-          </Tooltip>
-        ))}
-      </>
+      {['A', 'B', 'C', 'D'].map(letter => (
+        <Tooltip title={`Equipo ${letter}`} placement="top" key={letter}>
+          <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+            E{letter}
+          </Avatar>
+        </Tooltip>
+      ))}
     </Card>
   );
 };
