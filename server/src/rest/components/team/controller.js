@@ -25,7 +25,11 @@ const updateAttributes = {
  * @returns {JSON} of Team
  */
 const list = async (req, res) => {
-  const [error, teams] = await wrapper(Team.find());
+  const [error, teams] = await wrapper(
+    Team.find().populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
