@@ -20,6 +20,10 @@ const Resident = new Schema({
     type: String,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -35,6 +39,7 @@ export function validateResident(resident) {
     lastName: Joi.string().max(255).required(),
     team: Joi.objectId(),
     grade: Joi.string(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(resident);

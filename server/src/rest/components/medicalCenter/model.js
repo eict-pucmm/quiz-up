@@ -11,6 +11,10 @@ const MedicalCenter = new Schema({
     maxlength: 255,
     unique: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -30,6 +34,7 @@ const MedicalCenter = new Schema({
 export function validateMedicalCenter(medicalCenter) {
   const schema = Joi.object({
     name: Joi.string().min(4).max(255).required(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(medicalCenter);
