@@ -15,6 +15,7 @@ const Category = new Schema({
   },
   deletedAt: {
     type: Date,
+    default: Date.now,
   },
   createdAt: {
     type: Date,
@@ -45,6 +46,7 @@ export function validateForUpdate(category) {
   const schema = Joi.object({
     name: Joi.string().max(255),
     deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
   return schema.validate(category);

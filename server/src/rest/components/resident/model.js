@@ -25,9 +25,22 @@ const Resident = new Schema({
     required: true,
     default: Date.now,
   },
+  //Residents shouldn't be removed,  so the
+  //model doesn't need a `deleted` property
 });
 
 export function validateResident(resident) {
+  const schema = Joi.object({
+    firstName: Joi.string().max(255).required(),
+    lastName: Joi.string().max(255).required(),
+    team: Joi.objectId(),
+    grade: Joi.string(),
+  }).options({ stripUnknown: true });
+
+  return schema.validate(resident);
+}
+
+export function validateForUpdate(resident) {
   const schema = Joi.object({
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
