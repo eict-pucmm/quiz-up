@@ -1,15 +1,8 @@
 import React from 'react';
-import { Modal, Button, Form } from 'antd';
+import { Modal, Button } from 'antd';
 
-const MyModal = ({
-  children,
-  onCancel,
-  onSubmit,
-  saving,
-  title,
-  type,
-  visible,
-}) => {
+const MyModal = props => {
+  const { children, onCancel, onSubmit, saving, title, type, visible } = props;
   return (
     <Modal
       centered
@@ -21,9 +14,7 @@ const MyModal = ({
           Crear {type}
         </Button>,
       ]}>
-      <Form layout="vertical" size="medium" labelCol={{ span: 12 }}>
-        {children}
-      </Form>
+      <>{children}</>
     </Modal>
   );
 };

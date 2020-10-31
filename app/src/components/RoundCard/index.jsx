@@ -4,9 +4,12 @@ import { useMediaQuery } from 'react-responsive';
 
 import { getRoundById } from '../../api/round';
 
+const COLORS = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
+
 const RoundCard = ({ round, showModal, index }) => {
   const { _id, name } = round;
   const [fetchedRound, setFetchedRound] = useState({});
+  console.log('RoundCard -> fetchedRound', fetchedRound);
   const [loading, setLoading] = useState(true);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
@@ -20,6 +23,8 @@ const RoundCard = ({ round, showModal, index }) => {
 
     loadRound();
   }, [_id, round]);
+
+  const { categories, participants } = fetchedRound;
 
   return (
     <Card
@@ -38,21 +43,24 @@ const RoundCard = ({ round, showModal, index }) => {
         </span>
       }>
       <p>Categorias:</p>
-      {fetchedRound.categories &&
-        fetchedRound.categories.map(({ name, _id }) => (
+      {categories &&
+        categories.map(({ name, _id }) => (
           <Tag color="blue" key={_id}>
             {name}
           </Tag>
         ))}
       <Divider />
       <p>Equipos:</p>
-      {['A', 'B', 'C', 'D'].map(letter => (
-        <Tooltip title={`Equipo ${letter}`} placement="top" key={letter}>
-          <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
-            E{letter}
-          </Avatar>
-        </Tooltip>
-      ))}
+      <Avatar.Group>
+        {participants &&
+          participants.map(({ team }, i) => (
+            <Tooltip title={team.name} placement="top" key={team.name}>
+              <Avatar size="large" style={{ backgroundColor: COLORS[i] }}>
+                {team.name[0]}
+              </Avatar>
+            </Tooltip>
+          ))}
+      </Avatar.Group>
     </Card>
   );
 };

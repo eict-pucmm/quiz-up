@@ -13,11 +13,15 @@ export const initialState = {
     event: '',
     selectedRound: 0,
     saving: false,
+    roundId: '',
   },
   roundToAdd: {
     name: '',
     categories: [],
-    teams: [],
+    participants: [{ team: '', answered: [] }],
+    errorName: false,
+    errorCategories: false,
+    errorTeams: false,
   },
   questions: {
     data: [],

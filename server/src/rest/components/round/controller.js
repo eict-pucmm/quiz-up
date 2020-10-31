@@ -63,6 +63,10 @@ const findById = async (req, res) => {
         path: 'categories',
         select: 'name',
       },
+      {
+        path: 'participants.team',
+        select: 'name medicalCenter',
+      },
     ])
   );
 
@@ -82,7 +86,7 @@ const create = async (req, res) => {
     let roomId = String(Math.floor(100000 + Math.random() * 900000));
     let roundExists = await Round.findOne({ roomId });
 
-    while (!!roundExists) {
+    while (roundExists) {
       roomId = String(Math.floor(100000 + Math.random() * 900000));
       roundExists = await Round.findOne({ roomId });
     }
@@ -103,7 +107,7 @@ const create = async (req, res) => {
   } catch (error) {
     return res
       .status(INTERNAL_SERVER_ERROR)
-      .json({ message: 'Error creating the Round', error: errorSaving });
+      .json({ message: 'Error creating the Round', error });
   }
 };
 
