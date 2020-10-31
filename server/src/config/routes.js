@@ -6,7 +6,7 @@ import events from '../rest/components/event/routes';
 import rounds from '../rest/components/round/routes';
 import medicalCenters from '../rest/components/medicalCenter/routes';
 
-// import authMiddleware from '../rest/middlewares/firebase-auth';
+import authMiddleware from '../rest/middlewares/firebase-auth';
 
 import {
   URL_QUESTIONS,
@@ -19,8 +19,7 @@ import {
 } from './urls';
 
 const setRoutes = app => {
-  //TODO: get credentials to see if it starts verifying the token correctly
-  // app.use(authMiddleware); //use middleware for all routes
+  app.use(authMiddleware); //use middleware for all routes
   app.use(URL_QUESTIONS, questions);
   app.use(URL_CATEGORIES, categories);
   app.use(URL_RESIDENTS, residents);
