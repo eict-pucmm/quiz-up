@@ -9,6 +9,10 @@
   pointer-events: none;
 }
 
+.home-header-title {
+  margin: 0 !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -20,10 +24,10 @@
   background-color: #031529;
   color: #3790ff;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-size: calc(10px + 2vmin);
   font-weight: bold;
-  justify-content: center;
+  justify-content: space-evenly;
   min-height: 10vh;
 }
 
