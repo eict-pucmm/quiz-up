@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag } from 'antd';
+import { Tag, Tooltip, Avatar } from 'antd';
 
 import ActionButtons from '../../components/ActionButtons';
 
@@ -30,6 +30,24 @@ export const COLUMNS = ({ onRemove, onUpdate }) => {
       key: 'points',
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.points - b.points,
+    },
+    {
+      title: 'Creado Por',
+      dataIndex: 'createdBy',
+      key: 'createdBy',
+      width: 150,
+      render: record => {
+        if (!record) return;
+        const { firstName, lastName } = record;
+        return (
+          <Tooltip title={`${firstName} ${lastName}`} placement="top">
+            <Avatar
+              style={{
+                backgroundColor: '#fde3cf',
+              }}>{`${firstName[0]}${lastName[0]}`}</Avatar>
+          </Tooltip>
+        );
+      },
     },
     {
       title: 'Acción',

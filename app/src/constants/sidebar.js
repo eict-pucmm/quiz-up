@@ -2,6 +2,7 @@ import {
   QuestionCircleOutlined,
   TeamOutlined,
   BookOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons';
 
 export default [
@@ -22,4 +23,5 @@ export default [
       { title: 'Residentes', route: '/residents' },
     ],
   },
+  { title: 'Administradores', route: '/admins', Icon: UserAddOutlined },
 ];
