@@ -1,5 +1,6 @@
 import { URL_EVENTS } from '../config/urls';
 import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getEvents = async ({ oldEvents = false } = {}) => {
   try {
@@ -26,7 +27,10 @@ export const getEvents = async ({ oldEvents = false } = {}) => {
 
 export const saveEvents = async event => {
   try {
-    const response = await apiClient.post(`${URL_EVENTS}/`, { ...event });
+    const response = await apiClient.post(`${URL_EVENTS}/`, {
+      ...event,
+      createdBy: getUserInfo().id,
+    });
 
     return { data: response, error: null };
   } catch (error) {

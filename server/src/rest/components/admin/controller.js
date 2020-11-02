@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Admin, { validateAdmin, validateForUpdate } from './model';
 import {
   OK,
@@ -34,7 +35,10 @@ const list = async (req, res) => {
  * @returns {JSON} of a Admin
  */
 const findById = async (req, res) => {
-  const [error, admin] = await wrapper(Admin.findById({ _id: req.params.id }));
+  const id = mongoose.Types.ObjectId.isValid(req.params.id)
+    ? '_id'
+    : 'firebaseUID';
+  const [error, admin] = await wrapper(Admin.findOne({ [id]: req.params.id }));
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })

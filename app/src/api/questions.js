@@ -1,6 +1,7 @@
 import { apiClient } from './axios';
 
 import { URL_QUESTIONS } from '../config/urls';
+import { getUserInfo } from './user';
 
 export const getQuestions = async () => {
   try {
@@ -24,7 +25,10 @@ export const getQuestionById = async id => {
 
 export const saveQuestion = async question => {
   try {
-    const response = await apiClient.post(`${URL_QUESTIONS}/`, { ...question });
+    const response = await apiClient.post(`${URL_QUESTIONS}/`, {
+      ...question,
+      createdBy: getUserInfo().id,
+    });
 
     return { data: response, error: null };
   } catch (error) {

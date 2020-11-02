@@ -1,5 +1,6 @@
 import { URL_ROUNDS, URL_EVENTS } from '../config/urls';
 import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getRoundsByEvent = async eventId => {
   try {
@@ -26,6 +27,7 @@ export const saveRound = async ({ round, event }) => {
     const response = await apiClient.post(`${URL_ROUNDS}/`, {
       ...round,
       event,
+      createdBy: getUserInfo().id,
     });
     //update the parent event to add the round to
     //the array of rounds of a specific event
