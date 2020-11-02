@@ -15,6 +15,11 @@ const Category = new Schema({
   },
   deletedAt: {
     type: Date,
+    default: Date.now,
+  },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
   },
   createdAt: {
     type: Date,
@@ -36,6 +41,7 @@ export function validateCategory(category) {
   const schema = Joi.object({
     name: Joi.string().max(255).required(),
     deleted: Joi.boolean(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(category);
@@ -45,6 +51,7 @@ export function validateForUpdate(category) {
   const schema = Joi.object({
     name: Joi.string().max(255),
     deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
   return schema.validate(category);

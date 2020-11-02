@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Button, notification, Input, Table, Card } from 'antd';
 
-import ActionButtons from '../../components/ActionButtons';
+import { COLUMNS } from './columns';
 import {
   getCategories,
   getCategoryById,
@@ -94,26 +94,6 @@ const Categories = () => {
     setCategoryName('');
   };
 
-  const columns = [
-    {
-      title: 'Categorías',
-      dataIndex: 'name',
-      key: 'categoria',
-    },
-    {
-      title: 'Acción',
-      key: 'action',
-      render: record => (
-        <ActionButtons
-          onUpdate={() => onUpdate(record.key)}
-          onRemove={() => onRemove(record.key)}
-          update
-          remove
-        />
-      ),
-    },
-  ];
-
   return (
     <>
       <Breadcrumb className="breadcrumb-title">
@@ -140,7 +120,11 @@ const Categories = () => {
         )}
       </Card>
 
-      <Table loading={loading} columns={columns} dataSource={categories} />
+      <Table
+        loading={loading}
+        columns={COLUMNS({ onUpdate, onRemove })}
+        dataSource={categories}
+      />
     </>
   );
 };

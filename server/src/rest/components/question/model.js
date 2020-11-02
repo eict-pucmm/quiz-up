@@ -29,6 +29,11 @@ const Question = new Schema({
   },
   deletedAt: {
     type: Date,
+    default: Date.now,
+  },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
   },
   createdAt: {
     type: Date,
@@ -52,6 +57,7 @@ export function validateQuestion(question) {
     categories: Joi.array(),
     points: Joi.number().min(100).max(500).required(),
     deleted: Joi.boolean(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);
@@ -63,6 +69,7 @@ export function validateForUpdate(question) {
     categories: Joi.array(),
     points: Joi.number().min(100).max(500),
     deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
   return schema.validate(question);

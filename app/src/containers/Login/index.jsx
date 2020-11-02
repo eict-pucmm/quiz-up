@@ -4,6 +4,7 @@ import { LoginOutlined } from '@ant-design/icons';
 
 import { auth } from '../../constants/firebase';
 import { setUser } from '../../api/user';
+import { getAdminById } from '../../api/admins';
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -19,8 +20,10 @@ const Login = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(async () => {
+        const { uid, email } = auth.currentUser;
+        const { data } = await getAdminById(uid);
         const token = await auth.currentUser.getIdToken(true);
-        setUser(token);
+        setUser(token, email, data._id);
         window.location.replace('/');
       })
       .catch(error => {

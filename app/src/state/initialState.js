@@ -39,4 +39,21 @@ export const initialState = {
     errorCategories: false,
     errorPoints: false,
   },
+  admins: {
+    data: [],
+    saving: false,
+  },
+  adminToAdd: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    allAccess: false,
+    errorFirstName: false,
+    errorLastName: false,
+    errorEmail: false,
+    errorPassword: false,
+    errorConfirm: false,
+  },
 };

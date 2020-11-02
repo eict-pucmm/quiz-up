@@ -21,7 +21,11 @@ const attributes = {
  * @returns {JSON} of Question
  */
 const list = async (req, res) => {
-  const [error, questions] = await wrapper(Question.find({ deleted: false }));
+  const [error, questions] = await wrapper(
+    Question.find({ deleted: false }).populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
