@@ -10,6 +10,7 @@ import NotFound from '../NotFound';
 import Questions from '../../containers/Questions';
 import Login from '../../containers/Login';
 import Admin from '../../containers/Admins';
+import MedicalCenters from '../../containers/MedicalCenters';
 
 import { getUser } from '../../api/user.js';
 
@@ -23,6 +24,7 @@ const Routes = () => (
     <Route path="/residents" component={Residents} />
     <Route path="/teams" component={Teams} />
     <Route path="/admins" component={Admin} />
+    <Route path="/medical-centers" component={MedicalCenters} />
     <Route
       path="/event/round/:idOfRound"
       render={props => <Game {...props} />}

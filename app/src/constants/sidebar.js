@@ -21,6 +21,7 @@ export default [
     subMenu: [
       { title: 'Equipos', route: '/teams' },
       { title: 'Residentes', route: '/residents' },
+      { title: 'Centros Medicos', route: '/medical-centers' },
     ],
   },
   { title: 'Administradores', route: '/admins', Icon: UserAddOutlined },
