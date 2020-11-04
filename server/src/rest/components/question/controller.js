@@ -1,10 +1,8 @@
-import Question, { validateQuestion } from './model';
-import Category from '../category/model';
+import Question, { validateQuestion, validateForUpdate } from './model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
-  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -14,7 +12,6 @@ import subscribeToChannel from '../../../services/subscriber';
 const attributes = {
   Model: Question,
   fields: 'name',
-  validate: validateQuestion,
 };
 
 /**
@@ -24,22 +21,10 @@ const attributes = {
  * @returns {JSON} of Question
  */
 const list = async (req, res) => {
-  const [error, questions] = await wrapper(Question.find());
-
-  return error
-    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ questions });
-};
-
-/**
- * List of Question
- * @param {Object} req
- * @param {Object} res
- * @returns {JSON} of Question
- */
-const getRoundOfQuestions = async (req, res) => {
   const [error, questions] = await wrapper(
-    Question.find({ 'category.name': req.body.category })
+    Question.find({ deleted: false }).populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
   );
 
   return error
@@ -70,7 +55,10 @@ const findById = async (req, res) => {
  */
 const create = async (req, res) => {
   try {
-    const [error, value] = await validateData(req.body, attributes);
+    const [error, value] = await validateData(req.body, {
+      ...attributes,
+      validate: validateQuestion,
+    });
 
     if (error) {
       return res.status(error.status).send(error.message);
@@ -88,14 +76,33 @@ const create = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
-  const [errorRemoving, removedCategory] = await wrapper(
-    Question.findByIdAndRemove({ _id: req.params.id })
+/**
+ * Updates a question
+ * @param {Object} req
+ * @param {Object} res
+ * @returns The question updated
+ */
+const update = async (req, res) => {
+  const [error, value] = await validateData(req.body, {
+    ...attributes,
+    validate: validateForUpdate,
+  });
+
+  if (error) {
+    return res.status(error.status).send(error.message);
+  }
+
+  const [errorUpdating, updatedQuestion] = await wrapper(
+    Question.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: value },
+      { new: true }
+    )
   );
 
-  return errorRemoving
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the question')
-    : res.status(NO_CONTENT);
+  return errorUpdating
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the question')
+    : res.status(CREATED).send(updatedQuestion);
 };
 
 /**
@@ -122,4 +129,4 @@ const subscribe = async (req, res) => {
   return res.status(OK).send('subscribed');
 };
 
-export { list, findById, create, publish, subscribe, remove };
+export { list, findById, create, publish, subscribe, update };

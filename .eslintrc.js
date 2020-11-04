@@ -5,11 +5,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'prettier/@typescript-eslint', // allow ESLint to work nicely with Prettier
-  ],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -28,9 +24,9 @@ module.exports = {
   ],
   rules: {
     'no-console': 1,
-    'no-unused-vars': ['error', 'always'],
-    semi: ['error', 'always'],
+    'no-unused-vars': 1,
     'react/prop-types': 0,
+    'react/display-name': 0,
   },
   settings: {
     react: {

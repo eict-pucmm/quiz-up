@@ -1,18 +1,18 @@
 import express from 'express';
-import { list, findById, create, update, remove } from './controller';
+import { list, findById, create, update } from './controller';
 
 const router = express.Router();
 
 /**
  * @route GET '/'
- * @returns {JSON} of all questions
+ * @returns {JSON} of all categories
  * @access Public
  */
 router.get('/', list);
 
 /**
  * @route GET '/:id'
- * @returns {JSON} of a specific question
+ * @returns {JSON} of a specific category
  * @access Public
  */
 router.get('/:id', findById);
@@ -30,12 +30,5 @@ router.post('/', create);
  * @access Public
  */
 router.put('/:id', update);
-
-/**
- * @route DELETE '/:id'
- * @returns NO_CONTENT status
- * @access Public
- */
-router.delete('/:id', remove);
 
 export default router;

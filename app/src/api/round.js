@@ -1,10 +1,10 @@
-import axios from 'axios';
-
 import { URL_ROUNDS, URL_EVENTS } from '../config/urls';
+import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getRoundsByEvent = async eventId => {
   try {
-    const response = await axios.get(`${URL_ROUNDS}/event/${eventId}`);
+    const response = await apiClient.get(`${URL_ROUNDS}/event/${eventId}`);
 
     return { data: response.data.rounds, error: null };
   } catch (error) {
@@ -14,7 +14,7 @@ export const getRoundsByEvent = async eventId => {
 
 export const getRoundById = async roundId => {
   try {
-    const response = await axios.get(`${URL_ROUNDS}/${roundId}`);
+    const response = await apiClient.get(`${URL_ROUNDS}/${roundId}`);
 
     return { data: response.data.round, error: null };
   } catch (error) {
@@ -24,10 +24,16 @@ export const getRoundById = async roundId => {
 
 export const saveRound = async ({ round, event }) => {
   try {
-    const response = await axios.post(`${URL_ROUNDS}/`, { ...round, event });
+    const response = await apiClient.post(`${URL_ROUNDS}/`, {
+      ...round,
+      event,
+      createdBy: getUserInfo().id,
+    });
     //update the parent event to add the round to
     //the array of rounds of a specific event
-    await axios.put(`${URL_EVENTS}/${event}`, { rounds: [response.data._id] });
+    await apiClient.put(`${URL_EVENTS}/${event}`, {
+      rounds: [response.data._id],
+    });
 
     return { data: response, error: null };
   } catch (error) {

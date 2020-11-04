@@ -1,135 +1,132 @@
-import React, { Fragment, Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Button, notification, Input, Table, Card } from 'antd';
-import axios from 'axios';
 
-import { URL_CATEGORIES } from '../../config/urls';
-import ActionButtons from '../../components/ActionButtons';
+import { COLUMNS } from './columns';
+import {
+  getCategories,
+  getCategoryById,
+  removeCategory,
+  saveCategory,
+  updateCategory,
+} from '../../api/categories';
 
-class Categories extends Component {
-  state = {
-    categories: [],
-    categoryName: '',
-    savingCategory: false,
-    loading: true,
-  };
+const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [id, setId] = useState('');
 
-  componentDidMount() {
-    this.getCategories();
-  }
+  useEffect(() => {
+    const get = async () => {
+      const { data } = await getCategories();
+      const categories = data.map(el => ({ ...el, key: el._id }));
+      setCategories(categories || []);
+      setLoading(false);
+    };
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.savingCategory !== this.state.savingCategory) {
-      this.getCategories();
+    if (!saving) get();
+  }, [saving]);
+
+  const onRemove = async key => {
+    setLoading(true);
+    setSaving(true);
+    const { error } = await removeCategory(key);
+    if (!error) {
+      notification['success']({
+        message: 'La categoria ha sido removida con exito',
+      });
     }
-  }
-
-  getCategories = () => {
-    axios
-      .get(URL_CATEGORIES)
-      .then(({ data }) => {
-        const categories = data.categories.map(el => ({ ...el, key: el._id }));
-        setTimeout(() => this.setState({ categories, loading: false }), 1000);
-      })
-      .catch(({ response }) => {
-        console.log(response);
-      });
+    setSaving(false);
+    setLoading(false);
   };
 
-  onRemove = key => {
-    this.setState({ savingCategory: true, loading: true });
-    axios
-      .delete(`${URL_CATEGORIES}/${key}`, { id: key })
-      .then(() => {
-        this.setState({
-          savingCategory: false,
-          loading: false,
+  const clearAndReturn = error => {
+    setCategoryName('');
+    setSaving(false);
+    setLoading(false);
+    setEditing(false);
+
+    return error
+      ? notification['error']({
+          message:
+            '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+        })
+      : notification['success']({
+          message: `La categoria ha sido ${
+            editing ? 'actualizada' : 'creada'
+          } con exito`,
         });
-        notification['success']({
-          message: 'La categoria ha sido borrada con exito',
-        });
-      })
-      .catch(({ response }) => {
-        console.log(response);
-      });
   };
 
-  handleChange = event => {
-    this.setState({ categoryName: event.target.value });
+  const onSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setSaving(true);
+
+    if (editing) {
+      const { error } = await updateCategory(id, { name: categoryName });
+
+      return clearAndReturn(error);
+    }
+
+    const { error } = await saveCategory({
+      name: categoryName,
+    });
+
+    return clearAndReturn(error);
   };
 
-  onSubmit = () => {
-    this.setState({ savingCategory: true, loading: true });
-    axios
-      .post(`${URL_CATEGORIES}/`, { name: this.state.categoryName })
-      .then(({ data }) => {
-        this.setState({
-          categoryName: '',
-          savingCategory: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'La categoria ha sido creada con exito',
-        });
-      })
-      .catch(({ response }) => {
-        notification['error']({
-          message: response.data,
-        });
-      });
+  const onUpdate = async key => {
+    setLoading(true);
+    setEditing(true);
+    setId(key);
+
+    const { data } = await getCategoryById(key);
+    setCategoryName(data.name);
+    setLoading(false);
   };
 
-  render() {
-    const { categories, categoryName, loading } = this.state;
+  const cancelUpdate = e => {
+    e.preventDefault();
+    setEditing(false);
+    setCategoryName('');
+  };
 
-    const columns = [
-      {
-        title: 'Categorías',
-        dataIndex: 'name',
-        key: 'categoria',
-        render: text => <p>{text}</p>,
-      },
-      {
-        title: 'Acción',
-        key: 'action',
-        render: record => (
-          <ActionButtons
-            onUpdate={() => {
-              /*TODO: add function to update */
-            }}
-            onRemove={() => this.onRemove(record.key)}
-            update
-            remove
-          />
-        ),
-      },
-    ];
-
-    return (
-      <Fragment>
-        <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Categorias</Breadcrumb.Item>
-        </Breadcrumb>
-
-        <Card style={{ marginBottom: 8 }}>
-          <span
-            className="ant-form-item-label"
-            style={{ fontWeight: 700, marginRight: 4 }}>
-            Nueva Categoria :
-          </span>
-          <Input
-            style={{ width: '40%' }}
-            value={categoryName}
-            onChange={this.handleChange}
-          />
-          <Button key="submit" type="primary" onClick={this.onSubmit}>
-            Agregar
+  return (
+    <>
+      <Breadcrumb className="breadcrumb-title">
+        <Breadcrumb.Item>Categorias</Breadcrumb.Item>
+      </Breadcrumb>
+      <Card style={{ marginBottom: 8 }}>
+        <span
+          className="ant-form-item-label"
+          style={{ fontWeight: 700, marginRight: 4 }}>
+          Nueva Categoria :
+        </span>
+        <Input
+          style={{ width: '40%' }}
+          value={categoryName}
+          onChange={e => setCategoryName(e.target.value)}
+        />
+        <Button key="submit" type="primary" onClick={onSubmit}>
+          {editing ? 'Actualizar' : 'Agregar'}
+        </Button>
+        {editing && (
+          <Button type="danger" onClick={cancelUpdate}>
+            Cancelar
           </Button>
-        </Card>
+        )}
+      </Card>
 
-        <Table loading={loading} columns={columns} dataSource={categories} />
-      </Fragment>
-    );
-  }
-}
+      <Table
+        loading={loading}
+        columns={COLUMNS({ onUpdate, onRemove })}
+        dataSource={categories}
+      />
+    </>
+  );
+};
 
 export default Categories;

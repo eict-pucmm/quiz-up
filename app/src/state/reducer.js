@@ -26,6 +26,38 @@ export const reducer = (state, action) => {
         roundToAdd: Object.assign({}, state.roundToAdd, { ...action.round }),
       };
 
+    case 'SET_QUESTIONS':
+      return {
+        ...state,
+        questions: Object.assign({}, state.questions, { ...action.questions }),
+      };
+
+    case 'ADD_QUESTION':
+      return {
+        ...state,
+        questionToAdd: Object.assign({}, state.questionToAdd, {
+          ...action.question,
+        }),
+      };
+
+    case 'SET_ADMINS':
+      return {
+        ...state,
+        admins: Object.assign({}, state.admins, { ...action.admins }),
+      };
+
+    case 'ADD_ADMIN':
+      return {
+        ...state,
+        adminToAdd: Object.assign({}, state.adminToAdd, { ...action.admin }),
+      };
+
+    case 'CLEAR_ADMIN_FORM':
+      return { ...state, adminToAdd: initialState.adminToAdd };
+
+    case 'CLEAR_QUESTION_FORM':
+      return { ...state, questionToAdd: initialState.questionToAdd };
+
     case 'CLEAR_EVENT_FIELDS':
       return { ...state, eventToAdd: initialState.eventToAdd };
 

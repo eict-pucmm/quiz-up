@@ -1,12 +1,12 @@
-import axios from 'axios';
-
 import { URL_EVENTS } from '../config/urls';
+import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getEvents = async ({ oldEvents = false } = {}) => {
   try {
     const {
       data: { events },
-    } = await axios.get(`${URL_EVENTS}/`);
+    } = await apiClient.get(`${URL_EVENTS}/`);
 
     const filteredEvents = events.filter(({ dateOfEvent }) => {
       const eventDate = new Date(dateOfEvent);
@@ -27,7 +27,10 @@ export const getEvents = async ({ oldEvents = false } = {}) => {
 
 export const saveEvents = async event => {
   try {
-    const response = await axios.post(`${URL_EVENTS}/`, { ...event });
+    const response = await apiClient.post(`${URL_EVENTS}/`, {
+      ...event,
+      createdBy: getUserInfo().id,
+    });
 
     return { data: response, error: null };
   } catch (error) {
