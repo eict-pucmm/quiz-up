@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Breadcrumb, notification, Table } from 'antd';
+import { Breadcrumb, notification, Table, Form } from 'antd';
 
-import { getResidents, saveResident } from '../../api/resident';
 import ResidentsForm from '../../components/FormResidents';
 import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
+import { COLUMNS } from './columns';
+import {
+  getResidentById,
+  getResidents,
+  saveResident,
+  updateResident,
+} from '../../api/resident';
 
 const Residents = () => {
   const [residents, setResidents] = useState([]);
@@ -12,30 +18,9 @@ const Residents = () => {
   const [grade, setGrade] = useState('2do Año');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const columns = [
-    {
-      title: 'Nombres',
-      dataIndex: 'firstName',
-      key: 'firstName',
-      width: 200,
-      render: text => <p>{text}</p>,
-    },
-    {
-      title: 'Apellidos',
-      dataIndex: 'lastName',
-      key: 'lastName',
-      width: 200,
-      render: text => <p>{text}</p>,
-    },
-    {
-      title: 'Grado',
-      dataIndex: 'grade',
-      key: 'grade',
-      width: 100,
-      render: text => <p>{text}</p>,
-    },
-  ];
+  const [editing, setEditing] = useState(false);
+  const [id, setId] = useState('');
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const get = async () => {
@@ -48,6 +33,19 @@ const Residents = () => {
     if (!saving) get();
   }, [saving]);
 
+  const onUpdate = async key => {
+    setLoading(true);
+    setEditing(true);
+    setId(key);
+
+    const { data } = await getResidentById(key);
+    setFirstName(data.firstName);
+    setLastName(data.lastName);
+    setGrade(data.grade);
+    form.setFieldsValue({ grade: data.grade });
+    setLoading(false);
+  };
+
   const onSubmit = async () => {
     if (!firstName || !lastName) {
       return notification['error']({
@@ -57,25 +55,53 @@ const Residents = () => {
     setSaving(true);
     setLoading(true);
 
-    const { error } = await saveResident({ firstName, lastName, grade });
+    const RESIDENT = {
+      firstName,
+      lastName,
+      grade,
+    };
+
+    if (editing) {
+      const { error } = await updateResident(id, RESIDENT);
+      return clearAndReturn(error);
+    }
+
+    const { error } = await saveResident(RESIDENT);
+
+    return clearAndReturn(error);
+  };
+
+  const clearAndReturn = error => {
+    setSaving(false);
+    setLoading(false);
 
     if (error) {
-      setSaving(false);
       return notification['error']({
-        message: error.data.message || error.data,
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 
-    setTimeout(() => {
-      notification['success']({
-        message: 'El residente ha sido agregado con exito',
-      });
+    form.resetFields();
+    if (editing) setEditing(false);
+    setFirstName('');
+    setLastName('');
+    setGrade('2do Año');
 
-      setFirstName('');
-      setLastName('');
-      setGrade('2do Año');
-      setSaving(false);
-    }, 600);
+    return notification['success']({
+      message: `El residente ha sido ${
+        editing ? 'actualizado' : 'creado'
+      } con exito`,
+    });
+  };
+
+  const cancelUpdate = () => {
+    form.resetFields();
+    setEditing(false);
+    setSaving(false);
+    setFirstName('');
+    setLastName('');
+    setGrade('2do Año');
   };
 
   return (
@@ -85,17 +111,20 @@ const Residents = () => {
       </Breadcrumb>
       <CollapsableFormWrapper header={'Agregar residente'}>
         <ResidentsForm
+          cancelUpdate={cancelUpdate}
+          editing={editing}
+          firstName={firstName}
+          form={form}
+          lastName={lastName}
           onSubmit={onSubmit}
           setFirstName={setFirstName}
-          setLastName={setLastName}
           setGrade={setGrade}
-          firstName={firstName}
-          lastName={lastName}
+          setLastName={setLastName}
         />
       </CollapsableFormWrapper>
       <Table
         loading={loading}
-        columns={columns}
+        columns={COLUMNS({ onUpdate })}
         dataSource={residents}
         pagination={{ pageSize: 6 }}
         scroll={{ y: 400 }}

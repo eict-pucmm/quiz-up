@@ -1,35 +1,15 @@
 import React from 'react';
-import { Tag, Tooltip, Avatar } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 
 import ActionButtons from '../../components/ActionButtons';
 
-export const COLUMNS = ({ onRemove, onUpdate }) => {
+export const COLUMNS = ({ onUpdate, onRemove }) => {
   return [
     {
-      title: 'Pregunta',
+      title: 'Centros Medicos',
       dataIndex: 'name',
-      key: 'pregunta',
-    },
-    {
-      title: 'Categorías',
-      dataIndex: 'categories',
-      key: 'categories',
-      render: text => (
-        <>
-          {text.map(category => (
-            <Tag color="blue" key={category}>
-              {category}
-            </Tag>
-          ))}
-        </>
-      ),
-    },
-    {
-      title: 'Valor',
-      dataIndex: 'points',
-      key: 'points',
-      defaultSortOrder: 'ascend',
-      sorter: (a, b) => a.points - b.points,
+      key: 'medicalCenter',
+      width: 500,
     },
     {
       title: 'Creado Por',
@@ -43,7 +23,7 @@ export const COLUMNS = ({ onRemove, onUpdate }) => {
           <Tooltip title={`${firstName} ${lastName}`} placement="top">
             <Avatar
               style={{
-                backgroundColor: '#fde3cf',
+                backgroundColor: '#f99548',
               }}>{`${firstName[0]}${lastName[0]}`}</Avatar>
           </Tooltip>
         );
@@ -52,6 +32,7 @@ export const COLUMNS = ({ onRemove, onUpdate }) => {
     {
       title: 'Acción',
       key: 'action',
+      width: 200,
       render: record => (
         <ActionButtons
           onUpdate={() => onUpdate(record.key)}

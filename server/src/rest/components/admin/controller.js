@@ -1,5 +1,5 @@
-import Category, { validateCategory, validateForUpdate } from './model';
-
+import mongoose from 'mongoose';
+import Admin, { validateAdmin, validateForUpdate } from './model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
@@ -9,50 +9,47 @@ import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
 
 const attributes = {
-  Model: Category,
-  fields: 'name',
-  validate: validateCategory,
+  Model: Admin,
+  fields: 'firebaseUID',
+  validate: validateAdmin,
 };
 
 /**
- * List of Category
+ * List of Admin
  * @param {Object} req
  * @param {Object} res
- * @returns {JSON} of Category
+ * @returns {JSON} of Admin
  */
 const list = async (req, res) => {
-  const [error, categories] = await wrapper(
-    Category.find({ deleted: false }).populate([
-      { path: 'createdBy', select: 'firstName lastName -_id' },
-    ])
-  );
+  const [error, admins] = await wrapper(Admin.find({ deleted: false }));
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ categories });
+    : res.status(OK).json({ admins });
 };
 
 /**
- * Finds one specific Category
+ * Finds one specific Admin
  * @param {Object} req
  * @param {Object} res
- * @returns {JSON} of a Category
+ * @returns {JSON} of a Admin
  */
 const findById = async (req, res) => {
-  const [error, category] = await wrapper(
-    Category.findById({ _id: req.params.id })
-  );
+  const id = mongoose.Types.ObjectId.isValid(req.params.id)
+    ? '_id'
+    : 'firebaseUID';
+  const [error, admin] = await wrapper(Admin.findOne({ [id]: req.params.id }));
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ category });
+    : res.status(OK).json({ admin });
 };
 
 /**
- * Creates a Category
+ * Creates a Admin
  * @param {Object} req
  * @param {Object} res
- * @returns The saved category
+ * @returns The saved admin
  */
 const create = async (req, res) => {
   const [error, value] = await validateData(req.body, attributes);
@@ -61,21 +58,21 @@ const create = async (req, res) => {
     return res.status(error.status).send(error.message);
   }
 
-  const category = new Category(value);
-  const [errorSaving, savedCategory] = await wrapper(category.save());
+  const admin = new Admin(value);
+  const [errorSaving, savedCategory] = await wrapper(admin.save());
 
   return errorSaving
     ? res
         .status(INTERNAL_SERVER_ERROR)
-        .json({ message: 'Error creating the category', error: errorSaving })
+        .json({ message: 'Error creating the admin', error: errorSaving })
     : res.status(CREATED).send(savedCategory);
 };
 
 /**
- * Updates a Category
+ * Updates a Admin
  * @param {Object} req
  * @param {Object} res
- * @returns The category updated
+ * @returns The admin updated
  */
 const update = async (req, res) => {
   const [error, value] = await validateData(req.body, {
@@ -88,7 +85,7 @@ const update = async (req, res) => {
   }
 
   const [errorUpdating, updatedCategory] = await wrapper(
-    Category.findByIdAndUpdate(
+    Admin.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: value },
       { new: true }
@@ -96,7 +93,7 @@ const update = async (req, res) => {
   );
 
   return errorUpdating
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the category')
+    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the admin')
     : res.status(CREATED).send(updatedCategory);
 };
 

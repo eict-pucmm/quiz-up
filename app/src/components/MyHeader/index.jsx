@@ -1,10 +1,14 @@
 import React from 'react';
 import Title from 'antd/lib/typography/Title';
 import { Layout, Avatar, Menu, Dropdown } from 'antd';
-import { AntDesignOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  AntDesignOutlined,
+  LogoutOutlined,
+  MailOutlined,
+} from '@ant-design/icons';
 
 import { auth } from '../../constants/firebase';
-import { removeUser } from '../../api/user';
+import { getUserInfo, removeUser } from '../../api/user';
 
 import './styles.css';
 
@@ -25,10 +29,13 @@ const MyHeader = () => {
 
   const MENU = (
     <Menu>
-      <Menu.Item key="0">
-        <span onClick={handleLogout}>
-          <LogoutOutlined /> Cerrar sesion
-        </span>
+      {getUserInfo().email && (
+        <Menu.Item icon={<MailOutlined />}>
+          <span>{getUserInfo().email}</span>
+        </Menu.Item>
+      )}
+      <Menu.Item key="0" icon={<LogoutOutlined />}>
+        <span onClick={handleLogout}>Cerrar sesion</span>
       </Menu.Item>
     </Menu>
   );

@@ -53,6 +53,10 @@ const Round = new Schema({
       }),
     },
   ],
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
 });
 
 /**
@@ -73,6 +77,7 @@ export function validateRound(round) {
     participants: Joi.array(),
     roomId: Joi.string().required(),
     finished: Joi.boolean(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(round);

@@ -21,7 +21,11 @@ const attributes = {
  * @returns {JSON} of MedicalCenter
  */
 const list = async (req, res) => {
-  const [error, medicalCenters] = await wrapper(MedicalCenter.find());
+  const [error, medicalCenters] = await wrapper(
+    MedicalCenter.find().populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
     : res.status(OK).json({ medicalCenters });

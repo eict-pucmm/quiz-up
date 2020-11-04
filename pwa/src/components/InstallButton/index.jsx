@@ -57,6 +57,7 @@ const InstallButton = () => {
             left: 0,
             bottom: 0,
             margin: '15px',
+            zIndex: 1001,
           }}>
           <Fab
             color="primary"

@@ -4,12 +4,13 @@ import { useMediaQuery } from 'react-responsive';
 
 const { Option } = Select;
 
-const FormResidents = ({ firstName, lastName, ...props }) => {
-  const { setFirstName, setLastName, setGrade, onSubmit } = props;
+const FormResidents = ({ firstName, lastName, form, ...props }) => {
+  const { setFirstName, setLastName, setGrade, onSubmit, editing } = props;
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   return (
     <Form
+      form={form}
       layout={isDesktop ? 'horizontal' : 'vertical'}
       labelCol={{ span: isDesktop ? 4 : 8 }}
       wrapperCol={{ span: isDesktop ? 8 : 0 }}>
@@ -27,11 +28,14 @@ const FormResidents = ({ firstName, lastName, ...props }) => {
           onChange={e => setLastName(e.target.value)}
         />
       </Form.Item>
-      <Form.Item label="Grado: ">
+      <Form.Item label="Grado: " name="grade">
         <Select
           defaultValue={'2do Año'}
           optionFilterProp="children"
-          onChange={value => setGrade(value)}
+          onChange={value => {
+            form.setFieldsValue({ grade: value });
+            setGrade(value);
+          }}
           filterOption={(input, option) =>
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }>
@@ -44,9 +48,17 @@ const FormResidents = ({ firstName, lastName, ...props }) => {
       </Form.Item>
 
       <Form.Item wrapperCol={{ span: 14, offset: isDesktop ? 4 : 0 }}>
-        <Button key="submit" type="primary" onClick={onSubmit}>
-          Agregar
+        <Button type="primary" htmlType="submit" onClick={onSubmit}>
+          {editing ? 'Actualizar' : 'Agregar'}
         </Button>
+        {editing && (
+          <Button
+            type="danger"
+            onClick={props.cancelUpdate}
+            className="cancel-btn-form">
+            Cancelar
+          </Button>
+        )}
       </Form.Item>
     </Form>
   );
