@@ -21,6 +21,10 @@ const Team = new Schema({
     type: String,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -42,6 +46,7 @@ export function validateTeam(team) {
     name: Joi.string().min(4).max(255).required(),
     residents: Joi.array(),
     medicalCenter: Joi.string().required(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(team);

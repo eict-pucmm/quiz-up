@@ -3,25 +3,13 @@ import { Avatar, Tooltip } from 'antd';
 
 import ActionButtons from '../../components/ActionButtons';
 
-export const COLUMNS = ({ onUpdate }) => {
+export const COLUMNS = ({ onUpdate, onRemove }) => {
   return [
     {
-      title: 'Nombres',
-      dataIndex: 'firstName',
-      key: 'firstName',
-      width: 200,
-    },
-    {
-      title: 'Apellidos',
-      dataIndex: 'lastName',
-      key: 'lastName',
-      width: 200,
-    },
-    {
-      title: 'Grado',
-      dataIndex: 'grade',
-      key: 'grade',
-      width: 100,
+      title: 'Categorías',
+      dataIndex: 'name',
+      key: 'categoria',
+      width: 500,
     },
     {
       title: 'Creado Por',
@@ -35,7 +23,7 @@ export const COLUMNS = ({ onUpdate }) => {
           <Tooltip title={`${firstName} ${lastName}`} placement="top">
             <Avatar
               style={{
-                backgroundColor: '#fde3cf',
+                backgroundColor: '#f99548',
               }}>{`${firstName[0]}${lastName[0]}`}</Avatar>
           </Tooltip>
         );
@@ -44,9 +32,14 @@ export const COLUMNS = ({ onUpdate }) => {
     {
       title: 'Acción',
       key: 'action',
-      width: 100,
+      width: 200,
       render: record => (
-        <ActionButtons onUpdate={() => onUpdate(record.key)} update />
+        <ActionButtons
+          onUpdate={() => onUpdate(record.key)}
+          onRemove={() => onRemove(record.key)}
+          update
+          remove
+        />
       ),
     },
   ];

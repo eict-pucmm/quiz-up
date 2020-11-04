@@ -5,6 +5,7 @@ import teams from '../rest/components/team/routes';
 import events from '../rest/components/event/routes';
 import rounds from '../rest/components/round/routes';
 import medicalCenters from '../rest/components/medicalCenter/routes';
+import admins from '../rest/components/admin/routes';
 
 import authMiddleware from '../rest/middlewares/firebase-auth';
 
@@ -16,6 +17,7 @@ import {
   URL_EVENTS,
   URL_ROUNDS,
   URL_MEDICAL_CENTERS,
+  URL_ADMINS,
 } from './urls';
 
 const setRoutes = app => {
@@ -27,6 +29,7 @@ const setRoutes = app => {
   app.use(URL_ROUNDS, rounds);
   app.use(URL_EVENTS, events);
   app.use(URL_MEDICAL_CENTERS, medicalCenters);
+  app.use(URL_ADMINS, admins);
 };
 
 export default setRoutes;

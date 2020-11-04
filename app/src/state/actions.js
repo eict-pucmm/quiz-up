@@ -23,3 +23,9 @@ export const setQuestionsAttributes = questions => ({
 export const addQuestion = question => ({ type: 'ADD_QUESTION', question });
 
 export const clearQuestionForm = () => ({ type: 'CLEAR_QUESTION_FORM' });
+
+export const setAdmins = admins => ({ type: 'SET_ADMINS', admins });
+
+export const addAdmin = admin => ({ type: 'ADD_ADMIN', admin });
+
+export const clearAdminForm = () => ({ type: 'CLEAR_ADMIN_FORM' });

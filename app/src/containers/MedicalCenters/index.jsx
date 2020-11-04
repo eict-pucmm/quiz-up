@@ -3,16 +3,16 @@ import { Breadcrumb, Button, notification, Input, Table, Card } from 'antd';
 
 import { COLUMNS } from './columns';
 import {
-  getCategories,
-  getCategoryById,
-  removeCategory,
-  saveCategory,
-  updateCategory,
-} from '../../api/categories';
+  getMedicalCenterById,
+  getMedicalCenters,
+  removeMedicalCenter,
+  saveMedicalCenter,
+  updateMedicalCenter,
+} from '../../api/medialCenters';
 
-const Categories = () => {
-  const [categories, setCategories] = useState([]);
-  const [categoryName, setCategoryName] = useState('');
+const MedicalCenters = () => {
+  const [centers, setCenters] = useState([]);
+  const [centerName, setCenterName] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -20,9 +20,9 @@ const Categories = () => {
 
   useEffect(() => {
     const get = async () => {
-      const { data } = await getCategories();
-      const categories = data.map(el => ({ ...el, key: el._id }));
-      setCategories(categories || []);
+      const { data } = await getMedicalCenters();
+      const centers = data.map(el => ({ ...el, key: el._id }));
+      setCenters(centers || []);
       setLoading(false);
     };
 
@@ -32,10 +32,10 @@ const Categories = () => {
   const onRemove = async key => {
     setLoading(true);
     setSaving(true);
-    const { error } = await removeCategory(key);
+    const { error } = await removeMedicalCenter(key);
     if (!error) {
       notification['success']({
-        message: 'La categoria ha sido removida con exito',
+        message: 'El centro ha sido removido con exito',
       });
     }
     setSaving(false);
@@ -43,7 +43,7 @@ const Categories = () => {
   };
 
   const clearAndReturn = error => {
-    setCategoryName('');
+    setCenterName('');
     setSaving(false);
     setLoading(false);
     setEditing(false);
@@ -54,8 +54,8 @@ const Categories = () => {
             '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
         })
       : notification['success']({
-          message: `La categoria ha sido ${
-            editing ? 'actualizada' : 'creada'
+          message: `El centro ha sido ${
+            editing ? 'actualizado' : 'creado'
           } con exito`,
         });
   };
@@ -66,13 +66,13 @@ const Categories = () => {
     setSaving(true);
 
     if (editing) {
-      const { error } = await updateCategory(id, { name: categoryName });
+      const { error } = await updateMedicalCenter(id, { name: centerName });
 
       return clearAndReturn(error);
     }
 
-    const { error } = await saveCategory({
-      name: categoryName,
+    const { error } = await saveMedicalCenter({
+      name: centerName,
     });
 
     return clearAndReturn(error);
@@ -83,32 +83,32 @@ const Categories = () => {
     setEditing(true);
     setId(key);
 
-    const { data } = await getCategoryById(key);
-    setCategoryName(data.name);
+    const { data } = await getMedicalCenterById(key);
+    setCenterName(data.name);
     setLoading(false);
   };
 
   const cancelUpdate = e => {
     e.preventDefault();
     setEditing(false);
-    setCategoryName('');
+    setCenterName('');
   };
 
   return (
     <>
       <Breadcrumb className="breadcrumb-title">
-        <Breadcrumb.Item>Categorias</Breadcrumb.Item>
+        <Breadcrumb.Item>Centros Medicos</Breadcrumb.Item>
       </Breadcrumb>
       <Card style={{ marginBottom: 8 }}>
         <span
           className="ant-form-item-label"
           style={{ fontWeight: 700, marginRight: 4 }}>
-          Nueva Categoria :
+          Nuevo Centro:
         </span>
         <Input
           style={{ width: '40%' }}
-          value={categoryName}
-          onChange={e => setCategoryName(e.target.value)}
+          value={centerName}
+          onChange={e => setCenterName(e.target.value)}
         />
         <Button key="submit" type="primary" onClick={onSubmit}>
           {editing ? 'Actualizar' : 'Agregar'}
@@ -123,10 +123,10 @@ const Categories = () => {
       <Table
         loading={loading}
         columns={COLUMNS({ onUpdate, onRemove })}
-        dataSource={categories}
+        dataSource={centers}
       />
     </>
   );
 };
 
-export default Categories;
+export default MedicalCenters;

@@ -3,7 +3,11 @@ import Joi from '@hapi/joi';
 
 const Schema = moongose.Schema;
 
-const Resident = new Schema({
+const Admin = new Schema({
+  firebaseUID: {
+    type: String,
+    required: true,
+  },
   firstName: {
     type: String,
     required: true,
@@ -12,48 +16,46 @@ const Resident = new Schema({
     type: String,
     required: true,
   },
-  team: {
-    type: Schema.Types.ObjectId,
-    ref: 'Team',
-  },
-  grade: {
-    type: String,
+  allAccess: {
+    type: Boolean,
     required: true,
   },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'Admin',
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: Date.now,
   },
   createdAt: {
     type: Date,
     required: true,
     default: Date.now,
   },
-  //Residents shouldn't be removed,  so the
-  //model doesn't need a `deleted` property
 });
 
-export function validateResident(resident) {
+export function validateAdmin(admin) {
+  const schema = Joi.object({
+    firebaseUID: Joi.string().max(255).required(),
+    firstName: Joi.string().max(255).required(),
+    lastName: Joi.string().max(255).required(),
+    allAccess: Joi.boolean().required(),
+  }).options({ stripUnknown: true });
+
+  return schema.validate(admin);
+}
+
+export function validateForUpdate(admin) {
   const schema = Joi.object({
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
-    team: Joi.objectId(),
-    grade: Joi.string(),
-    createdBy: Joi.objectId(),
+    allAccess: Joi.boolean().required(),
+    deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
-  return schema.validate(resident);
+  return schema.validate(admin);
 }
 
-export function validateForUpdate(resident) {
-  const schema = Joi.object({
-    firstName: Joi.string().max(255).required(),
-    lastName: Joi.string().max(255).required(),
-    team: Joi.objectId(),
-    grade: Joi.string(),
-  }).options({ stripUnknown: true });
-
-  return schema.validate(resident);
-}
-
-export default moongose.model('Resident', Resident);
+export default moongose.model('Admin', Admin);

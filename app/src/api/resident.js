@@ -1,5 +1,6 @@
 import { URL_RESIDENTS } from '../config/urls';
 import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getResidents = async () => {
   try {
@@ -28,7 +29,10 @@ export const getResidentById = async id => {
 
 export const saveResident = async resident => {
   try {
-    const response = await apiClient.post(`${URL_RESIDENTS}/`, { ...resident });
+    const response = await apiClient.post(`${URL_RESIDENTS}/`, {
+      ...resident,
+      createdBy: getUserInfo().id,
+    });
 
     return { data: response, error: null };
   } catch (error) {

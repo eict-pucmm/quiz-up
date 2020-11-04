@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
 import path from 'path';
+import cors from 'cors';
 import { MONGO, PORT, NODE_ENV } from './config/dotenv';
 
 import connectToDB from './services/mongo';
@@ -16,6 +17,7 @@ joiValidation();
 const app = express();
 const server = http.createServer(app);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

@@ -40,6 +40,21 @@ export const reducer = (state, action) => {
         }),
       };
 
+    case 'SET_ADMINS':
+      return {
+        ...state,
+        admins: Object.assign({}, state.admins, { ...action.admins }),
+      };
+
+    case 'ADD_ADMIN':
+      return {
+        ...state,
+        adminToAdd: Object.assign({}, state.adminToAdd, { ...action.admin }),
+      };
+
+    case 'CLEAR_ADMIN_FORM':
+      return { ...state, adminToAdd: initialState.adminToAdd };
+
     case 'CLEAR_QUESTION_FORM':
       return { ...state, questionToAdd: initialState.questionToAdd };
 

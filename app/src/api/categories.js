@@ -1,5 +1,6 @@
 import { URL_CATEGORIES } from '../config/urls';
 import { apiClient } from './axios';
+import { getUserInfo } from './user';
 
 export const getCategories = async () => {
   try {
@@ -25,6 +26,7 @@ export const saveCategory = async category => {
   try {
     const response = await apiClient.post(`${URL_CATEGORIES}/`, {
       ...category,
+      createdBy: getUserInfo().id,
     });
 
     return { data: response, error: null };
