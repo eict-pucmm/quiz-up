@@ -8,4 +8,6 @@ RUN npm install --silent
 
 COPY ./ ./
 
+EXPOSE 8080
+
 CMD npm start
