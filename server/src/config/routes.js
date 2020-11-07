@@ -21,7 +21,10 @@ import {
 } from './urls';
 
 const setRoutes = app => {
-  app.use(authMiddleware); //use middleware for all routes
+  // findById is needed without the middleware
+  // so its not used on all admin routes
+  app.use(URL_ADMINS, admins);
+  app.use(authMiddleware); //use middleware for all other routes
   app.use(URL_QUESTIONS, questions);
   app.use(URL_CATEGORIES, categories);
   app.use(URL_RESIDENTS, residents);
@@ -29,7 +32,6 @@ const setRoutes = app => {
   app.use(URL_ROUNDS, rounds);
   app.use(URL_EVENTS, events);
   app.use(URL_MEDICAL_CENTERS, medicalCenters);
-  app.use(URL_ADMINS, admins);
 };
 
 export default setRoutes;

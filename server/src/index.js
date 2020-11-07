@@ -24,10 +24,9 @@ if (NODE_ENV !== 'production') app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//using all API routes
-setRoutes(app);
-
 app.get('/', (req, res) => res.send('Hello World!🌎'));
+//setting up all other API routes
+setRoutes(app);
 
 const socketio = io.init(server);
 socketMagic(socketio);
