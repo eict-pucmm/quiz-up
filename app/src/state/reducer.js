@@ -52,6 +52,21 @@ export const reducer = (state, action) => {
         adminToAdd: Object.assign({}, state.adminToAdd, { ...action.admin }),
       };
 
+    case 'SET_TEAMS':
+      return {
+        ...state,
+        teams: Object.assign({}, state.teams, { ...action.teams }),
+      };
+
+    case 'ADD_TEAM':
+      return {
+        ...state,
+        teamToAdd: Object.assign({}, state.teamToAdd, { ...action.team }),
+      };
+
+    case 'CLEAR_TEAM_FORM':
+      return { ...state, teamToAdd: initialState.teamToAdd };
+
     case 'CLEAR_ADMIN_FORM':
       return { ...state, adminToAdd: initialState.adminToAdd };
 

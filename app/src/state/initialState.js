@@ -35,6 +35,23 @@ export const initialState = {
     errorCategories: false,
     errorPoints: false,
   },
+  teams: {
+    data: [],
+    allResidents: [],
+    allMedicalCenters: [],
+    saving: false,
+    editing: false,
+    //teamNameChanged is needed to prevent a 409 error when updating a team name
+    teamNameChanged: false,
+  },
+  teamToAdd: {
+    name: '',
+    residents: [],
+    medicalCenter: '',
+    errorName: false,
+    errorResidents: false,
+    errorMedicalCenter: false,
+  },
   admins: {
     data: [],
     saving: false,

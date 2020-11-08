@@ -29,7 +29,7 @@ const FormQuestions = ({ form, ...props }) => {
   const handleNameChange = e => {
     const name = e.target.value;
     if (editing) dispatch(setQuestionsAttributes({ nameChanged: true }));
-    dispatch(addQuestion({ name, errorName: name < 4 }));
+    dispatch(addQuestion({ name, errorName: name.length < 4 }));
   };
 
   return (
