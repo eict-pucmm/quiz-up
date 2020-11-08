@@ -7,7 +7,7 @@ const Team = new Schema({
   name: {
     type: String,
     required: true,
-    minlength: 4,
+    minlength: 3,
     maxlength: 255,
     unique: true,
   },
@@ -43,7 +43,7 @@ const Team = new Schema({
  */
 export function validateTeam(team) {
   const schema = Joi.object({
-    name: Joi.string().min(4).max(255).required(),
+    name: Joi.string().min(3).max(255).required(),
     residents: Joi.array(),
     medicalCenter: Joi.string().required(),
     createdBy: Joi.objectId(),
