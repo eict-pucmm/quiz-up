@@ -53,9 +53,21 @@ const Round = new Schema({
       }),
     },
   ],
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: Date.now,
+  },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'Admin',
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
@@ -78,6 +90,21 @@ export function validateRound(round) {
     roomId: Joi.string().required(),
     finished: Joi.boolean(),
     createdBy: Joi.objectId(),
+  }).options({ stripUnknown: true });
+
+  return schema.validate(round);
+}
+
+export function validateForUpdate(round) {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(255),
+    event: Joi.string(),
+    questions: Joi.array(),
+    categories: Joi.array(),
+    participants: Joi.array(),
+    finished: Joi.boolean(),
+    deleted: Joi.boolean(),
+    deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
 
   return schema.validate(round);

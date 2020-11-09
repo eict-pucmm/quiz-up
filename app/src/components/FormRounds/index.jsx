@@ -7,7 +7,7 @@ import { clearRoundFields, setRoundAttributes } from '../../state/actions';
 import { useStateValue } from '../../state';
 import { getCategories } from '../../api/categories';
 import { getTeams } from '../../api/teams';
-import { saveRound } from '../../api/round';
+import { saveRound, updateRound } from '../../api/round';
 import MyModal from '../MyModal';
 import GeneralData from './GeneralData';
 import QuestionBank from './QuestionBank';
@@ -25,7 +25,7 @@ export const SHARED_PROPS = {
     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
 };
 
-const FormRounds = ({ gameEvent, showInfo, ...props }) => {
+const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   const {
     dispatch,
     state: { roundToAdd, round, viewOldEvents },
@@ -35,7 +35,6 @@ const FormRounds = ({ gameEvent, showInfo, ...props }) => {
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const [form] = Form.useForm();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -61,6 +60,31 @@ const FormRounds = ({ gameEvent, showInfo, ...props }) => {
     setCurrentStep(currentStep - 1);
   };
 
+  const clearAll = () => {
+    setCurrentStep(0);
+    form.resetFields();
+    dispatch(clearRoundFields());
+    dispatch(setRoundAttributes({ saving: false, nameChanged: false }));
+  };
+
+  const clearAndReturn = error => {
+    if (error) {
+      return notification['error']({
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+      });
+    }
+
+    //clear form and reset state
+    clearAll();
+
+    return notification['success']({
+      message: `La ronda ha sido ${
+        showInfo ? 'actualizada' : 'creada'
+      } con exito`,
+    });
+  };
+
   const onSubmit = async () => {
     if (errorName || errorCategories || errorTeams) {
       return notification['error']({
@@ -70,25 +94,25 @@ const FormRounds = ({ gameEvent, showInfo, ...props }) => {
 
     dispatch(setRoundAttributes({ saving: true }));
 
+    const ROUND_INFO = { ...roundToAdd };
+
+    if (showInfo) {
+      if (!round.nameChanged) delete ROUND_INFO.name;
+      const { error } = await updateRound(round.roundId, {
+        ...ROUND_INFO,
+        event: gameEvent._id,
+      });
+      //close modal after submitting
+      props.onCancel();
+      return clearAndReturn(error);
+    }
+
     const { error } = await saveRound({
-      round: roundToAdd,
+      round: ROUND_INFO,
       event: gameEvent._id,
     });
 
-    if (error) {
-      dispatch(setRoundAttributes({ saving: false }));
-      return notification['error']({
-        message:
-          '¡Oh no! Ha ocurrido un error con el servidor. Favor de comunicarse con su administrador.',
-      });
-    }
-
-    notification['success']({
-      message: 'El evento ha sido creada con exito',
-    });
-
-    dispatch(clearRoundFields());
-    dispatch(setRoundAttributes({ saving: false }));
+    clearAndReturn(error);
     //close modal after submitting
     props.onCancel();
   };
@@ -97,6 +121,7 @@ const FormRounds = ({ gameEvent, showInfo, ...props }) => {
     0: () => (
       <GeneralData
         form={form}
+        showInfo={showInfo}
         allCategories={allCategories}
         allTeams={allTeams}
       />
@@ -108,6 +133,10 @@ const FormRounds = ({ gameEvent, showInfo, ...props }) => {
   return (
     <MyModal
       {...props}
+      onCancel={() => {
+        props.onCancel();
+        setCurrentStep(0);
+      }}
       form={form}
       onSubmit={onSubmit}
       saving={round.saving}

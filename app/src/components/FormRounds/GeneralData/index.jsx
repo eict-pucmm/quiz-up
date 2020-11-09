@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Form, Input, Select } from 'antd';
 
 import { SHARED_PROPS } from '../';
-import { addRound } from '../../../state/actions';
+import { addRound, setRoundAttributes } from '../../../state/actions';
 import { useStateValue } from '../../../state';
 
 const { Option } = Select;
@@ -17,12 +17,13 @@ const GeneralData = props => {
   const categoriesRef = useRef();
   const teamsRef = useRef();
 
-  const handleChange = ({ target: { name, value } }) => {
-    dispatch(addRound({ [name]: value, errorName: value.length < 3 }));
+  const handleChange = ({ target: { value } }) => {
+    if (props.showInfo) dispatch(setRoundAttributes({ nameChanged: true }));
+    dispatch(addRound({ name: value, errorName: value.length < 3 }));
   };
 
   const onSelectEvents = value => {
-    form.setFieldsValue({ roundCategories: value });
+    form.setFieldsValue({ categories: value });
     dispatch(
       addRound({ categories: value, errorCategories: value.length !== 4 })
     );
@@ -30,7 +31,7 @@ const GeneralData = props => {
   };
 
   const onSelectTeams = value => {
-    form.setFieldsValue({ roundTeams: value });
+    form.setFieldsValue({ teams: value });
     const participants = value.map(v => ({ team: v }));
     dispatch(addRound({ participants, errorTeams: value.length !== 4 }));
     if (value.length === 4) teamsRef.current.blur();
@@ -51,7 +52,7 @@ const GeneralData = props => {
       {errorCategories && (
         <p className="red">Favor de seleccionar 4 categorías</p>
       )}
-      <Form.Item label="Categorías">
+      <Form.Item label="Categorías" name="categories">
         <Select
           {...SHARED_PROPS}
           ref={categoriesRef}
@@ -66,7 +67,7 @@ const GeneralData = props => {
       </Form.Item>
 
       {errorTeams && <p className="red">Favor de seleccionar 4 equipos</p>}
-      <Form.Item label="Equipos">
+      <Form.Item label="Equipos" name="teams">
         <Select
           {...SHARED_PROPS}
           ref={teamsRef}

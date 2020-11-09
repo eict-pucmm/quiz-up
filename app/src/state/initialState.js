@@ -14,6 +14,7 @@ export const initialState = {
     selectedRound: 0,
     saving: false,
     roundId: '',
+    nameChanged: false,
   },
   roundToAdd: {
     name: '',

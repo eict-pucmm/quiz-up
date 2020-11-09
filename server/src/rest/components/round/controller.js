@@ -1,10 +1,9 @@
-import Round, { validateRound } from './model';
+import Round, { validateRound, validateForUpdate } from './model';
 
 import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
-  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -12,7 +11,6 @@ import validateData from '../../utils/validateData';
 const attributes = {
   Model: Round,
   fields: 'name,event',
-  validate: validateRound,
 };
 
 /**
@@ -89,7 +87,7 @@ const create = async (req, res) => {
 
     const [error, value] = await validateData(
       { ...req.body, roomId },
-      attributes
+      { ...attributes, validate: validateRound }
     );
 
     if (error) {
@@ -114,10 +112,13 @@ const create = async (req, res) => {
  * @returns The Round updated
  */
 const update = async (req, res) => {
-  const { error, value } = await validateRound(req.body);
+  const [error, value] = await validateData(req.body, {
+    ...attributes,
+    validate: validateForUpdate,
+  });
 
   if (error) {
-    return res.status(BAD_REQUEST).send(error.details[0].message);
+    return res.status(error.status).send(error.message);
   }
 
   const [errorUpdating, updatedRound] = await wrapper(
@@ -129,7 +130,9 @@ const update = async (req, res) => {
   );
 
   return errorUpdating
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the Round')
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error updating the round', errorUpdating })
     : res.status(OK).send(updatedRound);
 };
 

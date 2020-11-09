@@ -9,7 +9,6 @@ const COLORS = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
 const RoundCard = ({ round, showModal, index }) => {
   const { _id, name } = round;
   const [fetchedRound, setFetchedRound] = useState({});
-  console.log('RoundCard -> fetchedRound', fetchedRound);
   const [loading, setLoading] = useState(true);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 

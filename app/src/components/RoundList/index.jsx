@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Empty, Button } from 'antd';
+import { Card, Empty, Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import FormRounds from '../FormRounds';
@@ -20,6 +20,7 @@ const RoundList = props => {
   const [createRound, setCreateRound] = useState(false);
   const [localRounds, setLocalRounds] = useState([]);
   const [showInfo, setShowInfo] = useState(false);
+  const [form] = Form.useForm();
   const { saving } = state.round;
 
   useEffect(() => {
@@ -38,7 +39,8 @@ const RoundList = props => {
     const { name, participants, categories } = localRounds[roundIndex];
     const teams = participants.map(({ team }) => team);
     dispatch(setRoundAttributes({ roundId: localRounds[roundIndex]._id }));
-    dispatch(addRound({ name, categories, teams }));
+    dispatch(addRound({ name, categories, participants }));
+    form.setFieldsValue({ categories, teams });
   };
 
   const showAddRound = () => {
@@ -50,6 +52,7 @@ const RoundList = props => {
     const openModal = showInfo ? setShowInfo : setCreateRound;
     openModal(false);
     dispatch(clearRoundFields());
+    form.resetFields();
   };
 
   if (loading) return <Card loading={loading} />;
@@ -87,6 +90,7 @@ const RoundList = props => {
 
       <FormRounds
         {...props}
+        form={form}
         showInfo={showInfo}
         onCancel={closeAddRound}
         visible={createRound || showInfo}
