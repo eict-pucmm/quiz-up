@@ -1,10 +1,10 @@
 # Description
 
-In this part give a brief description of the change and also include any dependencies that are required for this change.
+<!-- In this part give a brief description of the change and also include any dependencies that are required for this change. -->
 
 ## Type of change
 
-Do not mark the options that are not relevant.
+<!-- Do not mark the options that are not relevant. -->
 
 - [ ] Bug fix (change which fixes an issue)
 - [ ] New feature (change which adds functionality)
@@ -19,7 +19,7 @@ Do not mark the options that are not relevant.
 
 # Screenshots
 
-Can be deleted if it's not neccesary
+<!-- Can be deleted if it's not neccesary -->
 
 |         Original          |         Updated          |
 | :-----------------------: | :----------------------: |
