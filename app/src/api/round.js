@@ -40,3 +40,27 @@ export const saveRound = async ({ round, event }) => {
     return { data: null, error: error.response };
   }
 };
+
+export const updateRound = async (id, round) => {
+  try {
+    const response = await apiClient.put(`${URL_ROUNDS}/${id}`, {
+      ...round,
+    });
+
+    return { data: response, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
+export const removeRound = async id => {
+  try {
+    const response = await apiClient.put(`${URL_ROUNDS}/${id}`, {
+      deleted: true,
+      deletedAt: new Date(),
+    });
+    return { data: response.data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};

@@ -2,7 +2,7 @@ import firebase from 'firebase-admin';
 import { FORBIDDEN, UNAUTHORIZED } from '../../config/statusCodes';
 
 firebase.initializeApp({
-  //credentials: GET_CREDENTIALS_FROM_FIREBASE
+  credentials: firebase.credential.applicationDefault(),
   databaseURL: 'https://quizup-c36c7.firebaseio.com',
 });
 
@@ -21,9 +21,9 @@ const authMiddleware = (request, response, next) => {
     .auth()
     .verifyIdToken(token)
     .then(() => next())
-    .catch(() =>
-      response.send({ message: 'Could not authorize' }).status(FORBIDDEN)
-    );
+    .catch(() => {
+      response.send({ message: 'Could not authorize' }).status(FORBIDDEN);
+    });
 };
 
 export default authMiddleware;

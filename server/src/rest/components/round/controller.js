@@ -1,10 +1,9 @@
-import Round, { validateRound } from './model';
+import Round, { validateRound, validateForUpdate } from './model';
 
 import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
-  BAD_REQUEST,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -12,7 +11,6 @@ import validateData from '../../utils/validateData';
 const attributes = {
   Model: Round,
   fields: 'name,event',
-  validate: validateRound,
 };
 
 /**
@@ -23,7 +21,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, rounds] = await wrapper(
-    Round.find().populate('event', 'name dateOfEvent').populate('categories')
+    Round.find().populate('event', 'name dateOfEvent')
   );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -60,8 +58,8 @@ const findById = async (req, res) => {
         select: 'name points',
       },
       {
-        path: 'categories',
-        select: 'name',
+        path: 'participants.team',
+        select: 'name medicalCenter',
       },
       {
         path: 'participants.team',
@@ -86,14 +84,14 @@ const create = async (req, res) => {
     let roomId = String(Math.floor(100000 + Math.random() * 900000));
     let roundExists = await Round.findOne({ roomId });
 
-    while (!!roundExists) {
+    while (roundExists) {
       roomId = String(Math.floor(100000 + Math.random() * 900000));
       roundExists = await Round.findOne({ roomId });
     }
 
     const [error, value] = await validateData(
       { ...req.body, roomId },
-      attributes
+      { ...attributes, validate: validateRound }
     );
 
     if (error) {
@@ -107,7 +105,7 @@ const create = async (req, res) => {
   } catch (error) {
     return res
       .status(INTERNAL_SERVER_ERROR)
-      .json({ message: 'Error creating the Round', error: errorSaving });
+      .json({ message: 'Error creating the Round', error });
   }
 };
 
@@ -118,10 +116,13 @@ const create = async (req, res) => {
  * @returns The Round updated
  */
 const update = async (req, res) => {
-  const { error, value } = await validateRound(req.body);
+  const [error, value] = await validateData(req.body, {
+    ...attributes,
+    validate: validateForUpdate,
+  });
 
   if (error) {
-    return res.status(BAD_REQUEST).send(error.details[0].message);
+    return res.status(error.status).send(error.message);
   }
 
   const [errorUpdating, updatedRound] = await wrapper(
@@ -133,7 +134,9 @@ const update = async (req, res) => {
   );
 
   return errorUpdating
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the Round')
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error updating the round', errorUpdating })
     : res.status(OK).send(updatedRound);
 };
 

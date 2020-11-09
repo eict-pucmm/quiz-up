@@ -24,6 +24,12 @@ export const addQuestion = question => ({ type: 'ADD_QUESTION', question });
 
 export const clearQuestionForm = () => ({ type: 'CLEAR_QUESTION_FORM' });
 
+export const setTeams = teams => ({ type: 'SET_TEAMS', teams });
+
+export const addTeam = team => ({ type: 'ADD_TEAM', team });
+
+export const clearTeamForm = () => ({ type: 'CLEAR_TEAM_FORM' });
+
 export const setAdmins = admins => ({ type: 'SET_ADMINS', admins });
 
 export const addAdmin = admin => ({ type: 'ADD_ADMIN', admin });

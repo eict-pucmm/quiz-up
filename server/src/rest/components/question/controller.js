@@ -101,7 +101,9 @@ const update = async (req, res) => {
   );
 
   return errorUpdating
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the question')
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error updating the question', errorUpdating })
     : res.status(CREATED).send(updatedQuestion);
 };
 

@@ -2,30 +2,64 @@ import React from 'react';
 import { Button, Input, Select, Form } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 
+import { useStateValue } from '../../state';
+import { addTeam, setTeams } from '../../state/actions';
+
 const { Option } = Select;
 
-const FormTeams = ({ allResidents, teamName, allMedicalCenters, ...props }) => {
-  const { handleNameChange, handleMedChange, onSelectChange, onSubmit } = props;
+const FormTeams = ({ form, ...props }) => {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
+  const { state, dispatch } = useStateValue();
+  const { allMedicalCenters, allResidents, editing } = state.teams;
+  const {
+    name,
+    errorName,
+    errorMedicalCenter,
+    errorResidents,
+  } = state.teamToAdd;
 
-  //TODO: add input validations and select for no more than 3 residents
+  const handleNameChange = e => {
+    const name = e.target.value;
+    if (editing) dispatch(setTeams({ nameChanged: true }));
+    dispatch(addTeam({ name, errorName: name.length < 3 }));
+  };
+
+  const onResidentChange = value => {
+    form.setFieldsValue({ residents: value });
+    dispatch(
+      addTeam({
+        residents: value,
+        errorResidents: value === 0 || value > 3,
+      })
+    );
+  };
+
+  const handleMedChange = value => {
+    form.setFieldsValue({ medicalCenter: value });
+    dispatch(addTeam({ medicalCenter: value }));
+  };
+
   return (
     <Form
+      form={form}
       layout={isDesktop ? 'horizontal' : 'vertical'}
       labelCol={{ span: isDesktop ? 4 : 8 }}
       wrapperCol={{ span: isDesktop ? 8 : 0 }}>
-      <Form.Item label="Nuevo Equipo: ">
+      {errorName && <p className="red">Favor introducir minimo 3 caracteres</p>}
+      <Form.Item label="Nuevo Equipo: " name="name">
         <Input
-          value={teamName}
+          value={name}
           onChange={handleNameChange}
           placeholder="Nombre del equipo"
         />
       </Form.Item>
-      <Form.Item label="Residentes">
+
+      {errorResidents && <p className="red">Favor seleccionar 3 residentes</p>}
+      <Form.Item label="Residentes" name="residents">
         <Select
           showArrow
           mode="multiple"
-          onChange={onSelectChange}
+          onChange={onResidentChange}
           placeholder="Selecionar residentes">
           {allResidents.map(({ firstName, lastName, key }) => (
             <Option value={firstName + ' ' + lastName} key={key}>
@@ -34,7 +68,11 @@ const FormTeams = ({ allResidents, teamName, allMedicalCenters, ...props }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Centro Medico: ">
+
+      {errorMedicalCenter && (
+        <p className="red">Favor introducir un centro medico valido</p>
+      )}
+      <Form.Item label="Centro Medico: " name="medicalCenter">
         <Select
           showArrow
           placeholder="Seleccionar centro medico del equipo"
@@ -46,10 +84,19 @@ const FormTeams = ({ allResidents, teamName, allMedicalCenters, ...props }) => {
           ))}
         </Select>
       </Form.Item>
+
       <Form.Item wrapperCol={{ span: 14, offset: isDesktop ? 4 : 0 }}>
-        <Button key="submit" type="primary" onClick={onSubmit}>
-          Agregar
+        <Button type="primary" htmlType="submit" onClick={props.onSubmit}>
+          {editing ? 'Actualizar' : 'Agregar'}
         </Button>
+        {editing && (
+          <Button
+            type="danger"
+            onClick={props.cancelUpdate}
+            className="cancel-btn-form">
+            Cancelar
+          </Button>
+        )}
       </Form.Item>
     </Form>
   );

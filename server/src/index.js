@@ -1,7 +1,9 @@
 import express from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
-import path from 'path';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import { MONGO, PORT, NODE_ENV } from './config/dotenv';
 
 import connectToDB from './services/mongo';
@@ -16,23 +18,15 @@ joiValidation();
 const app = express();
 const server = http.createServer(app);
 
+app.use(cors());
+app.use(helmet());
+if (NODE_ENV !== 'production') app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//using all API routes
-setRoutes(app);
-
 app.get('/', (req, res) => res.send('Hello World!🌎'));
-
-if (NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, 'app/build')));
-
-  // Handle React routing, return all requests to React app
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../app/build', 'index.html'));
-  });
-}
+//setting up all other API routes
+setRoutes(app);
 
 const socketio = io.init(server);
 socketMagic(socketio);

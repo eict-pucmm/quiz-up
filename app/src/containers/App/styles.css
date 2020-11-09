@@ -22,6 +22,10 @@
   color: red;
 }
 
+.mb-15 {
+  margin-bottom: 15px !important;
+}
+
 .title-quiz-up {
   margin-left: 20%;
   margin-top: 15px !important;
@@ -39,6 +43,6 @@
 
 @media only screen and (min-width: 1024px) {
   .event-rounds-card {
-    width: 211px;
+    width: 250px;
   }
 }

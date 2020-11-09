@@ -1,4 +1,6 @@
 import express from 'express';
+
+import authMiddleware from '../../middlewares/firebase-auth';
 import { list, findById, create, update } from './controller';
 
 const router = express.Router();
@@ -8,7 +10,7 @@ const router = express.Router();
  * @returns {JSON} of all admins
  * @access Public
  */
-router.get('/', list);
+router.get('/', authMiddleware, list);
 
 /**
  * @route GET '/:id'
@@ -22,13 +24,13 @@ router.get('/:id', findById);
  * @returns new instance of the admin
  * @access Public
  */
-router.post('/', create);
+router.post('/', authMiddleware, create);
 
 /**
  * @route PUT '/:id'
  * @returns new instance of the admin
  * @access Public
  */
-router.put('/:id', update);
+router.put('/:id', authMiddleware, update);
 
 export default router;
