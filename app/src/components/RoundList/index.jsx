@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Modal, Empty, Button, notification } from 'antd';
+import { Card, Empty, Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 
-import { getRoundsByEvent, saveRound } from '../../api/round';
-import { setRoundAttributes, clearRoundFields } from '../../state/actions';
-import { useStateValue } from '../../state';
-import RoundModal from '../RoundModal';
+import FormRounds from '../FormRounds';
 import RoundCard from '../RoundCard';
+import { getRoundsByEvent } from '../../api/round';
+import { useStateValue } from '../../state';
+import {
+  addRound,
+  clearRoundFields,
+  setRoundAttributes,
+} from '../../state/actions';
 
 import './styles.css';
 
 const RoundList = props => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
-  const [addRound, setAddRound] = useState(false);
+  const [createRound, setCreateRound] = useState(false);
   const [localRounds, setLocalRounds] = useState([]);
   const [showInfo, setShowInfo] = useState(false);
-  const { selectedRound, saving } = state.round;
+  const [form] = Form.useForm();
+  const { saving } = state.round;
 
   useEffect(() => {
     const get = async () => {
       const { data: rounds } = await getRoundsByEvent(props.gameEvent._id);
 
-      setLocalRounds(rounds);
+      setLocalRounds(rounds || []);
       setLoading(false);
     };
 
@@ -32,51 +36,23 @@ const RoundList = props => {
 
   const showModal = roundIndex => {
     setShowInfo(true);
-    dispatch(setRoundAttributes({ selectedRound: roundIndex }));
+    const { name, participants, categories } = localRounds[roundIndex];
+    const teams = participants.map(({ team }) => team);
+    dispatch(setRoundAttributes({ roundId: localRounds[roundIndex]._id }));
+    dispatch(addRound({ name, categories, participants }));
+    form.setFieldsValue({ categories, teams });
   };
 
-  const showAddRound = () => setAddRound(true);
+  const showAddRound = () => {
+    const openModal = showInfo ? setShowInfo : setCreateRound;
+    openModal(true);
+  };
 
-  const closeAddRound = () => setAddRound(false);
-
-  const handleOk = () => setShowInfo(false);
-
-  const handleCancel = () => setShowInfo(false);
-
-  const onSubmit = async () => {
-    const { name, categories, teams } = state.roundToAdd;
-    if (
-      !name ||
-      name.length < 3 ||
-      categories.length !== 4 ||
-      teams.length !== 4
-    ) {
-      return notification['error']({
-        message: 'Por favor revise los datos de la ronda.',
-      });
-    }
-    dispatch(setRoundAttributes({ saving: true }));
-
-    const { error } = await saveRound({
-      round: state.roundToAdd,
-      event: props.gameEvent._id,
-    });
-
-    if (error) {
-      dispatch(setRoundAttributes({ saving: false }));
-      return notification['error']({
-        message:
-          '¡Oh no! Ha ocurrido un error con el servidor. Favor de comunicarse con su administrador.',
-      });
-    }
-
-    notification['success']({
-      message: 'El evento ha sido creada con exito',
-    });
-
+  const closeAddRound = () => {
+    const openModal = showInfo ? setShowInfo : setCreateRound;
+    openModal(false);
     dispatch(clearRoundFields());
-    dispatch(setRoundAttributes({ saving: false }));
-    setAddRound(false);
+    form.resetFields();
   };
 
   if (loading) return <Card loading={loading} />;
@@ -109,30 +85,15 @@ const RoundList = props => {
               />
             );
           })}
-          <Modal
-            centered
-            cancelText="Cancelar"
-            onCancel={handleCancel}
-            onOk={handleOk}
-            title={localRounds[selectedRound].name}
-            visible={showInfo}>
-            <p>Some contents...</p>
-            {!state.viewOldEvents && (
-              <Link
-                className="start-round-btn"
-                to={`/event/round/${localRounds[selectedRound]._id}`}>
-                Empezar Ronda
-              </Link>
-            )}
-          </Modal>
         </div>
       )}
 
-      <RoundModal
+      <FormRounds
         {...props}
+        form={form}
+        showInfo={showInfo}
         onCancel={closeAddRound}
-        visible={addRound}
-        onSubmit={onSubmit}
+        visible={createRound || showInfo}
       />
     </>
   );

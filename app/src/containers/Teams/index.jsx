@@ -62,7 +62,6 @@ const Teams = () => {
     setLoading(false);
   };
 
-  console.log('Teams -> state.teamToAdd', state.teamToAdd);
   const onSubmit = async e => {
     e.preventDefault();
     const { errorName, residents, errorMedicalCenter } = state.teamToAdd;
