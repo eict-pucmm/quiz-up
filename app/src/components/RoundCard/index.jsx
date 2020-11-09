@@ -44,9 +44,9 @@ const RoundCard = ({ round, showModal, index }) => {
       }>
       <p>Categorias:</p>
       {categories &&
-        categories.map(({ name, _id }) => (
-          <Tag color="blue" key={_id}>
-            {name}
+        categories.map(c => (
+          <Tag color="blue" key={c}>
+            {c}
           </Tag>
         ))}
       <Divider />

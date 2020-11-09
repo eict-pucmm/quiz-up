@@ -23,7 +23,7 @@ const attributes = {
  */
 const list = async (req, res) => {
   const [error, rounds] = await wrapper(
-    Round.find().populate('event', 'name dateOfEvent').populate('categories')
+    Round.find().populate('event', 'name dateOfEvent')
   );
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -58,10 +58,6 @@ const findById = async (req, res) => {
       {
         path: 'questions',
         select: 'name points',
-      },
-      {
-        path: 'categories',
-        select: 'name',
       },
       {
         path: 'participants.team',

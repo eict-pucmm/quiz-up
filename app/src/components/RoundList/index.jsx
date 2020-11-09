@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Card, Empty, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import RoundModal from '../RoundModal';
+import FormRounds from '../FormRounds';
 import RoundCard from '../RoundCard';
 import { getRoundsByEvent } from '../../api/round';
 import { useStateValue } from '../../state';
-import { addRound, setRoundAttributes } from '../../state/actions';
+import {
+  addRound,
+  clearRoundFields,
+  setRoundAttributes,
+} from '../../state/actions';
 
 import './styles.css';
 
@@ -45,6 +49,7 @@ const RoundList = props => {
   const closeAddRound = () => {
     const openModal = showInfo ? setShowInfo : setCreateRound;
     openModal(false);
+    dispatch(clearRoundFields());
   };
 
   if (loading) return <Card loading={loading} />;
@@ -80,7 +85,7 @@ const RoundList = props => {
         </div>
       )}
 
-      <RoundModal
+      <FormRounds
         {...props}
         showInfo={showInfo}
         onCancel={closeAddRound}

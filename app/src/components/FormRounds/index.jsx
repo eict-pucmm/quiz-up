@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Select, notification, Button } from 'antd';
+import { Form, notification, Button, Steps } from 'antd';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 
-import {
-  addRound,
-  clearRoundFields,
-  setRoundAttributes,
-} from '../../state/actions';
+import { clearRoundFields, setRoundAttributes } from '../../state/actions';
 import { useStateValue } from '../../state';
-import ROUND from '../../constants/round';
-import MyModal from '../MyModal';
 import { getCategories } from '../../api/categories';
 import { getTeams } from '../../api/teams';
 import { saveRound } from '../../api/round';
+import MyModal from '../MyModal';
+import GeneralData from './GeneralData';
+import QuestionBank from './QuestionBank';
+import BonusQuestion from './BonusQuestion';
 
-const { Option } = Select;
+import './styles.css';
 
-const SHARED_PROPS = {
+const { Step } = Steps;
+
+export const SHARED_PROPS = {
   showArrow: true,
   mode: 'multiple',
   optionFilterProp: 'children',
@@ -24,14 +25,16 @@ const SHARED_PROPS = {
     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
 };
 
-const RoundModal = ({ gameEvent, showInfo, ...props }) => {
+const FormRounds = ({ gameEvent, showInfo, ...props }) => {
   const {
     dispatch,
     state: { roundToAdd, round, viewOldEvents },
   } = useStateValue();
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const { errorName, errorCategories, errorTeams } = roundToAdd;
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -49,21 +52,13 @@ const RoundModal = ({ gameEvent, showInfo, ...props }) => {
     loadTeams();
   }, []);
 
-  const handleChange = ({ target: { name, value } }) => {
-    dispatch(addRound({ [name]: value, errorName: value.length < 3 }));
+  const nextStep = () => {
+    if (errorCategories || roundToAdd.categories.length === 0) return;
+    setCurrentStep(currentStep + 1);
   };
 
-  const onSelectEvents = value => {
-    form.setFieldsValue({ roundCategories: value });
-    dispatch(
-      addRound({ categories: value, errorCategories: value.length !== 4 })
-    );
-  };
-
-  const onSelectTeams = value => {
-    form.setFieldsValue({ roundTeams: value });
-    const participants = value.map(v => ({ team: v }));
-    dispatch(addRound({ participants, errorTeams: value.length !== 4 }));
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
   };
 
   const onSubmit = async () => {
@@ -98,59 +93,46 @@ const RoundModal = ({ gameEvent, showInfo, ...props }) => {
     props.onCancel();
   };
 
+  const STEPS = {
+    0: () => (
+      <GeneralData
+        form={form}
+        allCategories={allCategories}
+        allTeams={allTeams}
+      />
+    ),
+    1: () => <QuestionBank />,
+    2: () => <BonusQuestion />,
+  };
+
   return (
     <MyModal
       {...props}
       form={form}
       onSubmit={onSubmit}
       saving={round.saving}
+      steps={{ next: nextStep, prev: prevStep, current: currentStep }}
       type="Ronda"
       title={`Agregar nueva ronda al evento: ${gameEvent.name}`}>
+      {isDesktopOrLaptop && (
+        <Steps current={currentStep} size="small" className="round-modal-steps">
+          {['Datos Generales', 'Banco de Preguntas', 'Pregunta Bono'].map(t => (
+            <Step key={t} title={t} />
+          ))}
+        </Steps>
+      )}
       {showInfo && (
         <Link to={viewOldEvents ? '#' : `/event/round/${round._id}`}>
-          <Button type="primary">Empezar Ronda</Button>
+          <Button className="mb-15" type="primary" block>
+            Empezar Ronda
+          </Button>
         </Link>
       )}
       <Form form={form} labelCol={{ span: 12 }} layout="vertical" size="medium">
-        {ROUND.map(({ label, id, ...attr }) => (
-          <Form.Item label={label} key={id}>
-            <Input {...attr} value={roundToAdd.name} onChange={handleChange} />
-            {errorName && (
-              <p className="red">Favor introducir más de 3 carácteres</p>
-            )}
-          </Form.Item>
-        ))}
-        <Form.Item label="Categorías">
-          {errorCategories && (
-            <p className="red">Favor de seleccionar 4 categorías</p>
-          )}
-          <Select
-            {...SHARED_PROPS}
-            onChange={onSelectEvents}
-            placeholder="Categorías de esta ronda">
-            {allCategories.map(({ name, _id }) => (
-              <Option value={_id} key={_id}>
-                {name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item label="Equipos">
-          {errorTeams && <p className="red">Favor de seleccionar 4 equipos</p>}
-          <Select
-            {...SHARED_PROPS}
-            onChange={onSelectTeams}
-            placeholder="Equipos que participaran en esta ronda">
-            {allTeams.map(({ name, _id }) => (
-              <Option value={_id} key={_id}>
-                {name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {STEPS[currentStep]}
       </Form>
     </MyModal>
   );
 };
 
-export default RoundModal;
+export default FormRounds;
