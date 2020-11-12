@@ -1,3 +1,5 @@
+export const setCurrentUser = user => ({ type: 'SET_CURRENT_USER', user });
+
 export const setEvents = events => ({ type: 'SET_EVENTS', events });
 
 export const addEvent = event => ({ type: 'ADD_EVENT', event });

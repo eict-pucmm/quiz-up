@@ -1,10 +1,11 @@
 import { URL_MEDICAL_CENTERS } from '../config/urls';
-import { apiClient } from './axios';
+import { apiClient, createToken } from './axios';
 import { getUserInfo } from './user';
 
 export const getMedicalCenters = async () => {
   try {
-    const response = await apiClient.get(`${URL_MEDICAL_CENTERS}/`);
+    const headers = await createToken();
+    const response = await apiClient.get(`${URL_MEDICAL_CENTERS}/`, headers);
 
     return { data: response.data.medicalCenters, error: null };
   } catch (error) {
@@ -14,7 +15,11 @@ export const getMedicalCenters = async () => {
 
 export const getMedicalCenterById = async id => {
   try {
-    const response = await apiClient.get(`${URL_MEDICAL_CENTERS}/${id}`);
+    const headers = await createToken();
+    const response = await apiClient.get(
+      `${URL_MEDICAL_CENTERS}/${id}`,
+      headers
+    );
 
     return { data: response.data.medicalCenter, error: null };
   } catch (error) {
@@ -24,10 +29,15 @@ export const getMedicalCenterById = async id => {
 
 export const saveMedicalCenter = async center => {
   try {
-    const response = await apiClient.post(`${URL_MEDICAL_CENTERS}/`, {
-      ...center,
-      createdBy: getUserInfo().id,
-    });
+    const headers = await createToken();
+    const response = await apiClient.post(
+      `${URL_MEDICAL_CENTERS}/`,
+      {
+        ...center,
+        createdBy: getUserInfo().id,
+      },
+      headers
+    );
 
     return { data: response, error: null };
   } catch (error) {
@@ -37,9 +47,14 @@ export const saveMedicalCenter = async center => {
 
 export const updateMedicalCenter = async (id, center) => {
   try {
-    const response = await apiClient.put(`${URL_MEDICAL_CENTERS}/${id}`, {
-      ...center,
-    });
+    const headers = await createToken();
+    const response = await apiClient.put(
+      `${URL_MEDICAL_CENTERS}/${id}`,
+      {
+        ...center,
+      },
+      headers
+    );
 
     return { data: response, error: null };
   } catch (error) {
@@ -49,10 +64,15 @@ export const updateMedicalCenter = async (id, center) => {
 
 export const removeMedicalCenter = async id => {
   try {
-    const response = await apiClient.put(`${URL_MEDICAL_CENTERS}/${id}`, {
-      deleted: true,
-      deletedAt: new Date(),
-    });
+    const headers = await createToken();
+    const response = await apiClient.put(
+      `${URL_MEDICAL_CENTERS}/${id}`,
+      {
+        deleted: true,
+        deletedAt: new Date(),
+      },
+      headers
+    );
 
     return { data: response.data, error: null };
   } catch (error) {

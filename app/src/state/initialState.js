@@ -1,4 +1,5 @@
 export const initialState = {
+  currentUser: null,
   viewOldEvents: false,
   events: {
     data: [],
