@@ -9,17 +9,22 @@ import {
 
 import { auth } from '../../constants/firebase';
 import { getUserInfo, removeUser } from '../../api/user';
+import { useStateValue } from '../../state';
+import { setCurrentUser } from '../../state/actions';
 
 import './styles.css';
 
 const { Header } = Layout;
 
 const MyHeader = () => {
+  const { dispatch } = useStateValue();
+
   const handleLogout = () => {
     auth
       .signOut()
       .then(() => {
         removeUser();
+        dispatch(setCurrentUser({ user: null }));
         window.location.replace('/login');
       })
       .catch(error => {
