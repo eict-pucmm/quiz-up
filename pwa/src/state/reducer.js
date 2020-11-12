@@ -5,6 +5,11 @@ export const reducer = (state, action) => {
         ...state,
         isInstalable: false,
       };
+    case 'SET_CURRENT_USER':
+      return {
+        ...state,
+        currentUser: Object.assign({}, state.currentUser, { ...action.user }),
+      };
     case 'USER_INFO':
       return {
         ...state,

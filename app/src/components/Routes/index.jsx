@@ -27,7 +27,7 @@ const Routes = () => {
       setLoading(false);
       dispatch(setCurrentUser({ user }));
     });
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return <Fragment />;
