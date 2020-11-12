@@ -1,10 +1,9 @@
-import Category, { validateCategory } from './model';
+import Category, { validateCategory, validateForUpdate } from './model';
 
 import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
-  NO_CONTENT,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -22,7 +21,11 @@ const attributes = {
  * @returns {JSON} of Category
  */
 const list = async (req, res) => {
-  const [error, categories] = await wrapper(Category.find());
+  const [error, categories] = await wrapper(
+    Category.find({ deleted: false }).populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -75,7 +78,10 @@ const create = async (req, res) => {
  * @returns The category updated
  */
 const update = async (req, res) => {
-  const [error, value] = await validateData(req.body, attributes);
+  const [error, value] = await validateData(req.body, {
+    ...attributes,
+    validate: validateForUpdate,
+  });
 
   if (error) {
     return res.status(error.status).send(error.message);
@@ -94,14 +100,4 @@ const update = async (req, res) => {
     : res.status(CREATED).send(updatedCategory);
 };
 
-const remove = async (req, res) => {
-  const [errorRemoving, removedCategory] = await wrapper(
-    Category.findByIdAndRemove({ _id: req.params.id })
-  );
-
-  return errorRemoving
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the category')
-    : res.status(NO_CONTENT);
-};
-
-export { list, findById, create, update, remove };
+export { list, findById, create, update };

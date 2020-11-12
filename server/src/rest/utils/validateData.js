@@ -19,7 +19,7 @@ export default async function validateData(body, attributes) {
 
   if (Model && fields) {
     //make dynamic queries to findOne
-    let query = {};
+    let query = { deleted: false };
     fields.split(',').map(i => (query = { ...query, [i]: value[i] }));
 
     const exists = await Model.findOne(query);

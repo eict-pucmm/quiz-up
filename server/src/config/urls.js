@@ -6,6 +6,7 @@ const URL_EVENTS = '/api/events';
 const URL_ROUNDS = '/api/rounds';
 const URL_MEDICAL_CENTERS = '/api/medical-centers';
 const URL_QUESTIONS_BANK = '/api/questions-bank';
+const URL_ADMINS = '/api/admins';
 
 export {
   URL_QUESTIONS,
@@ -16,4 +17,5 @@ export {
   URL_ROUNDS,
   URL_MEDICAL_CENTERS,
   URL_QUESTIONS_BANK,
+  URL_ADMINS,
 };

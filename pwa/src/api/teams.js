@@ -1,11 +1,12 @@
-import axios from 'axios';
-
 import { URL_TEAMS } from '../config/urls';
+import { apiClient, createToken } from './axios';
 
 export const getTeamsByMedicalCenter = async medicalCenter => {
   try {
-    const response = await axios.get(
-      `${URL_TEAMS}/find/mc?center=${encodeURIComponent(medicalCenter)}`
+    const headers = await createToken();
+    const response = await apiClient.get(
+      `${URL_TEAMS}/find/mc?center=${encodeURIComponent(medicalCenter)}`,
+      headers
     );
 
     return { data: response.data.teams, error: null };

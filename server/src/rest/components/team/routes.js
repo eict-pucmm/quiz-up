@@ -3,7 +3,6 @@ import {
   list,
   findById,
   create,
-  remove,
   findByMedicalCenter,
   update,
 } from './controller';
@@ -44,12 +43,5 @@ router.post('/', create);
  * @access Public
  */
 router.put('/:id', update);
-
-/**
- * @route DELETE '/:id'
- * @returns Message stating that the app it's subscribe
- * @access Public
- */
-router.delete('/:id', remove);
 
 export default router;

@@ -2,17 +2,23 @@
   color: dodgerblue !important;
 }
 
-.start-round-btn {
-  color: #fff !important;
-  background-color: green;
-  padding: 10px;
-}
-
 .gutter-box {
   padding: 8px 0;
   background: #00a0e9;
 }
 
 .add-round-card {
+  max-height: 70px;
   text-align: center;
+}
+
+@media only screen and (min-width: 1024px) {
+  .add-round-card {
+    width: 30%;
+  }
+
+  .round-list-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }

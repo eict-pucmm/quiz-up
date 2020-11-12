@@ -25,7 +25,11 @@ const updateAttributes = {
  * @returns {JSON} of Team
  */
 const list = async (req, res) => {
-  const [error, teams] = await wrapper(Team.find());
+  const [error, teams] = await wrapper(
+    Team.find().populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -105,18 +109,10 @@ const update = async (req, res) => {
   );
 
   return errorUpdating
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error updating the team')
+    ? res
+        .status(INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error updating the team', error: errorUpdating })
     : res.status(CREATED).send(updatedTeam);
 };
 
-const remove = async (req, res) => {
-  const [errorRemoving, removedCategory] = await wrapper(
-    Team.findByIdAndRemove({ _id: req.params.id })
-  );
-
-  return errorRemoving
-    ? res.status(INTERNAL_SERVER_ERROR).send('Error removing the question')
-    : res.status(NO_CONTENT);
-};
-
-export { list, findById, create, remove, findByMedicalCenter, update };
+export { list, findById, create, findByMedicalCenter, update };

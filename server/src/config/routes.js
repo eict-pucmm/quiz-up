@@ -6,6 +6,9 @@ import events from '../rest/components/event/routes';
 import rounds from '../rest/components/round/routes';
 import medicalCenters from '../rest/components/medicalCenter/routes';
 import questionsBank from '../rest/components/questionsBank/routes';
+import admins from '../rest/components/admin/routes';
+
+import authMiddleware from '../rest/middlewares/firebase-auth';
 
 import {
   URL_QUESTIONS,
@@ -16,9 +19,14 @@ import {
   URL_ROUNDS,
   URL_MEDICAL_CENTERS,
   URL_QUESTIONS_BANK,
+  URL_ADMINS,
 } from './urls';
 
 const setRoutes = app => {
+  // findById is needed without the middleware
+  // so its not used on all admin routes
+  app.use(URL_ADMINS, admins);
+  app.use(authMiddleware); //use middleware for all other routes
   app.use(URL_QUESTIONS, questions);
   app.use(URL_CATEGORIES, categories);
   app.use(URL_RESIDENTS, residents);

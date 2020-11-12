@@ -5,7 +5,7 @@ import {
   create,
   publish,
   subscribe,
-  remove,
+  update,
 } from './controller';
 
 const router = express.Router();
@@ -32,11 +32,11 @@ router.get('/:id', findById);
 router.post('/', create);
 
 /**
- * @route DELETE '/:id'
- * @returns NO_CONTENT status code
+ * @route PUT '/:id'
+ * @returns CREATED status code
  * @access Public
  */
-router.delete('/:id', remove);
+router.put('/:id', update);
 
 /**
  * @route GET 'mq/publish'

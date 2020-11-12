@@ -1,4 +1,5 @@
-import React, { useState, Fragment, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, Fragment, useEffect, useRef } from 'react';
 import { Card, Spin } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import io from 'socket.io-client';
@@ -10,9 +11,8 @@ import AnswersModal from '../../components/AnswersModal';
 
 import './styles.css';
 
-const socket = io('/');
-
 const Game = () => {
+  const socket = useRef(null);
   const [questions, setQuestions] = useState(QUESTIONS);
   const [visible, setVisible] = useState(false);
   const [published, setPublished] = useState(false);
@@ -20,7 +20,7 @@ const Game = () => {
   const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1024 });
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const HEADERS =
     questions.length > 0
       ? [
@@ -34,12 +34,20 @@ const Game = () => {
   const uniqueArray = array => Array.from(new Set(array));
 
   useEffect(() => {
-    socket.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
-    return () => socket.emit('leaveRoom', { roomId: '668435' });
+    socket.current = io('https://quizup-api-pucmm.site/');
+
+    return () => {
+      socket.current.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    socket.on('welcomeTeam', team => {
+    socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
+    return () => socket.current.emit('leaveRoom', { roomId: '668435' });
+  }, []);
+
+  useEffect(() => {
+    socket.current.on('welcomeTeam', team => {
       if (!teams.includes(team)) {
         setTeams(prevTeams => uniqueArray([...prevTeams, team]));
       }
@@ -47,7 +55,7 @@ const Game = () => {
   }, [teams]);
 
   useEffect(() => {
-    socket.on('answer', answers =>
+    socket.current.on('answer', answers =>
       setAnswers(prev => uniqueArray([...prev, answers]))
     );
   }, [answers]);
@@ -59,7 +67,7 @@ const Game = () => {
 
   const openQuestion = e => {
     e.preventDefault();
-    socket.emit('question', questions[questionIndex].name);
+    socket.current.emit('question', questions[questionIndex].name);
     questions[questionIndex].disabled = true;
     setPublished(true);
   };

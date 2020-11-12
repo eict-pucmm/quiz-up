@@ -1,50 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { Breadcrumb, notification, Table, Form } from 'antd';
+
+import ResidentsForm from '../../components/FormResidents';
+import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
+import { COLUMNS } from './columns';
 import {
-  Breadcrumb,
-  Button,
-  notification,
-  Input,
-  Table,
-  Select,
-  Form,
-} from 'antd';
-
-import { getResidents, saveResident } from '../../api/resident';
-
-const { Option } = Select;
+  getResidentById,
+  getResidents,
+  saveResident,
+  updateResident,
+} from '../../api/resident';
 
 const Residents = () => {
-  const [form] = Form.useForm();
   const [residents, setResidents] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [grade, setGrade] = useState('2do Año');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const columns = [
-    {
-      title: 'Nombres',
-      dataIndex: 'firstName',
-      key: 'firstName',
-      width: 200,
-      render: text => <p>{text}</p>,
-    },
-    {
-      title: 'Apellidos',
-      dataIndex: 'lastName',
-      key: 'lastName',
-      width: 200,
-      render: text => <p>{text}</p>,
-    },
-    {
-      title: 'Grado',
-      dataIndex: 'grade',
-      key: 'grade',
-      width: 100,
-      render: text => <p>{text}</p>,
-    },
-  ];
+  const [editing, setEditing] = useState(false);
+  const [id, setId] = useState('');
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const get = async () => {
@@ -57,29 +33,75 @@ const Residents = () => {
     if (!saving) get();
   }, [saving]);
 
+  const onUpdate = async key => {
+    setLoading(true);
+    setEditing(true);
+    setId(key);
+
+    const { data } = await getResidentById(key);
+    setFirstName(data.firstName);
+    setLastName(data.lastName);
+    setGrade(data.grade);
+    form.setFieldsValue({ grade: data.grade });
+    setLoading(false);
+  };
+
   const onSubmit = async () => {
+    if (!firstName || !lastName) {
+      return notification['error']({
+        message: 'Favor completar todos los campos',
+      });
+    }
     setSaving(true);
     setLoading(true);
 
-    const { error } = await saveResident({ firstName, lastName, grade });
+    const RESIDENT = {
+      firstName,
+      lastName,
+      grade,
+    };
+
+    if (editing) {
+      const { error } = await updateResident(id, RESIDENT);
+      return clearAndReturn(error);
+    }
+
+    const { error } = await saveResident(RESIDENT);
+
+    return clearAndReturn(error);
+  };
+
+  const clearAndReturn = error => {
+    setSaving(false);
+    setLoading(false);
 
     if (error) {
-      setSaving(false);
       return notification['error']({
-        message: error.data.message || error.data,
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 
-    setTimeout(() => {
-      notification['success']({
-        message: 'El residente ha sido agregado con exito',
-      });
+    form.resetFields();
+    if (editing) setEditing(false);
+    setFirstName('');
+    setLastName('');
+    setGrade('2do Año');
 
-      setFirstName('');
-      setLastName('');
-      setGrade('2do Año');
-      setSaving(false);
-    }, 600);
+    return notification['success']({
+      message: `El residente ha sido ${
+        editing ? 'actualizado' : 'creado'
+      } con exito`,
+    });
+  };
+
+  const cancelUpdate = () => {
+    form.resetFields();
+    setEditing(false);
+    setSaving(false);
+    setFirstName('');
+    setLastName('');
+    setGrade('2do Año');
   };
 
   return (
@@ -87,58 +109,26 @@ const Residents = () => {
       <Breadcrumb className="breadcrumb-title">
         <Breadcrumb.Item>Residentes</Breadcrumb.Item>
       </Breadcrumb>
-      <Form
-        form={form}
-        layout="horizontal"
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 8 }}>
-        <Form.Item label="Agregar Residente:" />
-        <Form.Item label="Nombres: ">
-          <Input
-            value={firstName}
-            onChange={e => setFirstName(e.target.value)}
-            name="firstName"
-          />
-        </Form.Item>
-        <Form.Item label="Apellidos: " rules={[{ required: true }]}>
-          <Input
-            name="lastName"
-            value={lastName}
-            onChange={e => setLastName(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Grado: " rules={[{ required: true }]}>
-          <Select
-            defaultValue={'2do Año'}
-            optionFilterProp="children"
-            onChange={value => setGrade(value)}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }>
-            {['2do Año', '3er Año'].map(value => (
-              <Option value={value} key={value}>
-                {value}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
-          <Button key="submit" type="primary" onClick={onSubmit}>
-            Agregar
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <div className="outer-categories-card">
-        <Table
-          loading={loading}
-          columns={columns}
-          dataSource={residents}
-          pagination={{ pageSize: 6 }}
-          scroll={{ y: 400 }}
+      <CollapsableFormWrapper header={'Agregar residente'}>
+        <ResidentsForm
+          cancelUpdate={cancelUpdate}
+          editing={editing}
+          firstName={firstName}
+          form={form}
+          lastName={lastName}
+          onSubmit={onSubmit}
+          setFirstName={setFirstName}
+          setGrade={setGrade}
+          setLastName={setLastName}
         />
-      </div>
+      </CollapsableFormWrapper>
+      <Table
+        loading={loading}
+        columns={COLUMNS({ onUpdate })}
+        dataSource={residents}
+        pagination={{ pageSize: 6 }}
+        scroll={{ y: 400 }}
+      />
     </>
   );
 };

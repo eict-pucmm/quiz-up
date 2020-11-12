@@ -1,187 +1,132 @@
-import React, { Fragment, Component } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  notification,
-  Input,
-  Table,
-  Select,
-  Tag,
-  Form,
-} from 'antd';
-import axios from 'axios';
-import { URL_TEAMS, URL_RESIDENTS } from '../../config/urls';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Breadcrumb, notification, Table, Form } from 'antd';
+
+import { getMedicalCenters } from '../../api/medialCenters';
+import { getTeamById, getTeams, saveTeam, updateTeam } from '../../api/teams';
+import { getResidents } from '../../api/resident';
+import { COLUMNS } from './columns';
+import { useStateValue } from '../../state';
+import { addTeam, clearTeamForm, setTeams } from '../../state/actions';
+import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
+import FormTeams from '../../components/FormTeams';
+
 import './styles.css';
+import { initialState } from '../../state/initialState';
 
-const { Option } = Select;
+const Teams = () => {
+  const { state, dispatch } = useStateValue();
+  const [loading, setLoading] = useState(true);
+  const [id, setId] = useState('');
+  const [form] = Form.useForm();
 
-class Teams extends Component {
-  state = {
-    teams: [],
-    allResidents: [],
-    teamName: '',
-    teamResidents: [],
-    teamMedicalCenter: '',
-    savingTeam: false,
-    loading: false,
-  };
+  const { saving, data, editing, nameChanged } = state.teams;
 
-  componentDidMount() {
-    this.getTeams();
-  }
+  useEffect(() => {
+    const get = async () => {
+      const { data } = await getTeams();
+      const teams = data.map(el => ({ ...el, key: el._id }));
+      const { data: residents } = await getResidents();
+      const { data: centers } = await getMedicalCenters();
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.savingTeam !== this.state.savingTeam) {
-      this.getTeams();
-    }
-  }
+      dispatch(
+        setTeams({
+          data: teams || [],
+          allResidents: residents || [],
+          allMedicalCenters: centers || [],
+        })
+      );
 
-  getTeams = () => {
-    axios
-      .get(`${URL_TEAMS}/`)
-      .then(({ data }) => {
-        const teams = data.teams.map(el => ({ ...el, key: el._id }));
+      setLoading(false);
+    };
 
-        setTimeout(() => this.setState({ teams, loading: false }), 1000);
+    if (!saving) get();
+  }, [saving, dispatch]);
 
-        axios
-          .get(`${URL_RESIDENTS}/`)
-          .then(({ data }) => {
-            const residents = data.residents.map(el => ({
-              ...el,
-              key: el._id,
-            }));
-            setTimeout(() => this.setState({ allResidents: residents }));
-          })
-          .catch(({ response }) => console.log(response));
+  const onUpdate = async key => {
+    setId(key);
+    setLoading(true);
+    dispatch(setTeams({ editing: true }));
+
+    const {
+      data: { name, residents, medicalCenter },
+    } = await getTeamById(key);
+    dispatch(
+      addTeam({
+        ...initialState.teamToAdd,
+        name,
+        residents,
+        medicalCenter,
       })
-      .catch(({ response }) => console.log(response));
-  };
-
-  handleNameChange = event => {
-    this.setState({ teamName: event.target.value });
-  };
-
-  onSelectChange = value => {
-    this.setState({ teamResidents: value });
-  };
-
-  handleMedChange = value => this.setState({ teamMedicalCenter: value });
-
-  onSubmit = () => {
-    const { teamName, teamResidents, teamMedicalCenter } = this.state;
-    this.setState({ savingTeam: true, loading: true });
-    axios
-      .post(`${URL_TEAMS}/`, {
-        name: teamName,
-        residents: teamResidents,
-        medicalCenter: teamMedicalCenter,
-      })
-      .then(({ data }) => {
-        this.setState({
-          teamName: '',
-          teamResidents: [],
-          teamMedicalCenter: '',
-          savingTeam: false,
-          loading: false,
-        });
-        notification['success']({
-          message: 'El equipo ha sido creado con exito',
-        });
-      })
-      .catch(({ response }) => {
-        notification['error']({
-          message: response.data,
-        });
-      });
-  };
-
-  render() {
-    const { allResidents, teams, teamName, loading } = this.state;
-
-    const columns = [
-      {
-        title: 'Equipo',
-        dataIndex: 'name',
-        key: 'team',
-        render: text => <p>{text}</p>,
-      },
-      {
-        title: 'Residentes',
-        dataIndex: 'residents',
-        key: 'residents',
-        render: text => (
-          <>
-            {text.map(cualquiera => (
-              <Tag color="blue" key={cualquiera}>
-                {cualquiera}
-              </Tag>
-            ))}
-          </>
-        ),
-      },
-      {
-        title: 'Centro Medico',
-        dataIndex: 'medicalCenter',
-        key: 'medicalCenter',
-        render: text => <p>{text}</p>,
-      },
-    ];
-    return (
-      <Fragment>
-        <Breadcrumb className="breadcrumb-title">
-          <Breadcrumb.Item>Equipos</Breadcrumb.Item>
-        </Breadcrumb>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 8 }}>
-          <Form.Item label="Agregar un equipo" />
-          <Form.Item label="Nuevo Equipo: ">
-            <Input
-              value={teamName}
-              onChange={this.handleNameChange}
-              placeholder="Nombre del equipo"
-            />
-          </Form.Item>
-          <Form.Item label="Residentes">
-            <Select
-              showArrow
-              mode="multiple"
-              onChange={this.onSelectChange}
-              placeholder="Selecionar residentes">
-              {allResidents.map(({ firstName, lastName, key }) => (
-                <Option value={firstName + ' ' + lastName} key={key}>
-                  {firstName + ' ' + lastName}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Centro Medico: ">
-            <Select
-              showArrow
-              placeholder="Seleccionar centro medico del equipo"
-              onChange={this.handleMedChange}>
-              {['Centro Medico #1', 'Centro Medico #2'].map(cm => (
-                <Option value={cm} key={cm}>
-                  {cm}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item wrapperCol={{ span: 14, offset: 4 }}>
-            <Button key="submit" type="primary" onClick={this.onSubmit}>
-              Agregar
-            </Button>
-          </Form.Item>
-        </Form>
-
-        <div className="outer-team-card">
-          <Table loading={loading} columns={columns} dataSource={teams} />
-        </div>
-      </Fragment>
     );
-  }
-}
+    form.setFieldsValue({ name, residents, medicalCenter });
+    setLoading(false);
+  };
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    const { errorName, residents, errorMedicalCenter } = state.teamToAdd;
+    if (errorName || errorMedicalCenter || residents.length === 0) {
+      dispatch(addTeam({ errorResidents: residents.length === 0 }));
+      return notification['error']({
+        message: 'Por favor revise los datos del formulario.',
+      });
+    }
+
+    setLoading(true);
+    dispatch(setTeams({ saving: true }));
+
+    const TEAM = { ...state.teamToAdd };
+
+    if (editing) {
+      if (!nameChanged) delete TEAM.name;
+      const { error } = await updateTeam(id, { ...TEAM });
+      return clearAndReturn(error);
+    }
+
+    const { error } = await saveTeam({ ...TEAM });
+
+    return clearAndReturn(error);
+  };
+
+  const clearAndReturn = error => {
+    if (error) {
+      return notification['error']({
+        message:
+          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+      });
+    }
+
+    //clear form and reset state
+    clearAll();
+
+    return notification['success']({
+      message: `El equipo ha sido ${
+        editing ? 'actualizado' : 'creado'
+      } con exito`,
+    });
+  };
+
+  const clearAll = () => {
+    form.resetFields();
+    dispatch(clearTeamForm());
+    dispatch(setTeams({ editing: false, saving: false, nameChanged: false }));
+  };
+
+  return (
+    <Fragment>
+      <Breadcrumb className="breadcrumb-title">
+        <Breadcrumb.Item>Equipos</Breadcrumb.Item>
+      </Breadcrumb>
+      <CollapsableFormWrapper header="Agregar un equipo">
+        <FormTeams form={form} cancelUpdate={clearAll} onSubmit={onSubmit} />
+      </CollapsableFormWrapper>
+      <Table
+        loading={loading}
+        columns={COLUMNS({ onUpdate })}
+        dataSource={data}
+      />
+    </Fragment>
+  );
+};
 
 export default Teams;

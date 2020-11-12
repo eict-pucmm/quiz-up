@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const Event = new Schema({
   name: {
     type: String,
-    minlength: 4,
+    minlength: 3,
     required: true,
   },
   dateOfEvent: {
@@ -19,6 +19,10 @@ const Event = new Schema({
       ref: 'Round',
     },
   ],
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
 });
 
 /**
@@ -35,6 +39,7 @@ export function validateEvent(event) {
     name: Joi.string().required(),
     dateOfEvent: Joi.date().raw().required(),
     rounds: Joi.array(),
+    createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
 
   return schema.validate(event);
