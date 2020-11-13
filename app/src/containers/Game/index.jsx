@@ -22,7 +22,7 @@ import { getRoundById } from '../../api/round';
 import './styles.css';
 
 const Game = props => {
-  const { idOfRound } = props.match.params; // Gets roomId from URL
+  const { idOfRound } = props.match.params;
   const socket = useRef(null);
   const [questions, setQuestions] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -75,9 +75,9 @@ const Game = props => {
   }, []);
 
   useEffect(() => {
-    socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
-    return () => socket.current.emit('leaveRoom', { roomId: '668435' });
-  }, []);
+    socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId });
+    return () => socket.current.emit('leaveRoom', { roomId });
+  }, [roomId]);
 
   useEffect(() => {
     socket.current.on('welcomeTeam', team => {
