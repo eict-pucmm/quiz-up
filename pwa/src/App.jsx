@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Title from 'antd/lib/typography/Title';
 import { Layout, Dropdown, Avatar, Menu } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
@@ -13,19 +13,34 @@ import Home from './containers/Home';
 import GameRoom from './containers/GameRoom';
 import Login from './containers/Login';
 
-import { getUser, removeUser } from './api/user';
+import { removeUser } from './api/user';
 import { auth } from './helpers/firebase';
+import { useStateValue } from './state';
+import { setCurrentUser } from './state/actions';
 
 import './App.css';
 
 const { Header, Content } = Layout;
 
 function App() {
+  const { dispatch } = useStateValue();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      setUser(user);
+      setLoading(false);
+      dispatch(setCurrentUser({ user }));
+    });
+  }, [dispatch]);
+
   const handleLogout = () => {
     auth
       .signOut()
       .then(() => {
         removeUser();
+        dispatch(setCurrentUser({ user: null }));
         window.location.replace('/login');
       })
       .catch(error => {
@@ -40,6 +55,10 @@ function App() {
       </Menu.Item>
     </Menu>
   );
+
+  if (loading) {
+    return <Fragment />;
+  }
 
   return (
     <div className="App">
@@ -59,7 +78,7 @@ function App() {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
-              {!getUser() && <Redirect to="/login" />}
+              {!user && <Redirect to="/login" />}
               <Route exact path="/" component={Home} />
               <Route exact path="/:roomId" component={GameRoom} />
             </Switch>

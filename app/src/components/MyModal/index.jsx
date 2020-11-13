@@ -14,12 +14,6 @@ const MyModal = props => {
 
   const FOOTER = steps
     ? [
-        steps.current === TOTAL_ROUND_STEPS - 1 && SUBMIT_BTN,
-        steps.current < TOTAL_ROUND_STEPS - 1 && (
-          <Button key={0} type="primary" onClick={() => steps.next()}>
-            Siguiente
-          </Button>
-        ),
         steps.current > 0 && (
           <Button
             key={2}
@@ -28,6 +22,12 @@ const MyModal = props => {
             Anterior
           </Button>
         ),
+        steps.current < TOTAL_ROUND_STEPS - 1 && (
+          <Button key={0} type="primary" onClick={() => steps.next()}>
+            Siguiente
+          </Button>
+        ),
+        steps.current === TOTAL_ROUND_STEPS - 1 && SUBMIT_BTN,
       ]
     : [SUBMIT_BTN];
 

@@ -1,9 +1,10 @@
 import { URL_ADMINS } from '../config/urls';
-import { apiClient } from './axios';
+import { apiClient, createToken } from './axios';
 
 export const getAdmins = async () => {
   try {
-    const response = await apiClient.get(`${URL_ADMINS}/`);
+    const header = await createToken();
+    const response = await apiClient.get(`${URL_ADMINS}/`, header);
 
     return { data: response.data.admins, error: null };
   } catch (error) {
@@ -13,7 +14,8 @@ export const getAdmins = async () => {
 
 export const getAdminById = async id => {
   try {
-    const response = await apiClient.get(`${URL_ADMINS}/${id}`);
+    const header = await createToken();
+    const response = await apiClient.get(`${URL_ADMINS}/${id}`, header);
 
     return { data: response.data.admin, error: null };
   } catch (error) {
@@ -23,7 +25,12 @@ export const getAdminById = async id => {
 
 export const saveAdmin = async admin => {
   try {
-    const response = await apiClient.post(`${URL_ADMINS}/`, { ...admin });
+    const header = await createToken();
+    const response = await apiClient.post(
+      `${URL_ADMINS}/`,
+      { ...admin },
+      header
+    );
 
     return { data: response, error: null };
   } catch (error) {
@@ -33,10 +40,15 @@ export const saveAdmin = async admin => {
 
 export const removeAdmin = async id => {
   try {
-    const response = await apiClient.put(`${URL_ADMINS}/${id}`, {
-      deleted: true,
-      deletedAt: new Date(),
-    });
+    const header = await createToken();
+    const response = await apiClient.put(
+      `${URL_ADMINS}/${id}`,
+      {
+        deleted: true,
+        deletedAt: new Date(),
+      },
+      header
+    );
 
     return { data: response.data, error: null };
   } catch (error) {

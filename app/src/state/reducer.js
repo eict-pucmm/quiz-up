@@ -2,6 +2,12 @@ import { initialState } from './initialState';
 
 export const reducer = (state, action) => {
   switch (action.type) {
+    case 'SET_CURRENT_USER':
+      return {
+        ...state,
+        currentUser: Object.assign({}, state.currentUser, { ...action.user }),
+      };
+
     case 'SET_EVENTS':
       return {
         ...state,

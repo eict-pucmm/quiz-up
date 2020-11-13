@@ -151,7 +151,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
         </Steps>
       )}
       {showInfo && (
-        <Link to={viewOldEvents ? '#' : `/event/round/${round._id}`}>
+        <Link to={viewOldEvents ? '#' : `/event/round/${round.roundId}`}>
           <Button className="mb-15" type="primary" block>
             Empezar Ronda
           </Button>

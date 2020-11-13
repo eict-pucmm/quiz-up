@@ -3,14 +3,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCDgg-C2-CzIlKHasWvPeWEvG6v-FXM43g',
-  authDomain: 'quizup-c36c7.firebaseapp.com',
-  databaseURL: 'https://quizup-c36c7.firebaseio.com',
-  projectId: 'quizup-c36c7',
-  storageBucket: 'quizup-c36c7.appspot.com',
-  messagingSenderId: '579170889757',
-  appId: '1:579170889757:web:c3ccca910f4c3a7ea016f4',
-  measurementId: 'G-4V55R204MN',
+  apiKey: 'AIzaSyCgFbQna2xIfywtc8zKW0B5PSsXwWZpnos',
+  authDomain: 'quiz-up-a8fa0.firebaseapp.com',
+  databaseURL: 'https://quiz-up-a8fa0.firebaseio.com',
+  projectId: 'quiz-up-a8fa0',
+  storageBucket: 'quiz-up-a8fa0.appspot.com',
+  messagingSenderId: '485409107985',
+  appId: '1:485409107985:web:17ca39c240b6d8e6d081b0',
+  measurementId: 'G-2S6C8X0KPD',
 };
 
 firebase.initializeApp(firebaseConfig);

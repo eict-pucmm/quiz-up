@@ -1,6 +1,8 @@
-import React, { useState, Fragment, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, Fragment, useEffect, useRef } from 'react';
 import { Spin } from 'antd';
 import { useMediaQuery } from 'react-responsive';
+import io from 'socket.io-client';
 
 import QUESTIONS from '../../constants/questions';
 import QuestionsTable from '../../components/QuestionsTable';
@@ -21,6 +23,7 @@ import './styles.css';
 
 const Game = props => {
   const { idOfRound } = props.match.params; // Gets roomId from URL
+  const socket = useRef(null);
   const [questions, setQuestions] = useState([]);
   const [visible, setVisible] = useState(false);
   const [published, setPublished] = useState(false);
@@ -64,9 +67,23 @@ const Game = props => {
   }, [idOfRound]);
 
   useEffect(() => {
-    subscribeToTeams((err, team) => {
-      if (err) return;
+    socket.current = io('https://quizup-api-pucmm.site/');
 
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId: '668435' });
+    return () => socket.current.emit('leaveRoom', { roomId: '668435' });
+  }, []);
+
+  useEffect(() => {
+    socket.current.on('welcomeTeam', team => {
+      if (!teams.includes(team)) {
+        setTeams(prevTeams => uniqueArray([...prevTeams, team]));
+      }
       const index = teams.findIndex(
         item => item.team.name === team && !item.connected
       );
@@ -95,11 +112,9 @@ const Game = props => {
   // }, [questionIndex]);
 
   useEffect(() => {
-    subscribeToAnswers((err, answer) => {
-      console.log('answer', answer);
-      if (err) return;
-      setAnswers(prev => uniqueArray([...prev, answer]));
-    });
+    socket.current.on('answer', answers =>
+      setAnswers(prev => uniqueArray([...prev, answers]))
+    );
   }, [answers]);
   console.log('answers outside use effect', answers);
 
@@ -110,9 +125,7 @@ const Game = props => {
 
   const openQuestion = e => {
     e.preventDefault();
-    sendQuestionToServer({
-      name: questions[questionIndex].name,
-    });
+    socket.current.emit('question', questions[questionIndex].name);
     questions[questionIndex].disabled = true;
     setPublished(true);
   };
