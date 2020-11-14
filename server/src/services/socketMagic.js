@@ -19,6 +19,19 @@ export const socketMagic = socketio => {
       });
     });
 
+    //start/stop timer
+    socket.on('countdown', ({ roomId, status }) => {
+      let countdown = 15;
+      const counting = status;
+
+      setInterval(() => {
+        if (!counting) return;
+        if (countdown <= 0) return;
+        countdown--;
+        socketio.to(roomId).emit('timer', countdown);
+      }, 1000);
+    });
+
     socket.on('answer', ({ teamInfo, roomId }) => {
       socketio.to(roomId).emit('answer', teamInfo);
     });

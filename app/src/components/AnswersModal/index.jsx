@@ -1,42 +1,55 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
-import Countdown from 'react-countdown';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
+import { useMediaQuery } from 'react-responsive';
 
 import './styles.css';
 
-const AnswersModal = ({ questions, questionIndex, ...props }) => {
+const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
   const { published, openQuestion, handleCancel, visible, answers } = props;
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
 
   const MODAL_BTNS = [
     <Button
       key="submit"
-      value={questions[questionIndex].name}
-      onClick={openQuestion}>
+      onClick={openQuestion}
+      size={isDesktopOrLaptop ? 'middle' : 'large'}
+      type="primary"
+      value={questions[questionIndex].name}>
       Abrir Pregunta
+    </Button>,
+    <Button
+      danger
+      key="cancel"
+      onClick={handleCancel}
+      size={isDesktopOrLaptop ? 'middle' : 'large'}>
+      Cerrar
     </Button>,
   ];
 
-  const RENDERER = ({ seconds, completed }) =>
-    completed ? (
-      <span className="question-countdown">
-        No hay mas oportunidades para responder
+  const RENDERER = timer =>
+    timer <= 0 ? (
+      <span
+        className="question-countdown"
+        style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>
+        ¡Se acabó el tiempo!
       </span>
     ) : (
-      <span className="question-countdown">{seconds}</span>
+      <span className="question-countdown">{timer}</span>
     );
 
   return (
     <Modal
       centered
+      bodyStyle={{ height: 460 }}
       footer={!published && MODAL_BTNS}
+      maskClosable={!timer}
       onCancel={handleCancel}
+      width={'90%'}
       visible={visible}>
       <div className="question-wrapper">
+        {published && RENDERER(timer)}
         <p className="question-content">{questions[questionIndex].name}</p>
-        {published && (
-          <Countdown date={Date.now() + 30000} renderer={RENDERER} />
-        )}
         {answers.length > 1 &&
           answers.map(({ teamName, timeToAnswer }) => (
             <p key={teamName}>
