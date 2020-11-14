@@ -48,7 +48,7 @@ const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
       width={'90%'}
       visible={visible}>
       <div className="question-wrapper">
-        {published && RENDERER(timer)}
+        {(published || isDesktopOrLaptop) && RENDERER(timer)}
         <p className="question-content">{questions[questionIndex].name}</p>
         {answers.length > 1 &&
           answers.map(({ teamName, timeToAnswer }) => (

@@ -13,9 +13,9 @@ export const socketMagic = socketio => {
         socketio.to(roomId).emit('question', question);
       });
 
-      socket.on('index', index => {
+      socket.on('subscribeToIndex', ({ index, open }) => {
         console.log('index', index);
-        socketio.to(roomId).emit('index', index);
+        socketio.to(roomId).emit('index', { index, open });
       });
     });
 
@@ -28,7 +28,7 @@ export const socketMagic = socketio => {
         if (!counting) return;
         if (countdown <= 0) return;
         countdown--;
-        socketio.to(roomId).emit('timer', countdown);
+        socketio.to(roomId).emit('timer', { timer: countdown, open: counting });
       }, 1000);
     });
 

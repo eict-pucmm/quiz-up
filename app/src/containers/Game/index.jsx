@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, Fragment, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { Spin } from 'antd';
@@ -64,27 +63,46 @@ const Game = props => {
   useEffect(() => {
     socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId });
     subscribeToTimer();
+    socket.current.on('index', ({ index, open }) => {
+      setVisible(open);
+      if (index !== -1) setQuestionIndex(index);
+      else setTimer(15);
+    });
+
     return () => socket.current.emit('leaveRoom', { roomId });
   }, [roomId]);
 
   const subscribeToTimer = () => {
-    socket.current.on('timer', data => setTimer(data));
+    socket.current.on('timer', ({ timer, open }) => {
+      setPublished(open);
+      setTimer(timer);
+    });
   };
 
   useEffect(() => {
-    socket.current.on('welcomeTeam', team => {
-      if (!teams.includes(team)) {
-        setTeams(prevTeams => uniqueArray([...prevTeams, team]));
-      }
-      const index = teams.findIndex(
-        ({ team, connected }) => team.name === team && !connected
-      );
+    if (questionIndex !== -1 && published) {
+      questions[questionIndex].disabled = true;
+    }
+  }, [questionIndex, published, questions]);
 
-      if (index === -1) {
-        return;
+  useEffect(() => {
+    socket.current.on('welcomeTeam', team => {
+      console.log('team', team);
+      // if (!teams.some(i => i.team.name === team) && team !== 'ADMIN') {
+      //   setTeams(prevTeams => uniqueArray([...prevTeams, team]));
+      // }
+      console.log('teams', teams);
+      const index =
+        teams.length > 0 &&
+        teams.findIndex(i => i.team && i.team.name === team && !i.connected);
+
+      if (index !== -1) {
+        if (teams.length > 0) {
+          setTeams([...teams, (teams[index].connected = true)]);
+        }
       }
-      teams[index].connected = true;
-      setTeams(prev => [...prev]);
+      return;
+      // setTeams(prev => [...prev]);
     });
   }, [teams]);
 
@@ -97,22 +115,28 @@ const Game = props => {
   const showModal = selectedQuestion => {
     setVisible(true);
     setQuestionIndex(selectedQuestion);
+
+    socket.current.emit('subscribeToIndex', {
+      index: selectedQuestion,
+      open: true,
+    });
   };
 
   const openQuestion = e => {
     e.preventDefault();
+    setPublished(true);
     setTimer(15);
     socket.current.emit('countdown', { roomId, status: true });
     socket.current.emit('question', questions[questionIndex].name);
     questions[questionIndex].disabled = true;
-    setPublished(true);
   };
 
   const handleCancel = () => {
     socket.current.emit('countdown', { roomId, status: false });
-    setTimer(15);
+    socket.current.emit('subscribeToIndex', { index: -1, open: false });
     setVisible(false);
     setPublished(false);
+    setTimer(15);
     setAnswers([]);
   };
 
