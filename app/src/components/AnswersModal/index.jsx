@@ -64,8 +64,14 @@ const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
                 <div className="answers-cell">{teamName}</div>
                 <div className="answers-cell">{timeToAnswer}</div>
                 <div className="answers-cell--actions">
-                  <CheckCircleTwoTone twoToneColor="#52c41a" />
-                  <CloseCircleTwoTone twoToneColor="#F51D23" />
+                  <CheckCircleTwoTone
+                    onClick={e => props.handleRightAnswer(e, teamName)}
+                    twoToneColor="#52c41a"
+                  />
+                  <CloseCircleTwoTone
+                    onClick={e => props.handleWrongAnswer(e, teamName)}
+                    twoToneColor="#F51D23"
+                  />
                 </div>
               </div>
             ))}

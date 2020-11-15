@@ -144,6 +144,25 @@ const Game = props => {
     setAnswers([]);
   };
 
+  const handleRightAnswer = (e, team) => {
+    e.preventDefault();
+
+    const index =
+      teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
+
+    if (index !== -1 && teams.length > 0) {
+      console.log({ question: questions[questionIndex], team: teams[index] });
+    }
+
+    //close modal and reset part of the state
+    handleCancel();
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const handleWrongAnswer = (e, team) => {
+    /**TODO */
+  };
+
   return (
     <div className="game-container">
       {loading ? (
@@ -196,14 +215,16 @@ const Game = props => {
               <Fragment />
             ) : (
               <AnswersModal
-                timer={timer}
-                published={published}
-                openQuestion={openQuestion}
-                visible={visible}
-                handleCancel={handleCancel}
-                questions={questions}
-                questionIndex={questionIndex}
                 answers={answers}
+                handleCancel={handleCancel}
+                handleRightAnswer={handleRightAnswer}
+                handleWrongAnswer={handleWrongAnswer}
+                openQuestion={openQuestion}
+                published={published}
+                questionIndex={questionIndex}
+                questions={questions}
+                timer={timer}
+                visible={visible}
               />
             )}
           </div>
