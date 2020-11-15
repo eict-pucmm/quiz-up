@@ -61,6 +61,10 @@ const findById = async (req, res) => {
         path: 'participants.team',
         select: 'name medicalCenter',
       },
+      {
+        path: 'participants.team',
+        select: 'name',
+      },
     ])
   );
 

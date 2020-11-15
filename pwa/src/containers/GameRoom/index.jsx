@@ -23,7 +23,7 @@ const GameRoom = props => {
     },
   } = useStateValue();
 
-  const disabled = question === undefined;
+  const disabled = question === false || question === undefined;
 
   useEffect(() => {
     if (roomId && teamName) initiateSocket(roomId, teamName);
