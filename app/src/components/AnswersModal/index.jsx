@@ -50,13 +50,26 @@ const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
       <div className="question-wrapper">
         {(published || isDesktopOrLaptop) && RENDERER(timer)}
         <p className="question-content">{questions[questionIndex].name}</p>
-        {answers.length > 1 &&
-          answers.map(({ teamName, timeToAnswer }) => (
-            <p key={teamName}>
-              {teamName} {timeToAnswer} <CheckCircleTwoTone />{' '}
-              <CloseCircleTwoTone />{' '}
-            </p>
-          ))}
+        <div className="answers-table">
+          {answers.length > 0 && (
+            <div className="answers-header">
+              <div className="answers-cell">Equipos</div>
+              <div className="answers-cell">Tiempo</div>
+              <div className="answers-cell">Acciones</div>
+            </div>
+          )}
+          {answers.length > 0 &&
+            answers.map(({ teamName, timeToAnswer }) => (
+              <div key={teamName} className="answers-body">
+                <div className="answers-cell">{teamName}</div>
+                <div className="answers-cell">{timeToAnswer}</div>
+                <div className="answers-cell--actions">
+                  <CheckCircleTwoTone twoToneColor="#52c41a" />
+                  <CloseCircleTwoTone twoToneColor="#F51D23" />
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </Modal>
   );

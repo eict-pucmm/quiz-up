@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { Spin } from 'antd';
 import { useMediaQuery } from 'react-responsive';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import QUESTIONS from '../../constants/questions';
 import QuestionsTable from '../../components/QuestionsTable';
@@ -62,12 +63,7 @@ const Game = props => {
   useEffect(() => {
     socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId });
     subscribeToTimer();
-    socket.current.on('index', ({ index, open }) => {
-      setVisible(open);
-      if (index !== -1) setQuestionIndex(index);
-      else setTimer(15);
-    });
-
+    subscribeToIndexChange();
     return () => socket.current.emit('leaveRoom', { roomId });
   }, [roomId]);
 
@@ -75,7 +71,20 @@ const Game = props => {
     socket.current.on('timer', ({ timer, open }) => {
       setPublished(open);
       setTimer(timer);
-      if (timer === 0) socket.current.emit('question', false);
+      if (timer === 0) {
+        socket.current.emit('question', false);
+      }
+    });
+  };
+
+  const subscribeToIndexChange = () => {
+    socket.current.on('index', ({ index, open }) => {
+      setVisible(open);
+      if (index !== -1) setQuestionIndex(index);
+      else {
+        setTimer(15);
+        setAnswers([]);
+      }
     });
   };
 
@@ -101,9 +110,9 @@ const Game = props => {
   }, [teams]);
 
   useEffect(() => {
-    socket.current.on('answer', answers =>
-      setAnswers(prev => uniqueArray([...prev, answers]))
-    );
+    socket.current.on('answer', answers => {
+      setAnswers(prev => uniqueArray([...prev, answers]));
+    });
   }, [answers]);
 
   const showModal = selectedQuestion => {
@@ -156,14 +165,11 @@ const Game = props => {
                         {connected ? (
                           <p>0</p>
                         ) : (
-                          <div style={{ fontSize: '16px' }}>
-                            Esperando equipo
-                            <div className="lds-ring">
-                              <div></div>
-                              <div></div>
-                              <div></div>
-                              <div></div>
-                            </div>
+                          <div style={{ fontSize: '16px', color: 'red' }}>
+                            <span style={{ marginRight: '2%' }}>
+                              Esperando equipo
+                            </span>
+                            <LoadingOutlined />
                           </div>
                         )}
                       </div>
