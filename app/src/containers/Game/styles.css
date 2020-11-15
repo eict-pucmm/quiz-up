@@ -5,11 +5,29 @@
   justify-content: space-around;
 }
 
+.game-content {
+  display: flex;
+  flex-direction: row;
+}
+
 .round-title {
   color: dodgerblue;
   font-size: 32px;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.round-loading {
+  align-items: center;
+  display: flex !important;
+  flex-direction: column;
+  height: 85vh;
+  justify-content: center;
+}
+
+.missing-teams {
+  font-size: 24px;
+  text-align: center;
 }
 
 .teams-container {

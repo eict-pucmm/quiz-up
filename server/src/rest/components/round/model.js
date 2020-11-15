@@ -44,7 +44,17 @@ const Round = new Schema({
           type: Schema.Types.ObjectId,
           ref: 'Team',
         },
+        connected: {
+          type: Boolean,
+          default: false,
+        },
         answered: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: 'Question',
+          },
+        ],
+        failed: [
           {
             type: Schema.Types.ObjectId,
             ref: 'Question',
