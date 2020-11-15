@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -103,6 +103,7 @@ const Game = props => {
       if (index !== -1) {
         if (teams.length > 0) {
           setTeams([...teams, (teams[index].connected = true)]);
+          return message.success(`Bienvenido ${team}`);
         }
       }
       return;
