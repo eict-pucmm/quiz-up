@@ -25,7 +25,6 @@ const Game = props => {
   const [title, setTitle] = useState();
   const [timer, setTimer] = useState(15);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
-  const allTeamsConnected = teams.every(({ connected }) => connected);
   const HEADERS =
     questions.length > 0
       ? [
@@ -76,6 +75,7 @@ const Game = props => {
     socket.current.on('timer', ({ timer, open }) => {
       setPublished(open);
       setTimer(timer);
+      if (timer === 0) socket.current.emit('question', false);
     });
   };
 
@@ -87,11 +87,6 @@ const Game = props => {
 
   useEffect(() => {
     socket.current.on('welcomeTeam', team => {
-      console.log('team', team);
-      // if (!teams.some(i => i.team.name === team) && team !== 'ADMIN') {
-      //   setTeams(prevTeams => uniqueArray([...prevTeams, team]));
-      // }
-      console.log('teams', teams);
       const index =
         teams.length > 0 &&
         teams.findIndex(i => i.team && i.team.name === team && !i.connected);
@@ -102,7 +97,6 @@ const Game = props => {
         }
       }
       return;
-      // setTeams(prev => [...prev]);
     });
   }, [teams]);
 
@@ -127,7 +121,7 @@ const Game = props => {
     setPublished(true);
     setTimer(15);
     socket.current.emit('countdown', { roomId, status: true });
-    socket.current.emit('question', questions[questionIndex].name);
+    socket.current.emit('question', true);
     questions[questionIndex].disabled = true;
   };
 
@@ -154,17 +148,24 @@ const Game = props => {
           <div className="game-content">
             {isDesktopOrLaptop && (
               <div className="teams-container">
-                {!allTeamsConnected && (
-                  <p className="missing-teams">
-                    Todos los equipos deben conectarse...
-                  </p>
-                )}
                 {teams.map(
                   ({ team, connected }) =>
-                    connected && (
+                    team && (
                       <div className="team-name" key={team._id}>
                         <p>{team.name}</p>
-                        <p>0</p>
+                        {connected ? (
+                          <p>0</p>
+                        ) : (
+                          <div style={{ fontSize: '16px' }}>
+                            Esperando equipo
+                            <div className="lds-ring">
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )
                 )}
