@@ -45,7 +45,7 @@ const FormTeams = ({ form, ...props }) => {
       layout={isDesktop ? 'horizontal' : 'vertical'}
       labelCol={{ span: isDesktop ? 4 : 8 }}
       wrapperCol={{ span: isDesktop ? 8 : 0 }}>
-      {errorName && <p className="red">Favor introducir minimo 3 caracteres</p>}
+      {errorName && <p className="red">Favor introducir mínimo 3 caracteres</p>}
       <Form.Item label="Nuevo Equipo: " name="name">
         <Input
           value={name}
@@ -70,12 +70,12 @@ const FormTeams = ({ form, ...props }) => {
       </Form.Item>
 
       {errorMedicalCenter && (
-        <p className="red">Favor introducir un centro medico valido</p>
+        <p className="red">Favor introducir un centro médico valido</p>
       )}
-      <Form.Item label="Centro Medico: " name="medicalCenter">
+      <Form.Item label="Centro Médico: " name="medicalCenter">
         <Select
           showArrow
-          placeholder="Seleccionar centro medico del equipo"
+          placeholder="Seleccionar centro médico del equipo"
           onChange={handleMedChange}>
           {allMedicalCenters.map(({ name, _id }) => (
             <Option value={name} key={_id}>

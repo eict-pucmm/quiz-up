@@ -6,7 +6,7 @@ import ActionButtons from '../../components/ActionButtons';
 export const COLUMNS = ({ onUpdate, onRemove }) => {
   return [
     {
-      title: 'Centros Medicos',
+      title: 'Centros Médicos',
       dataIndex: 'name',
       key: 'medicalCenter',
       width: 500,

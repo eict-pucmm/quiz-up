@@ -39,7 +39,7 @@ const GeneralData = props => {
 
   return (
     <>
-      {errorName && <p className="red">Favor introducir más de 3 carácteres</p>}
+      {errorName && <p className="red">Favor introducir más de 3 caracteres</p>}
       <Form.Item label="Nombre">
         <Input
           name="name"

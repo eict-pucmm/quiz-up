@@ -35,7 +35,7 @@ const MedicalCenters = () => {
     const { error } = await removeMedicalCenter(key);
     if (!error) {
       notification['success']({
-        message: 'El centro ha sido removido con exito',
+        message: 'El centro ha sido removido con éxito',
       });
     }
     setSaving(false);
@@ -56,7 +56,7 @@ const MedicalCenters = () => {
       : notification['success']({
           message: `El centro ha sido ${
             editing ? 'actualizado' : 'creado'
-          } con exito`,
+          } con éxito`,
         });
   };
 
@@ -97,7 +97,7 @@ const MedicalCenters = () => {
   return (
     <>
       <Breadcrumb className="breadcrumb-title">
-        <Breadcrumb.Item>Centros Medicos</Breadcrumb.Item>
+        <Breadcrumb.Item>Centros Médicos</Breadcrumb.Item>
       </Breadcrumb>
       <Card style={{ marginBottom: 8 }}>
         <span

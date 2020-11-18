@@ -38,15 +38,15 @@ const FormQuestions = ({ form, ...props }) => {
       layout={isDesktop ? 'horizontal' : 'vertical'}
       labelCol={{ span: isDesktop ? 4 : 8 }}
       wrapperCol={{ span: isDesktop ? 8 : 0 }}>
-      {errorName && <p className="red">Favor introducir minimo 4 caracteres</p>}
+      {errorName && <p className="red">Favor introducir mínimo 4 caracteres</p>}
       <Form.Item label="Nueva Pregunta:">
         <Input value={name} onChange={handleNameChange} />
       </Form.Item>
 
       {errorCategories && (
-        <p className="red">Favor de seleccionar al menos una categoria</p>
+        <p className="red">Favor de seleccionar al menos una categoría</p>
       )}
-      <Form.Item label="Categorias:" name="categories">
+      <Form.Item label="Categorías:" name="categories">
         <Select mode="multiple" onChange={handleSelect}>
           {allCategories.map(({ name }) => (
             <Option value={name} key={name}>

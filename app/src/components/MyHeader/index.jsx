@@ -40,7 +40,7 @@ const MyHeader = () => {
         </Menu.Item>
       )}
       <Menu.Item key="0" icon={<LogoutOutlined />}>
-        <span onClick={handleLogout}>Cerrar sesion</span>
+        <span onClick={handleLogout}>Cerrar sesión</span>
       </Menu.Item>
     </Menu>
   );

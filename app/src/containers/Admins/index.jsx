@@ -34,7 +34,7 @@ const Admins = () => {
 
     if (!error) {
       notification['success']({
-        message: 'La pregunta ha sido removida con exito',
+        message: 'La pregunta ha sido removida con éxito',
       });
     }
 
@@ -85,7 +85,7 @@ const Admins = () => {
       dispatch(clearAdminForm());
 
       return notification['success']({
-        message: 'El administrador ha sido creado con exito',
+        message: 'El administrador ha sido creado con éxito',
       });
     } catch (error) {
       const message =
@@ -94,7 +94,7 @@ const Admins = () => {
         'auth/email-already-in-use':
           'Favor introducir un correo que este disponible',
         'auth/invalid-email': 'Favor introducir un correo valido',
-        'auth/weak-password': 'Favor introducir una clave mas segura',
+        'auth/weak-password': 'Favor introducir una clave más segura',
       };
       return notification['error']({
         message: messages[error.code] || message,

@@ -51,7 +51,7 @@ const Questions = () => {
     const { error } = await removeQuestion(key);
     if (!error) {
       notification['success']({
-        message: 'La pregunta ha sido removida con exito',
+        message: 'La pregunta ha sido removida con éxito',
       });
     }
     dispatch(setQuestionsAttributes({ saving: false }));
@@ -121,7 +121,7 @@ const Questions = () => {
     return notification['success']({
       message: `La pregunta ha sido ${
         editing ? 'actualizada' : 'creada'
-      } con exito`,
+      } con éxito`,
     });
   };
 

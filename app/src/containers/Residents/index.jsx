@@ -91,7 +91,7 @@ const Residents = () => {
     return notification['success']({
       message: `El residente ha sido ${
         editing ? 'actualizado' : 'creado'
-      } con exito`,
+      } con éxito`,
     });
   };
 

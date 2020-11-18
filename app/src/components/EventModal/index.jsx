@@ -59,7 +59,7 @@ const EventModal = props => {
               />
               {error && (
                 <p style={{ color: 'red' }}>
-                  {'Favor introducir mas de 3 caracteres'}
+                  {'Favor introducir más de 3 caracteres'}
                 </p>
               )}
             </>

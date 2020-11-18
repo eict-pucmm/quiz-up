@@ -56,7 +56,7 @@ const FormAdmins = ({ form, ...props }) => {
           value={adminToAdd.firstName}
         />
         {errorFirstName && (
-          <p className="red">Favor introducir minimo 2 caracteres</p>
+          <p className="red">Favor introducir mínimo 2 caracteres</p>
         )}
       </Form.Item>
 
@@ -67,11 +67,11 @@ const FormAdmins = ({ form, ...props }) => {
           value={adminToAdd.lastName}
         />
         {errorLastName && (
-          <p className="red">Favor introducir minimo 2 caracteres</p>
+          <p className="red">Favor introducir mínimo 2 caracteres</p>
         )}
       </Form.Item>
 
-      <Form.Item label="Correo Electronico">
+      <Form.Item label="Correo Electrónico">
         <Input
           name="email"
           onChange={handleNameChange}
@@ -87,7 +87,7 @@ const FormAdmins = ({ form, ...props }) => {
           value={adminToAdd.password}
         />
         {errorPassword && (
-          <p className="red">Favor introducir minimo 8 caracteres</p>
+          <p className="red">Favor introducir mínimo 8 caracteres</p>
         )}
       </Form.Item>
       <Form.Item label="Confirmar Contraseña">

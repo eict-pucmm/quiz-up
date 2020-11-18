@@ -102,7 +102,7 @@ const Teams = () => {
     return notification['success']({
       message: `El equipo ha sido ${
         editing ? 'actualizado' : 'creado'
-      } con exito`,
+      } con éxito`,
     });
   };
 
