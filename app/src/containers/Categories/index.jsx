@@ -35,7 +35,7 @@ const Categories = () => {
     const { error } = await removeCategory(key);
     if (!error) {
       notification['success']({
-        message: 'La categoria ha sido removida con exito',
+        message: 'La categoría ha sido removida con exito',
       });
     }
     setSaving(false);
@@ -54,9 +54,9 @@ const Categories = () => {
             '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
         })
       : notification['success']({
-          message: `La categoria ha sido ${
+          message: `La categoría ha sido ${
             editing ? 'actualizada' : 'creada'
-          } con exito`,
+          } con éxito`,
         });
   };
 
@@ -97,13 +97,13 @@ const Categories = () => {
   return (
     <>
       <Breadcrumb className="breadcrumb-title">
-        <Breadcrumb.Item>Categorias</Breadcrumb.Item>
+        <Breadcrumb.Item>Categorías</Breadcrumb.Item>
       </Breadcrumb>
       <Card style={{ marginBottom: 8 }}>
         <span
           className="ant-form-item-label"
           style={{ fontWeight: 700, marginRight: 4 }}>
-          Nueva Categoria :
+          Nueva Categoría :
         </span>
         <Input
           style={{ width: '40%' }}

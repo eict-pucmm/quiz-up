@@ -39,11 +39,11 @@ const Login = () => {
     <Modal
       visible
       footer={null}
-      title="Iniciar Sesion - Quiz Up"
+      title="Iniciar Sesión - Quiz Up"
       maskStyle={{
         background: 'linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff)',
       }}>
-      {error && <p className="red">¡Correo electronico o clave incorrecta!</p>}
+      {error && <p className="red">¡Correo electrónico o clave incorrecta!</p>}
       <Form
         form={form}
         layout="vertical"

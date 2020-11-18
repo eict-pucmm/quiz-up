@@ -41,7 +41,7 @@ const RoundCard = ({ round, showModal, index }) => {
           {isDesktop ? 'Ver más' : '...'}
         </span>
       }>
-      <p>Categorias:</p>
+      <p>Categorías:</p>
       {categories &&
         categories.map(c => (
           <Tag color="blue" key={c}>

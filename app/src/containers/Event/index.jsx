@@ -58,7 +58,7 @@ const Event = () => {
 
     setTimeout(() => {
       notification['success']({
-        message: 'El evento ha sido creada con exito',
+        message: 'El evento ha sido creada con éxito',
       });
 
       dispatch(clearEventFields());

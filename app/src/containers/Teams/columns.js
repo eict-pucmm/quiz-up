@@ -25,7 +25,7 @@ export const COLUMNS = ({ onUpdate }) => {
       ),
     },
     {
-      title: 'Centro Medico',
+      title: 'Centro Médico',
       dataIndex: 'medicalCenter',
       key: 'medicalCenter',
     },
