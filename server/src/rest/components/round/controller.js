@@ -54,12 +54,8 @@ const findById = async (req, res) => {
   const [error, round] = await wrapper(
     Round.findById({ _id: req.params.id }).populate([
       {
-        path: 'questions',
+        path: 'questions.question',
         select: 'name points',
-      },
-      {
-        path: 'participants.team',
-        select: 'name medicalCenter',
       },
       {
         path: 'participants.team',
@@ -90,7 +86,14 @@ const create = async (req, res) => {
     }
 
     const [error, value] = await validateData(
-      { ...req.body, roomId },
+      {
+        ...req.body,
+        roomId,
+        questions: req.body.questionBank.map(({ categorySelected, _id }) => ({
+          categorySelected,
+          question: _id,
+        })),
+      },
       { ...attributes, validate: validateRound }
     );
 

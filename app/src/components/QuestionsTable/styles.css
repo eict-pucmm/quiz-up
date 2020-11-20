@@ -22,6 +22,10 @@
   flex: 1;
 }
 
+.entire-gameboard-container {
+  width: 100%;
+}
+
 .question-card {
   font-size: 30px !important;
   transition: all 0.3s;

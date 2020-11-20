@@ -25,13 +25,13 @@ const RoundController = ({ questions, showModal, headers }) => {
             <Card.Body>
               {questions.map(
                 (q, i) =>
-                  q.category === category && (
+                  q.categorySelected === category && (
                     <AntCard
                       key={q._id}
                       className="question-card"
                       onClick={() => !q.disabled && showModal(i)}
                       style={q.disabled ? CARD_STYLES_DISABLED : CARD_STYLES}>
-                      {q.points}
+                      {q.question.points}
                     </AntCard>
                   )
               )}

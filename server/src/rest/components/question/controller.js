@@ -33,6 +33,24 @@ const list = async (req, res) => {
 };
 
 /**
+ * Finds question on specific category
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of Question
+ */
+const getQuestionByCategoryAndPoints = async (req, res) => {
+  const { category, points } = req.params;
+
+  const [error, questions] = await wrapper(
+    Question.find({ categories: { $in: [category] }, points: points })
+  );
+
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ questions });
+};
+
+/**
  * Finds one specific Question
  * @param {Object} req
  * @param {Object} res
@@ -131,4 +149,12 @@ const subscribe = async (req, res) => {
   return res.status(OK).send('subscribed');
 };
 
-export { list, findById, create, publish, subscribe, update };
+export {
+  list,
+  findById,
+  create,
+  publish,
+  subscribe,
+  update,
+  getQuestionByCategoryAndPoints,
+};
