@@ -1,11 +1,6 @@
 import Question from '../question/model';
 
-import {
-  OK,
-  INTERNAL_SERVER_ERROR,
-  CREATED,
-  NO_CONTENT,
-} from '../../../config/statusCodes';
+import { INTERNAL_SERVER_ERROR, CREATED } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 
 const create = async (req, res) => {
@@ -34,15 +29,16 @@ const create = async (req, res) => {
 };
 
 const createQuestionBank = (questions, categories) => {
-  let orderedPoints = { oneH: [], twoH: [], threeH: [], fourH: [], fiveH: [] };
-  questions.forEach((question, index) => {
+  questions.forEach(question => {
     Object.keys(categories).forEach(key => {
+      const categorySelected = question.categories.find(c => c === key);
       if (question.categories.includes(key)) {
-        let objFormat = {
+        const objFormat = {
           name: question.name,
           points: question.points,
           category: question.categories,
           _id: question._id,
+          categorySelected,
         };
         categories[key].push(objFormat);
       }
@@ -53,7 +49,6 @@ const createQuestionBank = (questions, categories) => {
 };
 
 /* THIS FUNCTION WILL HELP GET ONE RANDOM QUESTION FROM THE ORDERED BY POINTS QUESTIONS*/
-
 function pickRandomQuestion(categories) {
   let questionBank = {};
   let actualCatQuestions = {
@@ -65,68 +60,65 @@ function pickRandomQuestion(categories) {
   };
 
   Object.keys(categories).forEach(key => {
-    questionBank[key] = {
-      oneH: [],
-      twoH: [],
-      threeH: [],
-      fourH: [],
-      fiveH: [],
-    };
+    questionBank[key] = [];
   });
 
   for (let [key, val] of Object.entries(categories)) {
+    let repeated = false;
     val.forEach(question => {
       if (question.category.length > 1) {
         question.category.forEach(category => {
-          let bankCat = questionBank[category];
+          if (!Object.keys(categories).includes(category)) return;
+          const bankCat = questionBank[category];
           Object.values(bankCat).forEach(val => {
-            if (val != null && val != undefined) {
-              if (val._id == question._id) {
-                console.log(
-                  'ommited a question because theres another>>>',
-                  val.name,
-                  '\nQuestion repeated ?',
-                  question.name
-                );
-                return;
-              }
+            if (val && val._id === question._id) {
+              repeated = true;
+              return;
             }
           });
         });
       }
-      if (question.points == 100) {
-        actualCatQuestions.oneH.push(question);
-      } else if (question.points == 200) {
-        actualCatQuestions.twoH.push(question);
-      } else if (question.points == 300) {
-        actualCatQuestions.threeH.push(question);
-      } else if (question.points == 400) {
-        actualCatQuestions.fourH.push(question);
-      } else if (question.points == 500) {
-        actualCatQuestions.fiveH.push(question);
+
+      if (!repeated) {
+        if (question.points === 100) {
+          actualCatQuestions.oneH.push(question);
+        } else if (question.points === 200) {
+          actualCatQuestions.twoH.push(question);
+        } else if (question.points === 300) {
+          actualCatQuestions.threeH.push(question);
+        } else if (question.points === 400) {
+          actualCatQuestions.fourH.push(question);
+        } else if (question.points === 500) {
+          actualCatQuestions.fiveH.push(question);
+        }
       }
     });
 
-    questionBank[key].oneH =
+    questionBank[key].push(
       actualCatQuestions.oneH[
         Math.floor(Math.random() * actualCatQuestions.oneH.length)
-      ];
-    questionBank[key].twoH =
+      ] || {}
+    );
+    questionBank[key].push(
       actualCatQuestions.twoH[
         Math.floor(Math.random() * actualCatQuestions.twoH.length)
-      ];
-    questionBank[key].threeH =
+      ] || {}
+    );
+    questionBank[key].push(
       actualCatQuestions.threeH[
         Math.floor(Math.random() * actualCatQuestions.threeH.length)
-      ];
-    questionBank[key].fourH =
+      ] || {}
+    );
+    questionBank[key].push(
       actualCatQuestions.fourH[
         Math.floor(Math.random() * actualCatQuestions.fourH.length)
-      ];
-    questionBank[key].fiveH =
+      ] || {}
+    );
+    questionBank[key].push(
       actualCatQuestions.fiveH[
         Math.floor(Math.random() * actualCatQuestions.fiveH.length)
-      ];
+      ] || {}
+    );
 
     actualCatQuestions = {
       oneH: [],

@@ -21,6 +21,7 @@ export const initialState = {
     name: '',
     categories: [],
     participants: [{ team: '', answered: [] }],
+    questionBank: {},
     errorName: false,
     errorCategories: false,
     errorTeams: false,

@@ -8,7 +8,7 @@ const CARD_STYLES_DISABLED = { color: 'grey', cursor: 'none' };
 
 const QuestionsTable = ({ questions, showModal, headers }) => {
   return (
-    <div>
+    <div className="entire-gameboard-container">
       <Row>
         {headers.map(category => (
           <Col className="category-col" key={category}>
@@ -17,13 +17,13 @@ const QuestionsTable = ({ questions, showModal, headers }) => {
         ))}
       </Row>
       <Row className="all-questions-container">
-        {questions.map((question, index) => (
-          <Col className="question-col" key={question._id}>
+        {questions.map((q, index) => (
+          <Col className="question-col" key={q.question._id}>
             <Card
               className="question-card"
-              onClick={() => !question.disabled && showModal(index)}
-              style={question.disabled ? CARD_STYLES_DISABLED : CARD_STYLES}>
-              {question.points}
+              onClick={() => !q.disabled && showModal(index)}
+              style={q.disabled ? CARD_STYLES_DISABLED : CARD_STYLES}>
+              {q.question.points}
             </Card>
           </Col>
         ))}

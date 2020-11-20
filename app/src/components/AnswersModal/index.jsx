@@ -15,7 +15,7 @@ const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
       onClick={openQuestion}
       size={isDesktopOrLaptop ? 'middle' : 'large'}
       type="primary"
-      value={questions[questionIndex].name}>
+      value={questions[questionIndex].question.name}>
       Abrir Pregunta
     </Button>,
     <Button
@@ -49,7 +49,9 @@ const AnswersModal = ({ questions, questionIndex, timer, ...props }) => {
       visible={visible}>
       <div className="question-wrapper">
         {(published || isDesktopOrLaptop) && RENDERER(timer)}
-        <p className="question-content">{questions[questionIndex].name}</p>
+        <p className="question-content">
+          {questions[questionIndex].question.name}
+        </p>
         <div className="answers-table">
           {answers.length > 0 && (
             <div className="answers-header">

@@ -31,7 +31,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
     state: { roundToAdd, round, viewOldEvents },
   } = useStateValue();
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
-  const { errorName, errorCategories, errorTeams } = roundToAdd;
+  const { errorName, errorCategories, errorTeams, questionBank } = roundToAdd;
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -86,7 +86,12 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   };
 
   const onSubmit = async () => {
-    if (errorName || errorCategories || errorTeams) {
+    if (
+      errorName ||
+      errorCategories ||
+      errorTeams ||
+      Object.keys(questionBank).length === 0
+    ) {
       return notification['error']({
         message: 'Por favor revise los datos de la ronda.',
       });
@@ -94,7 +99,10 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
 
     dispatch(setRoundAttributes({ saving: true }));
 
-    const ROUND_INFO = { ...roundToAdd };
+    const ROUND_INFO = {
+      ...roundToAdd,
+      questionBank: Object.values(questionBank).flat(),
+    };
 
     if (showInfo) {
       if (!round.nameChanged) delete ROUND_INFO.name;
@@ -126,7 +134,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
         allTeams={allTeams}
       />
     ),
-    1: () => <QuestionBank />,
+    1: () => <QuestionBank form={form} allCategories={allCategories} />,
     2: () => <BonusQuestion />,
   };
 

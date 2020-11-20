@@ -42,23 +42,13 @@
   margin-bottom: 2%;
 }
 
-@media only screen and (min-width: 1024px) {
-  .answers-cell--actions {
-    display: block;
-    font-size: 25px;
-  }
-  .answers-cell--actions > * {
-    margin-right: 2%;
-  }
-}
-
 .question-countdown {
   color: red !important;
   font-size: 65px;
 }
 
 .question-content {
-  font-size: 50px;
+  font-size: 30px;
   font-weight: bold;
   color: dodgerblue !important;
 }
@@ -67,4 +57,17 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+
+@media only screen and (min-width: 1024px) {
+  .answers-cell--actions {
+    display: block;
+    font-size: 25px;
+  }
+  .answers-cell--actions > * {
+    margin-right: 2%;
+  }
+  .question-content {
+    font-size: 50px;
+  }
 }

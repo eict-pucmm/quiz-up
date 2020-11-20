@@ -4,7 +4,6 @@ import { Spin, message } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import QUESTIONS from '../../constants/questions';
 import QuestionsTable from '../../components/QuestionsTable';
 import RoundController from '../../components/RoundController';
 import AnswersModal from '../../components/AnswersModal';
@@ -29,10 +28,10 @@ const Game = props => {
   const HEADERS =
     questions.length > 0
       ? [
-          questions[0].category,
-          questions[5].category,
-          questions[10].category,
-          questions[15].category,
+          questions[0].categorySelected,
+          questions[5].categorySelected,
+          questions[10].categorySelected,
+          questions[15].categorySelected,
         ]
       : [];
 
@@ -45,8 +44,7 @@ const Game = props => {
       setTitle(data.name);
       setTeams(data.participants);
       setLoading(false);
-      //TODO: change to data.questions
-      setQuestions(data.questions.length > 0 ? data.questions : QUESTIONS);
+      setQuestions(data.questions);
     };
 
     getRoundInfo();
@@ -151,7 +149,10 @@ const Game = props => {
       teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
 
     if (index !== -1 && teams.length > 0) {
-      console.log({ question: questions[questionIndex], team: teams[index] });
+      console.log({
+        question: questions[questionIndex].question,
+        team: teams[index],
+      });
     }
 
     //close modal and reset part of the state

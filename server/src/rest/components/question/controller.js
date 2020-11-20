@@ -38,14 +38,12 @@ const list = async (req, res) => {
  * @param {Object} res
  * @returns {JSON} of Question
  */
-const getQuestionFromCategory = async (req, res) => {
-  const { category, points } = req.body;
+const getQuestionByCategoryAndPoints = async (req, res) => {
+  const { category, points } = req.params;
 
   const [error, questions] = await wrapper(
-    Question.find({ 'category.name': category, points: points })
+    Question.find({ categories: { $in: [category] }, points: points })
   );
-
-  console.log('??????????', questions);
 
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
@@ -151,4 +149,12 @@ const subscribe = async (req, res) => {
   return res.status(OK).send('subscribed');
 };
 
-export { list, findById, create, publish, subscribe, update };
+export {
+  list,
+  findById,
+  create,
+  publish,
+  subscribe,
+  update,
+  getQuestionByCategoryAndPoints,
+};
