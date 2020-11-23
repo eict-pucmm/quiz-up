@@ -1,6 +1,6 @@
 import { apiClient, createToken } from './axios';
 
-import { URL_QUESTIONS } from '../config/urls';
+import { URL_QUESTIONS, URL_QUESTIONS_BANK } from '../config/urls';
 import { getUserInfo } from './user';
 
 export const getQuestions = async () => {
@@ -22,6 +22,37 @@ export const getQuestionById = async id => {
     return { data: response.data.question, error: null };
   } catch (error) {
     return { data: null, error: error.response };
+  }
+};
+
+export const getQuestionByCatAndPoints = async (category, points) => {
+  try {
+    const headers = await createToken();
+    const response = await apiClient.get(
+      `${URL_QUESTIONS}/category/${encodeURIComponent(
+        category
+      )}/points/${points}`,
+      headers
+    );
+
+    return { data: response.data.questions, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
+export const generateQuestionBank = async categories => {
+  try {
+    const headers = await createToken();
+    const response = await apiClient.post(
+      `${URL_QUESTIONS_BANK}/`,
+      { categories },
+      headers
+    );
+
+    return { data: response.data.qbank, error: null };
+  } catch (error) {
+    return { data: null, error };
   }
 };
 

@@ -27,8 +27,15 @@ const Round = new Schema({
   },
   questions: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Question',
+      type: new Schema({
+        categorySelected: {
+          type: String,
+        },
+        question: {
+          type: Schema.Types.ObjectId,
+          ref: 'Question',
+        },
+      }),
     },
   ],
   categories: [

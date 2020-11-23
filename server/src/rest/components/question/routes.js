@@ -6,6 +6,7 @@ import {
   publish,
   subscribe,
   update,
+  getQuestionByCategoryAndPoints,
 } from './controller';
 
 const router = express.Router();
@@ -23,6 +24,18 @@ router.get('/', list);
  * @access Public
  */
 router.get('/:id', findById);
+
+/**
+ * @route GET '/category/:category/points/:points'
+ * @returns {JSON} of a list of questions
+ * that belong to a certain category and have
+ * either 100 to 500 points
+ * @access Public
+ */
+router.get(
+  '/category/:category/points/:points',
+  getQuestionByCategoryAndPoints
+);
 
 /**
  * @route POST '/'
