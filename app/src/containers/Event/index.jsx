@@ -52,7 +52,9 @@ const Event = () => {
       dispatch(setEvents({ saving: false }));
       return notification['error']({
         message:
-          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+          error.status === 409
+            ? '¡Ya existe un evento con ese nombre!'
+            : '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 

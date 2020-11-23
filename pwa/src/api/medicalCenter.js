@@ -8,6 +8,6 @@ export const getMedicalCenters = async () => {
 
     return { data: response.data.medicalCenters, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

@@ -10,7 +10,7 @@ export const getQuestions = async () => {
 
     return { data: response.data.questions, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -21,7 +21,7 @@ export const getQuestionById = async id => {
 
     return { data: response.data.question, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -39,7 +39,7 @@ export const saveQuestion = async question => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -56,7 +56,7 @@ export const updateQuestion = async (id, question) => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -74,6 +74,6 @@ export const removeQuestion = async id => {
 
     return { data: response.data, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

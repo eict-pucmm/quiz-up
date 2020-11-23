@@ -9,7 +9,7 @@ export const getMedicalCenters = async () => {
 
     return { data: response.data.medicalCenters, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -23,7 +23,7 @@ export const getMedicalCenterById = async id => {
 
     return { data: response.data.medicalCenter, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -41,7 +41,7 @@ export const saveMedicalCenter = async center => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -58,7 +58,7 @@ export const updateMedicalCenter = async (id, center) => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -76,6 +76,6 @@ export const removeMedicalCenter = async id => {
 
     return { data: response.data, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

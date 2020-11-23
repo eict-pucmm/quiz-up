@@ -11,6 +11,6 @@ export const getTeamsByMedicalCenter = async medicalCenter => {
 
     return { data: response.data.teams, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
