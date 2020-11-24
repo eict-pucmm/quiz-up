@@ -7,6 +7,7 @@ import {
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
+import io from '../../../services/socket';
 
 const attributes = {
   Model: Round,
@@ -56,6 +57,14 @@ const findById = async (req, res) => {
       {
         path: 'questions.question',
         select: 'name points',
+      },
+      {
+        path: 'participants.failed',
+        select: 'points -_id',
+      },
+      {
+        path: 'participants.answered',
+        select: 'points -_id',
       },
       {
         path: 'participants.team',
@@ -135,6 +144,10 @@ const update = async (req, res) => {
       { new: true }
     )
   );
+
+  io.getIO()
+    .to(updatedRound.roomId)
+    .emit('teamsInfo', updatedRound.participants);
 
   return errorUpdating
     ? res

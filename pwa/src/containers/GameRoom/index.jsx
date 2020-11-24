@@ -3,6 +3,7 @@ import Title from 'antd/lib/typography/Title';
 import { Button } from 'antd';
 
 import { useStateValue } from '../../state/';
+import { setUserInfo } from '../../state/actions';
 import {
   answerQuestion,
   disconnectSocket,
@@ -26,7 +27,15 @@ const GameRoom = props => {
   const disabled = question === false || question === undefined;
 
   useEffect(() => {
-    if (roomId && teamName) initiateSocket(roomId, teamName);
+    if (!teamName) {
+      const team = localStorage.getItem('TEAM');
+      dispatch(setUserInfo({ teamName: team }));
+    }
+
+    if (roomId && teamName) {
+      initiateSocket(roomId, teamName);
+      localStorage.setItem('TEAM', teamName);
+    }
 
     subscribeToQuestion((err, q) => {
       if (err) return;
@@ -34,7 +43,9 @@ const GameRoom = props => {
       setStartTime(performance.now());
     });
 
-    return () => disconnectSocket();
+    return () => {
+      disconnectSocket();
+    };
   }, [dispatch, roomId, teamName]);
 
   const handleClick = () => {
@@ -43,7 +54,7 @@ const GameRoom = props => {
     const timeDiff = endTime - startTime;
 
     answerQuestion(
-      { teamName, timeToAnswer: Math.round(timeDiff) / 1000 },
+      { team: teamName, timeToAnswer: Math.round(timeDiff) / 1000 },
       roomId
     );
   };

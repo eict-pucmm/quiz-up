@@ -20,11 +20,22 @@ export const initialState = {
   roundToAdd: {
     name: '',
     categories: [],
-    participants: [{ team: '', answered: [] }],
+    participants: [{ team: '', answered: [], failed: [] }],
     questionBank: {},
     errorName: false,
     errorCategories: false,
     errorTeams: false,
+  },
+  game: {
+    teams: [],
+    saving: false,
+    questions: [],
+    timer: 15,
+    answers: [],
+    published: false,
+    questionIndex: -1,
+    roomId: '',
+    title: '',
   },
   questions: {
     data: [],

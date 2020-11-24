@@ -2,12 +2,13 @@ import io from 'socket.io-client';
 let socket;
 
 export const initiateSocket = (roomId, teamName) => {
-  socket = io('https://quizup-api-pucmm.site/');
+  socket = io('http://localhost:8080/');
   if (socket && roomId) socket.emit('joinRoom', { teamName, roomId });
 };
 
 export const disconnectSocket = () => {
   if (socket) socket.disconnect();
+  localStorage.removeItem('TEAM');
 };
 
 export const subscribeToQuestion = cb => {

@@ -26,6 +26,12 @@ export const reducer = (state, action) => {
         round: Object.assign({}, state.round, { ...action.round }),
       };
 
+    case 'SET_GAME':
+      return {
+        ...state,
+        game: Object.assign({}, state.game, { ...action.game }),
+      };
+
     case 'ADD_ROUND':
       return {
         ...state,
@@ -84,6 +90,9 @@ export const reducer = (state, action) => {
 
     case 'CLEAR_ROUND_FIELDS':
       return { ...state, roundToAdd: initialState.roundToAdd };
+
+    case 'CLEAR_GAME':
+      return { ...state, game: initialState.game };
 
     case 'VIEW_OLD_EVENTS':
       return { ...state, viewOldEvents: action.status };
