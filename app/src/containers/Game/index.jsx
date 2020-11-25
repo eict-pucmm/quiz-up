@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { Spin, message } from 'antd';
@@ -14,11 +15,10 @@ import { setGame } from '../../state/actions';
 import './styles.css';
 
 const Game = props => {
-  console.log('WHATEVER');
+  // console.log('WHATEVER');
   const { idOfRound } = props.match.params;
   const { state, dispatch } = useStateValue();
   const { questions, roomId, teams, published } = state.game;
-  // console.log({ questions });
   const { questionIndex } = state.game;
   const socket = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -85,7 +85,7 @@ const Game = props => {
               participants: teams,
             });
             //TODO" do something with this
-            console.log('ERRR', { error });
+            // console.log('ERRR', { error });
             return message.success(`Bienvenido ${team}`);
           }
         }
@@ -105,7 +105,7 @@ const Game = props => {
       const QUEUE = isDesktopOrLaptop ? 'indexDesktop' : 'indexMobile';
 
       socket.current.on(QUEUE, ({ index, open }) => {
-        console.log('🚀 { index, open }', { index, open });
+        // console.log('🚀 { index, open }', { index, open });
         if (index !== -1) dispatch(setGame({ questionIndex: index }));
 
         if (!visible) setVisible(open);
@@ -135,9 +135,9 @@ const Game = props => {
 
   useEffect(() => {
     const subscribeToTeamsInfo = () => {
-      console.log('subscribing to info');
+      // console.log('subscribing to info');
       socket.current.on('teamsInfo', teams => {
-        console.log('REEEE', { teams });
+        // console.log('REEEE', { teams });
         dispatch(setGame({ teams }));
       });
     };
@@ -150,7 +150,7 @@ const Game = props => {
     if (questionIndex !== -1 && published) {
       questions[questionIndex].disabled = true;
       const { error } = updateRound(idOfRound, { questions });
-      console.log('ERROR ON DISABLE QUESTION', { error });
+      // console.log('ERROR ON DISABLE QUESTION', { error });
     }
   }, [questionIndex, published, questions, idOfRound]);
 
@@ -218,7 +218,7 @@ const Game = props => {
     const { error } = updateRound(idOfRound, {
       participants: teams.filter(team => typeof team === 'object'),
     });
-    console.log('handleRightAnwers', { error });
+    // console.log('handleRightAnwers', { error });
 
     //close modal and reset part of the state
     handleCancel();
@@ -238,7 +238,7 @@ const Game = props => {
     const { error } = updateRound(idOfRound, {
       participants: teams.filter(team => typeof team === 'object'),
     });
-    console.log('handleWringAnswer', { error });
+    // console.log('handleWringAnswer', { error });
   };
 
   return (

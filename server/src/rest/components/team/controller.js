@@ -73,7 +73,7 @@ const findByMedicalCenter = async (req, res) => {
  */
 const findByRoomIdAndTeamName = async (req, res) => {
   const [errorRound, round] = await wrapper(
-    Round.findOne({ roomId: req.params.room }).populate(
+    Round.findOne({ roomId: req.params.room }).populate([
       {
         path: 'participants.failed',
         select: 'points',
@@ -85,8 +85,8 @@ const findByRoomIdAndTeamName = async (req, res) => {
       {
         path: 'participants.team',
         select: 'name',
-      }
-    )
+      },
+    ])
   );
 
   if (errorRound) {

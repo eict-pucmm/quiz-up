@@ -19,7 +19,7 @@ export const getTeamByRoomIdAndTeamName = async (room, teamName) => {
   try {
     const headers = await createToken();
     const response = await apiClient.get(
-      `${URL_TEAMS}/round/${room}/team/${teamName}}`,
+      `${URL_TEAMS}/round/${room}/team/${encodeURIComponent(teamName)}`,
       headers
     );
 
