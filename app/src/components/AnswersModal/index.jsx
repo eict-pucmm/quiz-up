@@ -8,10 +8,11 @@ import './styles.css';
 
 const AnswersModal = props => {
   const { state } = useStateValue();
-  const { published, questions, questionIndex, timer } = state.game;
+  const { published, questions, questionIndex } = state.game;
   const { openQuestion, handleCancel, visible } = props;
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
+  const TIMER = questions[questionIndex].timer;
 
   const MODAL_BTNS = [
     <Button
@@ -47,13 +48,13 @@ const AnswersModal = props => {
     <Modal
       centered
       bodyStyle={{ minHeight: 460 }}
-      footer={!published && MODAL_BTNS}
-      maskClosable={!timer}
+      footer={(!published || !isDesktopOrLaptop) && MODAL_BTNS}
+      maskClosable={!TIMER}
       onCancel={handleCancel}
       width={'90%'}
       visible={visible}>
       <div className="question-wrapper">
-        {(published || isDesktopOrLaptop) && RENDERER(timer)}
+        {(published || isDesktopOrLaptop) && RENDERER(TIMER)}
         <p className="question-content">
           {questions[questionIndex].question.name}
         </p>
@@ -72,11 +73,23 @@ const AnswersModal = props => {
                 <div className="answers-cell">{timeToAnswer}</div>
                 <div className="answers-cell--actions">
                   <CheckCircleTwoTone
-                    onClick={e => props.handleRightAnswer(e, team)}
+                    onClick={e =>
+                      props.handleRightAnswer(
+                        e,
+                        team,
+                        questions[questionIndex].question._id
+                      )
+                    }
                     twoToneColor="#52c41a"
                   />
                   <CloseCircleTwoTone
-                    onClick={e => props.handleWrongAnswer(e, team)}
+                    onClick={e =>
+                      props.handleWrongAnswer(
+                        e,
+                        team,
+                        questions[questionIndex].question._id
+                      )
+                    }
                     twoToneColor="#F51D23"
                   />
                 </div>

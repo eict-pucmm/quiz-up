@@ -13,12 +13,10 @@ export const socketMagic = socketio => {
       });
 
       socket.on('subscribeToIndexDesktop', ({ index, open }) => {
-        console.log('toDesktop', { index, open });
         socketio.to(roomId).emit('indexDesktop', { index, open });
       });
 
       socket.on('subscribeToIndexMobile', ({ index, open }) => {
-        console.log('toMobile', { index, open });
         socketio.to(roomId).emit('indexMobile', { index, open });
       });
     });
@@ -37,7 +35,6 @@ export const socketMagic = socketio => {
         timer = setInterval(() => {
           countdown--;
 
-          console.log('👀 sending stuff');
           socketio
             .to(roomId)
             .emit('timer', { timer: countdown, open: counting });
@@ -46,11 +43,11 @@ export const socketMagic = socketio => {
     });
 
     socket.on('answer', ({ teamInfo, roomId }) => {
-      console.log('{ teamInfo, roomId }', { teamInfo, roomId });
       socketio.to(roomId).emit('answer', teamInfo);
     });
 
-    socket.on('leaveRoom', roomId => {
+    socket.on('leaveRoom', ({ roomId, teamName }) => {
+      if (teamName) socketio.to(roomId).emit('byeTeam', teamName);
       socket.leave(roomId);
     });
 
