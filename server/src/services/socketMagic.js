@@ -12,29 +12,42 @@ export const socketMagic = socketio => {
         socketio.to(roomId).emit('question', questionStatus);
       });
 
-      socket.on('subscribeToIndex', ({ index, open }) => {
-        socketio.to(roomId).emit('index', { index, open });
+      socket.on('subscribeToIndexDesktop', ({ index, open }) => {
+        socketio.to(roomId).emit('indexDesktop', { index, open });
+      });
+
+      socket.on('subscribeToIndexMobile', ({ index, open }) => {
+        socketio.to(roomId).emit('indexMobile', { index, open });
       });
     });
 
     //start/stop timer
+    let timer;
     socket.on('countdown', ({ roomId, status }) => {
-      let countdown = 15;
       const counting = status;
+      let countdown = counting ? 15 : 0;
+      const STOP = !counting || countdown <= 0;
 
-      setInterval(() => {
-        if (!counting) return;
-        if (countdown <= 0) return;
-        countdown--;
-        socketio.to(roomId).emit('timer', { timer: countdown, open: counting });
-      }, 1000);
+      if (STOP) {
+        clearInterval(timer);
+        return;
+      } else {
+        timer = setInterval(() => {
+          countdown--;
+
+          socketio
+            .to(roomId)
+            .emit('timer', { timer: countdown, open: counting });
+        }, 1000);
+      }
     });
 
     socket.on('answer', ({ teamInfo, roomId }) => {
       socketio.to(roomId).emit('answer', teamInfo);
     });
 
-    socket.on('leaveRoom', roomId => {
+    socket.on('leaveRoom', ({ roomId, teamName }) => {
+      if (teamName) socketio.to(roomId).emit('byeTeam', teamName);
       socket.leave(roomId);
     });
 

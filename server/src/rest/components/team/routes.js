@@ -5,6 +5,7 @@ import {
   create,
   findByMedicalCenter,
   update,
+  findByRoomIdAndTeamName,
 } from './controller';
 
 const router = express.Router();
@@ -29,6 +30,13 @@ router.get('/:id', findById);
  * @access Public
  */
 router.get('/find/mc', findByMedicalCenter);
+
+/**
+ * @route GET '/round/123456/team/TEAM_NAME'
+ * @returns {JSON} the team information of a round
+ * @access Public
+ */
+router.get('/round/:room/team/:team', findByRoomIdAndTeamName);
 
 /**
  * @route POST '/'

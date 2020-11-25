@@ -7,6 +7,7 @@ import {
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
+import io from '../../../services/socket';
 
 const attributes = {
   Model: Round,
@@ -58,15 +59,43 @@ const findById = async (req, res) => {
         select: 'name points',
       },
       {
+        path: 'participants.failed',
+        select: 'points',
+      },
+      {
+        path: 'participants.answered',
+        select: 'points',
+      },
+      {
         path: 'participants.team',
         select: 'name',
       },
     ])
   );
 
+  const withTotalPoints = round.participants.map(values => {
+    const { answered, failed, connected, _id, team } = values;
+    const temp = { connected, _id, team, answered, failed };
+    const sumFunc = (total, num) => total + num.points;
+    const pointsGained = answered.reduce(sumFunc, 0);
+    const pointsLosed = failed.reduce(sumFunc, 0);
+
+    return { ...temp, total: pointsGained - pointsLosed };
+  });
+
   return error
     ? res.status(INTERNAL_SERVER_ERROR).json({ error })
-    : res.status(OK).json({ round });
+    : res.status(OK).json({
+        round: {
+          name: round.name,
+          finished: round.finished,
+          roomId: round.roomId,
+          event: round.event,
+          questions: round.questions,
+          categories: round.categories,
+          participants: withTotalPoints,
+        },
+      });
 };
 
 /**
@@ -119,6 +148,20 @@ const create = async (req, res) => {
  * @returns The Round updated
  */
 const update = async (req, res) => {
+  if (req.body.participants) {
+    req.body.participants = req.body.participants.map(
+      ({ answered, failed, ...others }) => {
+        if (answered.length > 0) {
+          answered = answered.map(ans => (ans._id ? ans._id : ans));
+        }
+        if (failed.length > 0) {
+          failed = failed.map(fail => (fail._id ? fail._id : fail));
+        }
+
+        return { answered, failed, ...others };
+      }
+    );
+  }
   const [error, value] = await validateData(req.body, {
     ...attributes,
     validate: validateForUpdate,
@@ -136,11 +179,50 @@ const update = async (req, res) => {
     )
   );
 
-  return errorUpdating
+  if (errorUpdating) {
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: 'Error updating the round', errorUpdating });
+  }
+
+  const [errorGetting, round] = await wrapper(
+    Round.findById({ _id: req.params.id }).populate([
+      {
+        path: 'questions.question',
+        select: 'name points',
+      },
+      {
+        path: 'participants.failed',
+        select: 'points',
+      },
+      {
+        path: 'participants.answered',
+        select: 'points',
+      },
+      {
+        path: 'participants.team',
+        select: 'name',
+      },
+    ])
+  );
+
+  const withTotalPoints = round.participants.map(values => {
+    const { answered, failed, connected, _id, team } = values;
+    const temp = { connected, _id, team, answered, failed };
+    const sumFunc = (total, num) => total + num.points;
+    const pointsGained = answered.reduce(sumFunc, 0);
+    const pointsLosed = failed.reduce(sumFunc, 0);
+
+    return { ...temp, total: pointsGained - pointsLosed };
+  });
+
+  io.getIO().to(updatedRound.roomId).emit('teamsInfo', withTotalPoints);
+
+  return errorGetting
     ? res
         .status(INTERNAL_SERVER_ERROR)
-        .json({ message: 'Error updating the round', errorUpdating })
-    : res.status(OK).send(updatedRound);
+        .json({ message: 'Error updating the round', errorGetting })
+    : res.status(OK).send(round);
 };
 
 export { list, findById, create, update, roundByEvent };

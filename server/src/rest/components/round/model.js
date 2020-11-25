@@ -35,6 +35,24 @@ const Round = new Schema({
           type: Schema.Types.ObjectId,
           ref: 'Question',
         },
+        timer: {
+          type: Number,
+          default: 15,
+        },
+        disabled: {
+          type: Boolean,
+          default: false,
+        },
+        answers: [
+          {
+            team: {
+              type: String,
+            },
+            timeToAnswer: {
+              type: Number,
+            },
+          },
+        ],
       }),
     },
   ],
