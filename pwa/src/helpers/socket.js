@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 let socket;
 
 export const initiateSocket = (roomId, teamName) => {
-  socket = io('http://localhost:8080/');
+  socket = io('https://quizup-api-pucmm.site/');
   if (socket && roomId) socket.emit('joinRoom', { teamName, roomId });
 };
 

@@ -54,7 +54,7 @@ const Game = props => {
 
   //connect-disconect to socket
   useEffect(() => {
-    socket.current = io('http://localhost:8080/');
+    socket.current = io('https://quizup-api-pucmm.site/');
     return () => {
       socket.current.disconnect();
     };
