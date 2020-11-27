@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
@@ -15,7 +16,6 @@ import { setGame } from '../../state/actions';
 import './styles.css';
 
 const Game = props => {
-  // console.log('WHATEVER');
   const { idOfRound } = props.match.params;
   const { state, dispatch } = useStateValue();
   const { questions, roomId, teams, published } = state.game;
@@ -24,7 +24,8 @@ const Game = props => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
-
+  // console.log('WHATEVER', { published });
+  // const uniqueArray = array => Array.from(new Set(array));
   const HEADERS =
     questions.length > 0
       ? [
@@ -55,6 +56,7 @@ const Game = props => {
   //connect-disconect to socket
   useEffect(() => {
     socket.current = io('https://quizup-api-pucmm.site/');
+    // socket.current = io('http://localhost:8080/');
     return () => {
       socket.current.disconnect();
     };
@@ -62,11 +64,12 @@ const Game = props => {
 
   //when roomId is fetched -> join it
   useEffect(() => {
-    socket.current.emit('joinRoom', { teamName: 'ADMIN', roomId });
+    const QUEUE = isDesktopOrLaptop ? 'desktop' : 'mobile';
+    socket.current.emit('joinRoom', { teamName: `ADMIN-${QUEUE}`, roomId });
     return () => {
       socket.current.emit('leaveRoom', { roomId });
     };
-  }, [roomId]);
+  }, [roomId, isDesktopOrLaptop]);
 
   useEffect(() => {
     const welcomeTeams = () => {
@@ -85,7 +88,7 @@ const Game = props => {
               participants: teams,
             });
             //TODO" do something with this
-            // console.log('ERRR', { error });
+            // console.log('ERRR welcome teams', { error });
             return message.success(`Bienvenido ${team}`);
           }
         }
@@ -95,6 +98,7 @@ const Game = props => {
 
     const allTeamsConnected = () =>
       teams.map(({ connected }) => connected).every(v => v === true);
+    // console.log('useEffect ~ allTeamsConnected', allTeamsConnected());
     if (!allTeamsConnected()) welcomeTeams();
   }, [teams, dispatch, idOfRound, state.game]);
 
@@ -108,7 +112,10 @@ const Game = props => {
         // console.log('🚀 { index, open }', { index, open });
         if (index !== -1) dispatch(setGame({ questionIndex: index }));
 
-        if (!visible) setVisible(open);
+        if (!visible) {
+          setVisible(open);
+          dispatch(setGame({ timer: 15 }));
+        }
       });
     };
 
@@ -116,22 +123,26 @@ const Game = props => {
   }, [dispatch, isDesktopOrLaptop, visible]);
 
   useEffect(() => {
-    const subscribeToTimer = () => {
+    function subscribeToTimer() {
+      // console.log('REEE subscribed to timer');
       socket.current.on('timer', ({ timer, open }) => {
-        questions[questionIndex].timer = timer;
-        dispatch(setGame({ published: open, questions }));
-        if (timer === 0) {
-          //deactivate team buttons
-          socket.current.emit('question', false);
-          //stop countdown
-          socket.current.emit('countdown', { roomId, status: false });
-          dispatch(setGame({ published: false }));
+        // questions[questionIndex].timer = timer;
+        dispatch(setGame({ published: open, timer }));
+        if (timer === 0 || !open) {
+          dispatch(setGame({ published: false, timer: 15 }));
+          if (!isDesktopOrLaptop) {
+            //deactivate team buttons
+            socket.current.emit('question', false);
+            //stop countdown
+            socket.current.emit('countdown', { roomId, status: false });
+          }
         }
       });
-    };
+    }
 
-    if (questionIndex !== -1) subscribeToTimer();
-  }, [dispatch, questionIndex, roomId, questions]);
+    if (roomId) subscribeToTimer();
+    // eslint-disable-next-line
+  }, [dispatch, roomId, isDesktopOrLaptop]);
 
   useEffect(() => {
     const subscribeToTeamsInfo = () => {
@@ -156,7 +167,9 @@ const Game = props => {
 
   useEffect(() => {
     const getAnswers = () => {
-      socket.current.once('answer', answer => {
+      socket.current.on('answer', answer => {
+        // console.log('getAnswers ~ answer', answer);
+        //TODO: should we remove repeated values from answers array?
         questions[questionIndex].answers.push(answer);
         dispatch(setGame({ questions }));
       });
@@ -173,35 +186,42 @@ const Game = props => {
       ? 'subscribeToIndexMobile'
       : 'subscribeToIndexDesktop';
 
-    socket.current.emit(QUEUE, {
-      index: selectedQuestion,
-      open: true,
-    });
+    if (!isDesktopOrLaptop) {
+      socket.current.emit(QUEUE, {
+        index: selectedQuestion,
+        open: true,
+      });
+    }
   };
 
   const openQuestion = useCallback(
     e => {
       e.preventDefault();
-      socket.current.emit('countdown', { roomId, status: true });
-      socket.current.emit('question', true);
+      if (!isDesktopOrLaptop) {
+        socket.current.emit('countdown', { roomId, status: true });
+        socket.current.emit('question', true);
+      }
       dispatch(setGame({ published: true, questions }));
     },
-    [dispatch, roomId, questions]
+    [dispatch, roomId, questions, isDesktopOrLaptop]
   );
 
   const handleCancel = useCallback(() => {
     setVisible(false);
-    dispatch(setGame({ published: false }));
+    dispatch(setGame({ published: false, timer: 15 }));
     const QUEUE = isDesktopOrLaptop
       ? 'subscribeToIndexMobile'
       : 'subscribeToIndexDesktop';
 
-    // socket.current.emit('countdown', { roomId, status: false });
-    socket.current.emit(QUEUE, {
-      index: -1,
-      open: false,
-    });
-  }, [dispatch, isDesktopOrLaptop]);
+    if (!isDesktopOrLaptop) {
+      socket.current.emit('question', false);
+      socket.current.emit('countdown', { roomId, status: false });
+      socket.current.emit(QUEUE, {
+        index: -1,
+        open: false,
+      });
+    }
+  }, [dispatch, isDesktopOrLaptop, roomId]);
 
   const handleRightAnswer = (e, team, questionId) => {
     e.preventDefault();
@@ -209,7 +229,7 @@ const Game = props => {
     const index =
       teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
 
-    if (index !== -1 && teams.length > 0) {
+    if (index !== -1 && teams.length > 0 && !isDesktopOrLaptop) {
       socket.current.emit('countdown', { roomId, status: false });
       teams[index].answered.push(questionId);
       dispatch(setGame({ teams }));
@@ -238,7 +258,7 @@ const Game = props => {
     const { error } = updateRound(idOfRound, {
       participants: teams.filter(team => typeof team === 'object'),
     });
-    // console.log('handleWringAnswer', { error });
+    // console.log('handleWRONGAnswer', { error });
   };
 
   return (

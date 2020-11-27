@@ -29,12 +29,14 @@ export const socketMagic = socketio => {
       const STOP = !counting || countdown <= 0;
 
       if (STOP) {
+        // console.log('before clear interval', timer);
         clearInterval(timer);
         return;
       } else {
+        // console.log('emitting timer');
         timer = setInterval(() => {
           countdown--;
-
+          // console.log('sending stuff');
           socketio
             .to(roomId)
             .emit('timer', { timer: countdown, open: counting });

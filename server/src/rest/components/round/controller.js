@@ -162,7 +162,18 @@ const update = async (req, res) => {
       }
     );
   }
-  const [error, value] = await validateData(req.body, {
+
+  const body = !req.body.questionBank
+    ? { ...req.body }
+    : {
+        ...req.body,
+        questions: req.body.questionBank.map(({ categorySelected, _id }) => ({
+          categorySelected,
+          question: _id,
+        })),
+      };
+
+  const [error, value] = await validateData(body, {
     ...attributes,
     validate: validateForUpdate,
   });

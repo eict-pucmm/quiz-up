@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
@@ -8,12 +8,17 @@ import './styles.css';
 
 const AnswersModal = props => {
   const { state } = useStateValue();
-  const { published, questions, questionIndex } = state.game;
+  const { published, questions, questionIndex, timer } = state.game;
   const { openQuestion, handleCancel, visible } = props;
+  const [t, setT] = useState(timer);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
-  const TIMER = questions[questionIndex].timer;
+  // const TIMER = questions[questionIndex].timer;
 
+  useEffect(() => {
+    if (timer !== 15) setT(15);
+    //eslint-disable-next-line
+  }, []);
   const MODAL_BTNS = [
     <Button
       key="submit"
@@ -32,8 +37,8 @@ const AnswersModal = props => {
     </Button>,
   ];
 
-  const RENDERER = timer => {
-    return timer <= 0 ? (
+  const RENDERER = () => {
+    return t <= 0 ? (
       <span
         className="question-countdown"
         style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>
@@ -49,12 +54,12 @@ const AnswersModal = props => {
       centered
       bodyStyle={{ minHeight: 460 }}
       footer={(!published || !isDesktopOrLaptop) && MODAL_BTNS}
-      maskClosable={!TIMER}
+      maskClosable={!timer}
       onCancel={handleCancel}
       width={'90%'}
       visible={visible}>
       <div className="question-wrapper">
-        {(published || isDesktopOrLaptop) && RENDERER(TIMER)}
+        {(published || isDesktopOrLaptop) && RENDERER()}
         <p className="question-content">
           {questions[questionIndex].question.name}
         </p>
