@@ -19,29 +19,33 @@ export const socketMagic = socketio => {
       socket.on('subscribeToIndexMobile', ({ index, open }) => {
         socketio.to(roomId).emit('indexMobile', { index, open });
       });
-    });
 
-    //start/stop timer
-    let timer;
-    socket.on('countdown', ({ roomId, status }) => {
-      const counting = status;
-      let countdown = counting ? 15 : 0;
-      const STOP = !counting || countdown <= 0;
+      //start/stop timer
+      let timer;
+      socket.on(`countdown-${roomId}`, payload => {
+        if (roomId !== payload.roomId) return;
+        const counting = payload.status;
+        let countdown = counting ? 15 : 0;
+        const STOP = !counting || countdown <= 0;
 
-      if (STOP) {
-        // console.log('before clear interval', timer);
-        clearInterval(timer);
-        return;
-      } else {
-        // console.log('emitting timer');
-        timer = setInterval(() => {
-          countdown--;
-          // console.log('sending stuff');
-          socketio
-            .to(roomId)
-            .emit('timer', { timer: countdown, open: counting });
-        }, 1000);
-      }
+        if (STOP) {
+          // console.log('before clear interval', timer);
+          clearInterval(timer);
+          return;
+        } else {
+          // console.log('emitting timer');
+          timer = setInterval(() => {
+            countdown--;
+            // console.log('sending stuff');
+            socketio
+              .to(roomId)
+              .emit('timer', { timer: countdown, open: counting });
+            if (countdown <= 0) {
+              clearInterval(timer);
+            }
+          }, 1000);
+        }
+      });
     });
 
     socket.on('answer', ({ teamInfo, roomId }) => {

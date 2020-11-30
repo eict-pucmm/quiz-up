@@ -8,6 +8,7 @@
     "stop": "docker-compose stop",
     "react": "npm --prefix ./app start",
     "pwa": "npm --prefix ./pwa start",
+    "api": "npm --prefix ./server run dev",
     "build:admin": "npm --prefix ./app run build",
     "build:pwa": "npm --prefix ./pwa run build",
     "build:api": "npm --prefix ./server run build",

@@ -19,15 +19,18 @@ const AnswersModal = props => {
     if (timer !== 15) setT(15);
     //eslint-disable-next-line
   }, []);
+
   const MODAL_BTNS = [
-    <Button
-      key="submit"
-      onClick={openQuestion}
-      size={isDesktopOrLaptop ? 'middle' : 'large'}
-      type="primary"
-      value={questions[questionIndex].question.name}>
-      Abrir Pregunta
-    </Button>,
+    !published && (
+      <Button
+        key="submit"
+        onClick={openQuestion}
+        size={isDesktopOrLaptop ? 'middle' : 'large'}
+        type="primary"
+        value={questions[questionIndex].question.name}>
+        Abrir Pregunta
+      </Button>
+    ),
     <Button
       danger
       key="cancel"
@@ -53,7 +56,7 @@ const AnswersModal = props => {
     <Modal
       centered
       bodyStyle={{ minHeight: 460 }}
-      footer={(!published || !isDesktopOrLaptop) && MODAL_BTNS}
+      footer={!isDesktopOrLaptop && MODAL_BTNS}
       maskClosable={!timer}
       onCancel={handleCancel}
       width={'90%'}
