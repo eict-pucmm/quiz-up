@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
@@ -10,15 +10,8 @@ const AnswersModal = props => {
   const { state } = useStateValue();
   const { published, questions, questionIndex, timer } = state.game;
   const { openQuestion, handleCancel, visible } = props;
-  const [t, setT] = useState(timer);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
-  // const TIMER = questions[questionIndex].timer;
-
-  useEffect(() => {
-    if (timer !== 15) setT(15);
-    //eslint-disable-next-line
-  }, []);
 
   const MODAL_BTNS = [
     !published && (
@@ -41,7 +34,7 @@ const AnswersModal = props => {
   ];
 
   const RENDERER = () => {
-    return t <= 0 ? (
+    return timer <= 0 ? (
       <span
         className="question-countdown"
         style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>

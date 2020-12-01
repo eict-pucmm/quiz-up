@@ -55,8 +55,8 @@ const Game = props => {
 
   //connect-disconect to socket
   useEffect(() => {
-    socket.current = io('https://quizup-api-pucmm.site/');
-    // socket.current = io('http://localhost:8080/');
+    socket.current = io(process.env.REACT_APP_QU_BASE_API);
+    // socket.current = io(process.env.REACT_APP_QU_LOCAL_API);
     return () => {
       socket.current.disconnect();
     };
@@ -128,7 +128,7 @@ const Game = props => {
       socket.current.on('timer', ({ timer, open }) => {
         // questions[questionIndex].timer = timer;
         dispatch(setGame({ published: open, timer }));
-        if (timer >= 0 || !open) {
+        if (timer <= 0 || !open) {
           dispatch(setGame({ published: false, timer: 15 }));
 
           if (isDesktopOrBigger) {
@@ -137,7 +137,7 @@ const Game = props => {
           //deactivate team buttons
           socket.current.emit('question', false);
           //stop countdown
-          socket.current.emit('countdown', { roomId, status: false });
+          socket.current.emit(`countdown-${roomId}`, { roomId, status: false });
         }
       });
     }
@@ -163,7 +163,7 @@ const Game = props => {
     if (questionIndex !== -1 && published) {
       questions[questionIndex].disabled = true;
       const { error } = updateRound(idOfRound, { questions });
-      // console.log('ERROR ON DISABLE QUESTION', { error });
+      console.log('ERROR ON DISABLE QUESTION', { error });
     }
   }, [questionIndex, published, questions, idOfRound]);
 
@@ -204,7 +204,7 @@ const Game = props => {
       if (isDesktopOrBigger) {
         return;
       }
-      socket.current.emit('countdown', { roomId, status: true });
+      socket.current.emit(`countdown-${roomId}`, { roomId, status: true });
       socket.current.emit('question', true);
       dispatch(setGame({ published: true, questions }));
     },
@@ -221,49 +221,55 @@ const Game = props => {
     dispatch(setGame({ published: false, timer: 15 }));
 
     socket.current.emit('question', false);
-    socket.current.emit('countdown', { roomId, status: false });
+    socket.current.emit(`countdown-${roomId}`, { roomId, status: false });
     socket.current.emit('subscribeToIndexDesktop', {
       index: -1,
       open: false,
     });
   }, [dispatch, isDesktopOrBigger, roomId]);
 
-  const handleRightAnswer = (e, team, questionId) => {
-    e.preventDefault();
-
+  //correctAnswer can be either true or false
+  const handleAnswersActions = async (
+    team,
+    questionId,
+    correctAnswer = true
+  ) => {
     const index =
       teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
 
     if (index !== -1 && teams.length > 0 && !isDesktopOrBigger) {
-      socket.current.emit('countdown', { roomId, status: false });
-      teams[index].answered.push(questionId);
+      socket.current.emit(`countdown-${roomId}`, { roomId, status: false });
+      const ACTION = correctAnswer ? 'answered' : 'failed';
+      teams[index][ACTION].push(questionId);
       dispatch(setGame({ teams }));
     }
 
-    const { error } = updateRound(idOfRound, {
+    const { error } = await updateRound(idOfRound, {
       participants: teams.filter(team => typeof team === 'object'),
     });
+
+    return error;
+  };
+
+  const handleRightAnswer = async (e, team, questionId) => {
+    e.preventDefault();
+
+    const error = await handleAnswersActions(team, questionId, true);
+
     // console.log('handleRightAnwers', { error });
 
     //close modal and reset part of the state
     handleCancel();
   };
 
-  const handleWrongAnswer = (e, team, questionId) => {
+  const handleWrongAnswer = async (e, team, questionId) => {
     e.preventDefault();
 
-    const index =
-      teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
-
-    if (index !== -1 && teams.length > 0) {
-      teams[index].failed.push(questionId);
-      dispatch(setGame({ teams }));
-    }
-
-    const { error } = updateRound(idOfRound, {
-      participants: teams.filter(team => typeof team === 'object'),
-    });
+    const error = await handleAnswersActions(team, questionId, false);
+    // console.log({ team });
     // console.log('handleWRONGAnswer', { error });
+
+    // message.error(``)
   };
 
   return (
