@@ -8,7 +8,7 @@ export const getTeams = async () => {
 
     return { data: response.data.teams, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -19,7 +19,7 @@ export const getTeamById = async id => {
 
     return { data: response.data.team, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -34,7 +34,7 @@ export const saveTeam = async team => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -51,6 +51,6 @@ export const updateTeam = async (id, team) => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

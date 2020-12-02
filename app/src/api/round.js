@@ -12,7 +12,7 @@ export const getRoundsByEvent = async eventId => {
 
     return { data: response.data.rounds, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -23,7 +23,7 @@ export const getRoundById = async roundId => {
 
     return { data: response.data.round, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -68,7 +68,7 @@ export const updateRound = async (id, round) => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -85,6 +85,6 @@ export const removeRound = async id => {
     );
     return { data: response.data, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

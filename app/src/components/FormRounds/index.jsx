@@ -72,7 +72,9 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
     if (error) {
       return notification['error']({
         message:
-          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+          error.status === 409
+            ? '¡Ya existe una ronda con ese nombre!'
+            : '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 

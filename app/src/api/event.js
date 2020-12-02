@@ -22,7 +22,7 @@ export const getEvents = async ({ oldEvents = false } = {}) => {
 
     return { data: filteredEvents, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
