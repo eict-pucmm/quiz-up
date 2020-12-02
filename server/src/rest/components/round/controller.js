@@ -246,6 +246,10 @@ const update = async (req, res) => {
 
   io.getIO().to(updatedRound.roomId).emit('teamsInfo', withTotalPoints);
 
+  if (req.body.finished) {
+    io.getIO().to(updatedRound.roomId).emit('roundFinished', round.finished);
+  }
+
   return errorGetting
     ? res
         .status(INTERNAL_SERVER_ERROR)
