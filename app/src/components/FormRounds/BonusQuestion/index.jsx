@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Select } from 'antd';
 import { getBonusQuestions } from '../../../api/questions';
 import { SHARED_PROPS } from '../';
@@ -13,11 +13,8 @@ const QuestionBank = () => {
     state: { roundToAdd },
   } = useStateValue();
   const { bonusQuestion } = roundToAdd;
-  console.log(bonusQuestion);
   const [gettingQuestions, setGettingQuestions] = useState(false);
   const [questions, setQuestions] = useState([]);
-
-  useEffect(() => {}, [dispatch]);
 
   const onFocus = async () => {
     setGettingQuestions(true);

@@ -3,13 +3,10 @@ import { apiClient, createToken } from './axios';
 import { URL_QUESTIONS, URL_QUESTIONS_BANK } from '../config/urls';
 import { getUserInfo } from './user';
 
-export const getQuestions = async (isBonus = 0) => {
+export const getQuestions = async () => {
   try {
     const headers = await createToken();
-    const response = await apiClient.get(
-      `${URL_QUESTIONS}/?isBonus=${isBonus}`,
-      headers
-    );
+    const response = await apiClient.get(`${URL_QUESTIONS}/`, headers);
 
     return { data: response.data.questions, error: null };
   } catch (error) {

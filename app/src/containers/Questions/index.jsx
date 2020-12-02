@@ -102,7 +102,6 @@ const Questions = () => {
     const { errorName, errorPoints, categories } = state.questionToAdd;
 
     if (isBonus) {
-      console.log('ADWQNO><><><><');
       dispatch(
         addQuestion({
           points: 100,
