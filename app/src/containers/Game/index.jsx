@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+import uniqBy from 'lodash/uniqBy';
 import { Spin, message } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 
@@ -128,7 +129,7 @@ const Game = props => {
       socket.current.on('timer', ({ timer, open }) => {
         // questions[questionIndex].timer = timer;
         dispatch(setGame({ published: open, timer }));
-        if (timer <= 0 || !open) {
+        if (!open) {
           dispatch(setGame({ published: false, timer: 15 }));
 
           if (isDesktopOrBigger) {
@@ -158,6 +159,24 @@ const Game = props => {
     if (visible) subscribeToTeamsInfo();
   }, [visible, dispatch]);
 
+  useEffect(() => {
+    const subscribeToRightOrWrongAnswer = () => {
+      console.log('subscribing to answers');
+      socket.current.on('answersDesktop', ({ team, points, action }) => {
+        const o =
+          action === 'answered'
+            ? { type: 'success', msg: 'ganado' }
+            : { type: 'error', msg: 'perdido' };
+
+        return message[o.type](
+          `El equipo ${team} ha ${o.msg} ${points} puntos`
+        );
+      });
+    };
+
+    if (visible) subscribeToRightOrWrongAnswer();
+  }, [visible, dispatch]);
+
   // disable the question after its published
   useEffect(() => {
     if (questionIndex !== -1 && published) {
@@ -171,8 +190,12 @@ const Game = props => {
     const getAnswers = () => {
       socket.current.on('answer', answer => {
         // console.log('getAnswers ~ answer', answer);
-        //TODO: should we remove repeated values from answers array?
         questions[questionIndex].answers.push(answer);
+        //uniqBy returns an array with unique values
+        questions[questionIndex].answers = uniqBy(
+          questions[questionIndex].answers,
+          a => a.team
+        );
         questions[questionIndex].answers.sort(
           (a1, a2) => a1.timeToAnswer - a2.timeToAnswer
         );
@@ -238,14 +261,31 @@ const Game = props => {
       teams.length > 0 && teams.findIndex(i => i.team && i.team.name === team);
 
     if (index !== -1 && teams.length > 0 && !isDesktopOrBigger) {
-      socket.current.emit(`countdown-${roomId}`, { roomId, status: false });
       const ACTION = correctAnswer ? 'answered' : 'failed';
+
+      if (ACTION === 'answered') {
+        socket.current.emit(`countdown-${roomId}`, { roomId, status: false });
+      }
+
+      //get the participant in the answers array
+      const answerIndex = questions[questionIndex].answers.findIndex(
+        i => i.team === team
+      );
+      //add the `pressed` attribute
+      questions[questionIndex].answers[answerIndex] = {
+        ...questions[questionIndex].answers[answerIndex],
+        pressed: true,
+      };
+
+      //push to the right action
       teams[index][ACTION].push(questionId);
-      dispatch(setGame({ teams }));
+
+      dispatch(setGame({ teams, questions }));
     }
 
     const { error } = await updateRound(idOfRound, {
       participants: teams.filter(team => typeof team === 'object'),
+      questions,
     });
 
     return error;
@@ -253,10 +293,20 @@ const Game = props => {
 
   const handleRightAnswer = async (e, team, questionId) => {
     e.preventDefault();
+    //Desktop/TV cant control state
+    if (isDesktopOrBigger) {
+      return;
+    }
 
     const error = await handleAnswersActions(team, questionId, true);
 
     // console.log('handleRightAnwers', { error });
+
+    socket.current.emit('subscribeToAnswersDesktop', {
+      team,
+      points: questions[questionIndex].question.points,
+      action: 'answered',
+    });
 
     //close modal and reset part of the state
     handleCancel();
@@ -264,12 +314,19 @@ const Game = props => {
 
   const handleWrongAnswer = async (e, team, questionId) => {
     e.preventDefault();
+    //Desktop/TV cant control state
+    if (isDesktopOrBigger) {
+      return;
+    }
 
     const error = await handleAnswersActions(team, questionId, false);
-    // console.log({ team });
     // console.log('handleWRONGAnswer', { error });
 
-    // message.error(``)
+    socket.current.emit('subscribeToAnswersDesktop', {
+      team,
+      points: questions[questionIndex].question.points,
+      action: 'failed',
+    });
   };
 
   return (

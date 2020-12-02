@@ -20,6 +20,10 @@ export const socketMagic = socketio => {
         socketio.to(roomId).emit('indexMobile', { index, open });
       });
 
+      socket.on('subscribeToAnswersDesktop', ({ team, points, action }) => {
+        socketio.to(roomId).emit('answersDesktop', { team, points, action });
+      });
+
       //start/stop timer
       let timer;
       socket.on(`countdown-${roomId}`, payload => {
