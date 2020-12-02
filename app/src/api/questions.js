@@ -14,6 +14,17 @@ export const getQuestions = async () => {
   }
 };
 
+export const getBonusQuestions = async () => {
+  try {
+    const headers = await createToken();
+    const response = await apiClient.get(`${URL_QUESTIONS}/bonus`, headers);
+
+    return { data: response.data.questions, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
 export const getQuestionById = async id => {
   try {
     const headers = await createToken();

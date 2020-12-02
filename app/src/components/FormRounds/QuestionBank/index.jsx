@@ -38,6 +38,29 @@ const QuestionBank = () => {
     }
   }, [questionBank, categories, dispatch]);
 
+  useEffect(() => {
+    if (
+      roundToAdd.questions &&
+      roundToAdd.questions.length > 0 &&
+      questionBank &&
+      Object.keys(questionBank).length === 4
+    ) {
+      roundToAdd.questions.forEach(el => {
+        if (questionBank[el.categorySelected].length === 5) {
+          return;
+        }
+        questionBank[el.categorySelected].push({
+          name: el.question.name,
+          category: el.question.categories,
+          points: el.question.points,
+          categorySelected: el.categorySelected,
+          _id: el.question._id,
+        });
+        dispatch(addRound({ questionBank }));
+      });
+    }
+  }, [dispatch, roundToAdd.questions, questionBank]);
+
   const callQuestionBank = async () => {
     setLoading(true);
     const { data } = await generateQuestionBank(categories);

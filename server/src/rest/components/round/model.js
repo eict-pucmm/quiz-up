@@ -35,6 +35,24 @@ const Round = new Schema({
           type: Schema.Types.ObjectId,
           ref: 'Question',
         },
+        timer: {
+          type: Number,
+          default: 15,
+        },
+        disabled: {
+          type: Boolean,
+          default: false,
+        },
+        answers: [
+          {
+            team: {
+              type: String,
+            },
+            timeToAnswer: {
+              type: Number,
+            },
+          },
+        ],
       }),
     },
   ],
@@ -70,6 +88,10 @@ const Round = new Schema({
       }),
     },
   ],
+  bonusQuestion: {
+    type: Schema.Types.ObjectId,
+    ref: 'Question',
+  },
   deleted: {
     type: Boolean,
     default: false,
@@ -104,6 +126,7 @@ export function validateRound(round) {
     questions: Joi.array(),
     categories: Joi.array(),
     participants: Joi.array(),
+    bonusQuestion: Joi.objectId(),
     roomId: Joi.string().required(),
     finished: Joi.boolean(),
     createdBy: Joi.objectId(),
@@ -119,6 +142,7 @@ export function validateForUpdate(round) {
     questions: Joi.array(),
     categories: Joi.array(),
     participants: Joi.array(),
+    bonusQuestion: Joi.objectId(),
     finished: Joi.boolean(),
     deleted: Joi.boolean(),
     deletedAt: Joi.date(),

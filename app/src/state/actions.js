@@ -15,6 +15,10 @@ export const addRound = round => ({ type: 'ADD_ROUND', round });
 
 export const clearRoundFields = () => ({ type: 'CLEAR_ROUND_FIELDS' });
 
+export const setGame = attributes => ({ type: 'SET_GAME', game: attributes });
+
+export const clearGame = () => ({ type: 'CLEAR_GAME' });
+
 export const viewOldEvents = status => ({ type: 'VIEW_OLD_EVENTS', status });
 
 export const setQuestionsAttributes = questions => ({

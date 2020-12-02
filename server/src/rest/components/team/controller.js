@@ -1,4 +1,5 @@
 import Team, { validateTeam } from './model';
+import Round from '../round/model';
 import {
   OK,
   INTERNAL_SERVER_ERROR,
@@ -65,6 +66,51 @@ const findByMedicalCenter = async (req, res) => {
 };
 
 /**
+ * Finds the round info of a team
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of the team info of that specific round
+ */
+const findByRoomIdAndTeamName = async (req, res) => {
+  const [errorRound, round] = await wrapper(
+    Round.findOne({ roomId: req.params.room }).populate([
+      {
+        path: 'participants.failed',
+        select: 'points',
+      },
+      {
+        path: 'participants.answered',
+        select: 'points',
+      },
+      {
+        path: 'participants.team',
+        select: 'name',
+      },
+    ])
+  );
+
+  if (errorRound) {
+    return res.stats(INTERNAL_SERVER_ERROR).json({ errorRound });
+  }
+
+  const withTotalPoints = round.participants.map(values => {
+    const { answered, failed, connected, _id, team } = values;
+    const temp = { connected, _id, team, answered, failed };
+    const sumFunc = (total, num) => total + num.points;
+    const pointsGained = answered.reduce(sumFunc, 0);
+    const pointsLosed = failed.reduce(sumFunc, 0);
+
+    return { ...temp, total: pointsGained - pointsLosed };
+  });
+
+  const teamInfo = withTotalPoints.find(
+    ({ team }) => team.name === req.params.team
+  );
+
+  return res.status(OK).json({ teamInfo });
+};
+
+/**
  * Creates a Team
  * @param {Object} req
  * @param {Object} res
@@ -115,4 +161,11 @@ const update = async (req, res) => {
     : res.status(CREATED).send(updatedTeam);
 };
 
-export { list, findById, create, findByMedicalCenter, update };
+export {
+  list,
+  findById,
+  create,
+  findByMedicalCenter,
+  update,
+  findByRoomIdAndTeamName,
+};

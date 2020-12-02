@@ -14,3 +14,17 @@ export const getTeamsByMedicalCenter = async medicalCenter => {
     return { data: null, error: error.response };
   }
 };
+
+export const getTeamByRoomIdAndTeamName = async (room, teamName) => {
+  try {
+    const headers = await createToken();
+    const response = await apiClient.get(
+      `${URL_TEAMS}/round/${room}/team/${encodeURIComponent(teamName)}`,
+      headers
+    );
+
+    return { data: response.data.teamInfo, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
