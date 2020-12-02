@@ -58,6 +58,6 @@ export const updateResident = async (id, resident) => {
 
     return { data: res, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

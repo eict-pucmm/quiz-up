@@ -37,7 +37,16 @@ const list = async (req, res) => {
  */
 const roundByEvent = async (req, res) => {
   const [error, rounds] = await wrapper(
-    Round.find({ event: req.params.idOfEvent })
+    Round.find({ event: req.params.idOfEvent }).populate([
+      {
+        path: 'bonusQuestion',
+        select: 'name',
+      },
+      {
+        path: 'questions.question',
+        select: 'name categories points',
+      },
+    ])
   );
 
   return error
@@ -70,6 +79,10 @@ const findById = async (req, res) => {
         path: 'participants.team',
         select: 'name',
       },
+      {
+        path: 'bonusQuestion',
+        select: 'name',
+      },
     ])
   );
 
@@ -94,6 +107,7 @@ const findById = async (req, res) => {
           questions: round.questions,
           categories: round.categories,
           participants: withTotalPoints,
+          bonusQuestion: round.bonusQuestion,
         },
       });
 };
@@ -150,14 +164,13 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   if (req.body.participants) {
     req.body.participants = req.body.participants.map(
-      ({ answered, failed, ...others }) => {
-        if (answered.length > 0) {
+      ({ answered = [], failed = [], ...others }) => {
+        if (answered && answered.length > 0) {
           answered = answered.map(ans => (ans._id ? ans._id : ans));
         }
-        if (failed.length > 0) {
+        if (failed && failed.length > 0) {
           failed = failed.map(fail => (fail._id ? fail._id : fail));
         }
-
         return { answered, failed, ...others };
       }
     );
@@ -212,6 +225,10 @@ const update = async (req, res) => {
       },
       {
         path: 'participants.team',
+        select: 'name',
+      },
+      {
+        path: 'bonusQuestion',
         select: 'name',
       },
     ])

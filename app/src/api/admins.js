@@ -8,7 +8,7 @@ export const getAdmins = async () => {
 
     return { data: response.data.admins, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -19,7 +19,7 @@ export const getAdminById = async id => {
 
     return { data: response.data.admin, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -34,7 +34,7 @@ export const saveAdmin = async admin => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -52,6 +52,6 @@ export const removeAdmin = async id => {
 
     return { data: response.data, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

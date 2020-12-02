@@ -9,7 +9,7 @@ export const getCategories = async () => {
 
     return { data: response.data.categories, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -20,7 +20,7 @@ export const getCategoryById = async id => {
 
     return { data: response.data.category, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -38,7 +38,7 @@ export const saveCategory = async category => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -55,7 +55,7 @@ export const updateCategory = async (id, category) => {
 
     return { data: response, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 
@@ -73,6 +73,6 @@ export const removeCategory = async id => {
 
     return { data: response.data, error: null };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };

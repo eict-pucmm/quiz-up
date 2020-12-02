@@ -33,6 +33,24 @@ const list = async (req, res) => {
 };
 
 /**
+ * List of Bonus Questions
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of Question
+ */
+const listBonusQuestions = async (req, res) => {
+  const [error, questions] = await wrapper(
+    Question.find({ deleted: false, isBonus: true }).populate([
+      { path: 'createdBy', select: 'firstName lastName -_id' },
+    ])
+  );
+
+  return error
+    ? res.status(INTERNAL_SERVER_ERROR).json({ error })
+    : res.status(OK).json({ questions });
+};
+
+/**
  * Finds question on specific category
  * @param {Object} req
  * @param {Object} res
@@ -157,4 +175,5 @@ export {
   subscribe,
   update,
   getQuestionByCategoryAndPoints,
+  listBonusQuestions,
 };

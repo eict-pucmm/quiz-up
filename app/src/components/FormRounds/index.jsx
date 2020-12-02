@@ -32,6 +32,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   } = useStateValue();
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const { errorName, errorCategories, errorTeams, questionBank } = roundToAdd;
+  const { editing } = round;
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -71,7 +72,9 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
     if (error) {
       return notification['error']({
         message:
-          '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
+          error.status === 409
+            ? '¡Ya existe una ronda con ese nombre!'
+            : '¡Oh no! Ha ocurrido un error con el servidor. Favor comunicarse con su administrador.',
       });
     }
 
@@ -106,13 +109,14 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
 
     if (showInfo) {
       if (!round.nameChanged) delete ROUND_INFO.name;
-      const { error } = await updateRound(round.roundId, {
+      const { error: e } = await updateRound(round.roundId, {
         ...ROUND_INFO,
         event: gameEvent._id,
+        bonusQuestion: roundToAdd.bonusQuestion._id,
       });
       //close modal after submitting
       props.onCancel();
-      return clearAndReturn(error);
+      return clearAndReturn(e);
     }
 
     const { error } = await saveRound({
@@ -135,7 +139,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       />
     ),
     1: () => <QuestionBank form={form} allCategories={allCategories} />,
-    2: () => <BonusQuestion />,
+    2: () => <BonusQuestion form={form} />,
   };
 
   return (
@@ -150,7 +154,12 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       saving={round.saving}
       steps={{ next: nextStep, prev: prevStep, current: currentStep }}
       type="Ronda"
-      title={`Agregar nueva ronda al evento: ${gameEvent.name}`}>
+      editing={editing}
+      title={
+        editing
+          ? `Editar ronda del evento: ${gameEvent.name}`
+          : `Agregar nueva ronda al evento: ${gameEvent.name}`
+      }>
       {isDesktopOrLaptop && (
         <Steps current={currentStep} size="small" className="round-modal-steps">
           {['Datos Generales', 'Banco de Preguntas', 'Pregunta Bono'].map(t => (
