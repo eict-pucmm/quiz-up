@@ -1,0 +1,47 @@
+.first-place {
+  background: #26a0da; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #26a0da,
+    dodgerblue
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #26a0da,
+    dodgerblue
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: white;
+  font-weight: bold;
+}
+
+.teams-container {
+  background-color: whitesmoke;
+  color: dodgerblue;
+  height: 100vh;
+  width: 25%;
+}
+
+.team-info {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.team-total {
+  width: 50%;
+}
+
+.team-placement {
+  display: block;
+  margin: auto;
+  width: 50%;
+}
+
+.team-section {
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+  flex-direction: column;
+  font-size: 19.5px;
+  height: 12%;
+  justify-content: center;
+  text-align: center;
+}

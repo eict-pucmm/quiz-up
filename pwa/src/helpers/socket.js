@@ -1,16 +1,19 @@
 import io from 'socket.io-client';
 let socket;
 
+let rID;
 export const initiateSocket = (roomId, teamName) => {
-  socket = io('https://quizup-api-pucmm.site/');
+  socket = io(process.env.REACT_APP_QU_BASE_API);
+  // socket = io(process.env.REACT_APP_QU_LOCAL_API);
+  rID = roomId;
   if (socket && roomId) socket.emit('joinRoom', { teamName, roomId });
 };
 
 export const disconnectSocket = () => {
   //TODO: disconnect teams
-  // if (socket && roomId) socket.emit('leaveRoom', { roomId, teamName });
+  if (socket && rID) socket.emit('leaveRoom', { roomId: rID });
   localStorage.removeItem('TEAM');
-  if (socket) socket.disconnect();
+  // if (socket) socket.disconnect();
 };
 
 export const subscribeToQuestion = cb => {

@@ -45,3 +45,15 @@
     width: 30%;
   }
 }
+
+/*This changes the global container tag that comes from antd*/
+@media (min-width: 1200px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl {
+    max-width: initial !important;
+    padding: 0 5% !important;
+  }
+}

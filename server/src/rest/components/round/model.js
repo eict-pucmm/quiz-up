@@ -51,6 +51,10 @@ const Round = new Schema({
             timeToAnswer: {
               type: Number,
             },
+            pressed: {
+              type: Boolean,
+              default: false,
+            },
           },
         ],
       }),

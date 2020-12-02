@@ -8,3 +8,11 @@ svg {
   text-align: center;
   width: 100%;
 }
+
+.end-round-fab {
+  position: fixed !important;
+  left: 0;
+  bottom: 0;
+  margin: 15px !important;
+  z-index: 1;
+}

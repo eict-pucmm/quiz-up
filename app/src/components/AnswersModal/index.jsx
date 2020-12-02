@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
@@ -10,24 +10,20 @@ const AnswersModal = props => {
   const { state } = useStateValue();
   const { published, questions, questionIndex, timer } = state.game;
   const { openQuestion, handleCancel, visible } = props;
-  const [t, setT] = useState(timer);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
-  // const TIMER = questions[questionIndex].timer;
 
-  useEffect(() => {
-    if (timer !== 15) setT(15);
-    //eslint-disable-next-line
-  }, []);
   const MODAL_BTNS = [
-    <Button
-      key="submit"
-      onClick={openQuestion}
-      size={isDesktopOrLaptop ? 'middle' : 'large'}
-      type="primary"
-      value={questions[questionIndex].question.name}>
-      Abrir Pregunta
-    </Button>,
+    !published && ANSWERS.length === 0 && (
+      <Button
+        key="submit"
+        onClick={openQuestion}
+        size={isDesktopOrLaptop ? 'middle' : 'large'}
+        type="primary"
+        value={questions[questionIndex].question.name}>
+        Abrir Pregunta
+      </Button>
+    ),
     <Button
       danger
       key="cancel"
@@ -38,22 +34,26 @@ const AnswersModal = props => {
   ];
 
   const RENDERER = () => {
-    return t <= 0 ? (
-      <span
-        className="question-countdown"
-        style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>
-        ¡Se acabó el tiempo!
-      </span>
-    ) : (
-      <span className="question-countdown">{timer}</span>
-    );
+    questions[questionIndex].timer = timer !== 15 ? timer : undefined;
+
+    if (questions[questionIndex].timer <= 0) {
+      return (
+        <span
+          className="question-countdown"
+          style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>
+          ¡Se acabó el tiempo!
+        </span>
+      );
+    }
+
+    return <span className="question-countdown">{timer}</span>;
   };
 
   return (
     <Modal
       centered
       bodyStyle={{ minHeight: 460 }}
-      footer={(!published || !isDesktopOrLaptop) && MODAL_BTNS}
+      footer={!isDesktopOrLaptop && MODAL_BTNS}
       maskClosable={!timer}
       onCancel={handleCancel}
       width={'90%'}
@@ -72,31 +72,35 @@ const AnswersModal = props => {
             </div>
           )}
           {ANSWERS.length > 0 &&
-            ANSWERS.map(({ team, timeToAnswer }) => (
+            ANSWERS.map(({ team, timeToAnswer, pressed }) => (
               <div key={team} className="answers-body">
                 <div className="answers-cell">{team}</div>
                 <div className="answers-cell">{timeToAnswer}</div>
                 <div className="answers-cell--actions">
-                  <CheckCircleTwoTone
-                    onClick={e =>
-                      props.handleRightAnswer(
-                        e,
-                        team,
-                        questions[questionIndex].question._id
-                      )
-                    }
-                    twoToneColor="#52c41a"
-                  />
-                  <CloseCircleTwoTone
-                    onClick={e =>
-                      props.handleWrongAnswer(
-                        e,
-                        team,
-                        questions[questionIndex].question._id
-                      )
-                    }
-                    twoToneColor="#F51D23"
-                  />
+                  {!pressed && (
+                    <>
+                      <CheckCircleTwoTone
+                        onClick={e =>
+                          props.handleRightAnswer(
+                            e,
+                            team,
+                            questions[questionIndex].question._id
+                          )
+                        }
+                        twoToneColor="#52c41a"
+                      />
+                      <CloseCircleTwoTone
+                        onClick={e =>
+                          props.handleWrongAnswer(
+                            e,
+                            team,
+                            questions[questionIndex].question._id
+                          )
+                        }
+                        twoToneColor="#F51D23"
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             ))}
