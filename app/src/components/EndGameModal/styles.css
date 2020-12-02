@@ -1,0 +1,27 @@
+.end-game-container {
+  font-weight: bold;
+  text-align: center;
+}
+.end-game-modal-title {
+  display: flex;
+  justify-content: center;
+}
+
+.end-game-title {
+  font-size: 25px;
+  color: goldenrod;
+}
+
+.end-game-subtitle {
+  font-size: 16px;
+}
+
+@media (min-width: 1024px) {
+  .end-game-title {
+    font-size: 50px;
+  }
+
+  .end-game-subtitle {
+    font-size: 25px;
+  }
+}
