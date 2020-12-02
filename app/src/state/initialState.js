@@ -16,6 +16,7 @@ export const initialState = {
     saving: false,
     roundId: '',
     nameChanged: false,
+    editing: false,
   },
   roundToAdd: {
     name: '',
@@ -25,6 +26,7 @@ export const initialState = {
     errorName: false,
     errorCategories: false,
     errorTeams: false,
+    bonusQuestion: '',
   },
   game: {
     teams: [],
@@ -52,6 +54,7 @@ export const initialState = {
     errorName: false,
     errorCategories: false,
     errorPoints: false,
+    isBonus: false,
   },
   teams: {
     data: [],

@@ -106,13 +106,13 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
 
     if (showInfo) {
       if (!round.nameChanged) delete ROUND_INFO.name;
-      const { error } = await updateRound(round.roundId, {
+      const { error: e } = await updateRound(round.roundId, {
         ...ROUND_INFO,
         event: gameEvent._id,
       });
       //close modal after submitting
       props.onCancel();
-      return clearAndReturn(error);
+      return clearAndReturn(e);
     }
 
     const { error } = await saveRound({
@@ -135,7 +135,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       />
     ),
     1: () => <QuestionBank form={form} allCategories={allCategories} />,
-    2: () => <BonusQuestion />,
+    2: () => <BonusQuestion form={form} />,
   };
 
   return (

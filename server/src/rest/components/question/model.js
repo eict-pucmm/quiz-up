@@ -23,6 +23,10 @@ const Question = new Schema({
     max: 500,
     default: 100,
   },
+  isBonus: {
+    type: Boolean,
+    default: false,
+  },
   deleted: {
     type: Boolean,
     default: false,
@@ -56,6 +60,7 @@ export function validateQuestion(question) {
     name: Joi.string().min(4).max(255).required(),
     categories: Joi.array(),
     points: Joi.number().min(100).max(500).required(),
+    isBonus: Joi.boolean(),
     deleted: Joi.boolean(),
     createdBy: Joi.objectId(),
   }).options({ stripUnknown: true });
