@@ -4,9 +4,13 @@ import { Modal, Button } from 'antd';
 const TOTAL_ROUND_STEPS = 3;
 
 const MyModal = props => {
-  const { onSubmit, saving, type, visible, steps = null } = props;
+  const { onSubmit, saving, type, visible, steps = null, editing } = props;
 
-  const SUBMIT_BTN = (
+  const SUBMIT_BTN = editing ? (
+    <Button key="submit" type="primary" loading={saving} onClick={onSubmit}>
+      Editar {type}
+    </Button>
+  ) : (
     <Button key="submit" type="primary" loading={saving} onClick={onSubmit}>
       Crear {type}
     </Button>

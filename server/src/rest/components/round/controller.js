@@ -164,14 +164,13 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   if (req.body.participants) {
     req.body.participants = req.body.participants.map(
-      ({ answered, failed, ...others }) => {
-        if (answered.length > 0) {
+      ({ answered = [], failed = [], ...others }) => {
+        if (answered && answered.length > 0) {
           answered = answered.map(ans => (ans._id ? ans._id : ans));
         }
-        if (failed.length > 0) {
+        if (failed && failed.length > 0) {
           failed = failed.map(fail => (fail._id ? fail._id : fail));
         }
-
         return { answered, failed, ...others };
       }
     );
