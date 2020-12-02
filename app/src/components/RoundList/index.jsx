@@ -43,7 +43,6 @@ const RoundList = props => {
       bonusQuestion,
       questions,
     } = localRounds[roundIndex];
-    console.log(localRounds[roundIndex]);
     const teams = participants.map(({ team }) => team);
     dispatch(
       setRoundAttributes({
