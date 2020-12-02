@@ -69,7 +69,9 @@ const AnswersModal = props => {
             <div className="answers-header">
               <div className="answers-cell">Equipos</div>
               <div className="answers-cell">Tiempo</div>
-              <div className="answers-cell">Acciones</div>
+              {!isDesktopOrBigger && (
+                <div className="answers-cell">Acciones</div>
+              )}
             </div>
           )}
           {ANSWERS.length > 0 &&
@@ -77,32 +79,34 @@ const AnswersModal = props => {
               <div key={team} className="answers-body">
                 <div className="answers-cell">{team}</div>
                 <div className="answers-cell">{timeToAnswer}</div>
-                <div className="answers-cell--actions">
-                  {!pressed && (
-                    <>
-                      <CheckCircleTwoTone
-                        onClick={e =>
-                          props.handleRightAnswer(
-                            e,
-                            team,
-                            questions[questionIndex].question._id
-                          )
-                        }
-                        twoToneColor="#52c41a"
-                      />
-                      <CloseCircleTwoTone
-                        onClick={e =>
-                          props.handleWrongAnswer(
-                            e,
-                            team,
-                            questions[questionIndex].question._id
-                          )
-                        }
-                        twoToneColor="#F51D23"
-                      />
-                    </>
-                  )}
-                </div>
+                {!isDesktopOrBigger && (
+                  <div className="answers-cell--actions">
+                    {!pressed && (
+                      <>
+                        <CheckCircleTwoTone
+                          onClick={e =>
+                            props.handleRightAnswer(
+                              e,
+                              team,
+                              questions[questionIndex].question._id
+                            )
+                          }
+                          twoToneColor="#52c41a"
+                        />
+                        <CloseCircleTwoTone
+                          onClick={e =>
+                            props.handleWrongAnswer(
+                              e,
+                              team,
+                              questions[questionIndex].question._id
+                            )
+                          }
+                          twoToneColor="#F51D23"
+                        />
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
         </div>

@@ -112,7 +112,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       const { error: e } = await updateRound(round.roundId, {
         ...ROUND_INFO,
         event: gameEvent._id,
-        bonusQuestion: roundToAdd.bonusQuestion._id,
+        bonusQuestion: roundToAdd.bonusQuestion._id || roundToAdd.bonusQuestion,
       });
       //close modal after submitting
       props.onCancel();

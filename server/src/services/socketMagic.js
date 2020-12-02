@@ -33,7 +33,7 @@ export const socketMagic = socketio => {
       socket.on(`countdown-${roomId}`, payload => {
         if (roomId !== payload.roomId) return;
         const counting = payload.status;
-        let countdown = counting ? 15 : 0;
+        let countdown = counting ? payload.amount || 15 : 0;
         const STOP = !counting || countdown <= 0;
 
         if (STOP) {
