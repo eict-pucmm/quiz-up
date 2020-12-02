@@ -10,6 +10,7 @@ import QuestionsTable from '../../components/QuestionsTable';
 import RoundController from '../../components/RoundController';
 import AnswersModal from '../../components/AnswersModal';
 import TeamsLeaderboard from '../../components/TeamsLeaderboard';
+import EndGameModal from '../../components/EndGameModal';
 import { getRoundById, updateRound } from '../../api/round';
 import { useStateValue } from '../../state';
 import { setGame } from '../../state/actions';
@@ -20,13 +21,13 @@ const Game = props => {
   const { idOfRound } = props.match.params;
   const { state, dispatch } = useStateValue();
   const { questions, roomId, teams, published } = state.game;
-  const { questionIndex } = state.game;
+  const { questionIndex, finished } = state.game;
   const socket = useRef(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   // console.log('WHATEVER', { published });
-  // const uniqueArray = array => Array.from(new Set(array));
+
   const HEADERS =
     questions.length > 0
       ? [
@@ -37,6 +38,14 @@ const Game = props => {
         ]
       : [];
 
+  //TODO: does this go on a useMemo?
+  const FIRST_PLACE_IN_POINTS =
+    teams.length > 0 &&
+    Math.max.apply(
+      Math,
+      teams.map(({ total }) => total)
+    );
+
   useEffect(() => {
     const getRoundInfo = async () => {
       const { data } = await getRoundById(idOfRound);
@@ -46,6 +55,7 @@ const Game = props => {
           title: data.name,
           teams: data.participants,
           questions: data.questions,
+          finished: data.finished,
         })
       );
       setLoading(false);
@@ -148,8 +158,31 @@ const Game = props => {
   }, [dispatch, roomId, isDesktopOrBigger]);
 
   useEffect(() => {
+    const subscribeToFinishedRound = () => {
+      socket.current.on('roundFinished', status => {
+        dispatch(setGame({ finished: status }));
+      });
+    };
+
+    if (roomId) subscribeToFinishedRound();
+    // eslint-disable-next-line
+  }, [dispatch, roomId, isDesktopOrBigger]);
+
+  useEffect(() => {
+    const subscribeToVamonos = () => {
+      socket.current.on('vamonos', status => {
+        //if true apaga y vamonos
+        if (status) window.location.replace('/');
+      });
+    };
+
+    if (roomId) subscribeToVamonos();
+    // eslint-disable-next-line
+  }, [dispatch, roomId, isDesktopOrBigger]);
+
+  useEffect(() => {
     const subscribeToTeamsInfo = () => {
-      // console.log('subscribing to info');
+      console.log('subscribing to info');
       socket.current.on('teamsInfo', teams => {
         // console.log('REEEE', { teams });
         dispatch(setGame({ teams }));
@@ -338,10 +371,15 @@ const Game = props => {
           <div className="header-game">
             <div className="game-title-placeholder"></div>
             <h1 className="round-title">{state.game.title}</h1>
-            <span>id: {roomId}</span>
+            <span>PIN: {roomId}</span>
           </div>
           <div className="game-content">
-            {isDesktopOrBigger && <TeamsLeaderboard teams={teams} />}
+            {isDesktopOrBigger && (
+              <TeamsLeaderboard
+                teams={teams}
+                firstPlace={FIRST_PLACE_IN_POINTS}
+              />
+            )}
             {isDesktopOrBigger ? (
               <QuestionsTable
                 questions={questions}
@@ -353,9 +391,18 @@ const Game = props => {
                 questions={questions}
                 showModal={showModal}
                 headers={HEADERS}
+                idOfRound={idOfRound}
               />
             )}
 
+            {finished && (
+              <EndGameModal
+                firstPlace={FIRST_PLACE_IN_POINTS}
+                socket={socket.current}
+                teams={teams}
+                title={state.game.title}
+              />
+            )}
             {questions.length > 0 && visible ? (
               <AnswersModal
                 handleCancel={handleCancel}

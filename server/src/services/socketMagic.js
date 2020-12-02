@@ -24,6 +24,10 @@ export const socketMagic = socketio => {
         socketio.to(roomId).emit('answersDesktop', { team, points, action });
       });
 
+      socket.on('apaga', ({ status }) => {
+        socketio.to(roomId).emit('vamonos', { status });
+      });
+
       //start/stop timer
       let timer;
       socket.on(`countdown-${roomId}`, payload => {

@@ -31,6 +31,7 @@ export const initialState = {
   game: {
     teams: [],
     saving: false,
+    finished: false,
     questions: [],
     timer: 15,
     answers: [],

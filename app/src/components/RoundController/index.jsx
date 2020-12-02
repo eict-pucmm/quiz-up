@@ -3,24 +3,27 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import AccordionContext from 'react-bootstrap/AccordionContext';
-import { Card as AntCard, Button } from 'antd';
+import { Card as AntCard, Button, Popconfirm } from 'antd';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 
 import { useStateValue } from '../../state';
 import { setGame } from '../../state/actions';
+import { updateRound } from '../../api/round';
 
 import './styles.css';
 
 const CARD_STYLES = { color: 'dodgerblue' };
 const CARD_STYLES_DISABLED = { color: 'grey', cursor: 'none' };
 
-const RoundController = ({ questions, showModal, headers }) => {
+const RoundController = props => {
+  const { questions, showModal, headers, idOfRound } = props;
   const { dispatch } = useStateValue();
 
-  const handleFinishRound = () => {
-    // console.log(state.game.finished)
+  const handleFinishRound = async () => {
     dispatch(setGame({ finished: true }));
-    //TODO update round, show modal with winner and redirect home
+    const { error } = await updateRound(idOfRound, { finished: true });
+    //TODO: do something w error
+    console.log('handle finish', { error });
   };
   return (
     <>
@@ -51,13 +54,15 @@ const RoundController = ({ questions, showModal, headers }) => {
           </Card>
         ))}
       </Accordion>
-      <Button
-        type="primary"
-        shape="round"
-        className="end-round-fab"
-        onClick={handleFinishRound}>
-        Terminar Ronda
-      </Button>
+      <Popconfirm
+        cancelText="No"
+        okText="Sí"
+        title="¿Esta segura que desea terminar esta ronda?"
+        onConfirm={handleFinishRound}>
+        <Button type="primary" shape="round" className="end-round-fab">
+          Terminar Ronda
+        </Button>
+      </Popconfirm>
     </>
   );
 };

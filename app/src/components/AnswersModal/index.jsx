@@ -10,7 +10,7 @@ const AnswersModal = props => {
   const { state } = useStateValue();
   const { published, questions, questionIndex, timer } = state.game;
   const { openQuestion, handleCancel, visible } = props;
-  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
+  const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
 
   const MODAL_BTNS = [
@@ -18,7 +18,7 @@ const AnswersModal = props => {
       <Button
         key="submit"
         onClick={openQuestion}
-        size={isDesktopOrLaptop ? 'middle' : 'large'}
+        size={isDesktopOrBigger ? 'middle' : 'large'}
         type="primary"
         value={questions[questionIndex].question.name}>
         Abrir Pregunta
@@ -28,7 +28,7 @@ const AnswersModal = props => {
       danger
       key="cancel"
       onClick={handleCancel}
-      size={isDesktopOrLaptop ? 'middle' : 'large'}>
+      size={isDesktopOrBigger ? 'middle' : 'large'}>
       Cerrar
     </Button>,
   ];
@@ -40,7 +40,7 @@ const AnswersModal = props => {
       return (
         <span
           className="question-countdown"
-          style={{ fontSize: !isDesktopOrLaptop ? '24px' : '65px' }}>
+          style={{ fontSize: !isDesktopOrBigger ? '24px' : '65px' }}>
           ¡Se acabó el tiempo!
         </span>
       );
@@ -53,13 +53,14 @@ const AnswersModal = props => {
     <Modal
       centered
       bodyStyle={{ minHeight: 460 }}
-      footer={!isDesktopOrLaptop && MODAL_BTNS}
+      footer={!isDesktopOrBigger && MODAL_BTNS}
       maskClosable={!timer}
+      closable={!isDesktopOrBigger}
       onCancel={handleCancel}
       width={'90%'}
       visible={visible}>
       <div className="question-wrapper">
-        {(published || isDesktopOrLaptop) && RENDERER()}
+        {(published || isDesktopOrBigger) && RENDERER()}
         <p className="question-content">
           {questions[questionIndex].question.name}
         </p>
