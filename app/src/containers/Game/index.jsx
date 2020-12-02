@@ -149,7 +149,7 @@ const Game = props => {
 
   useEffect(() => {
     const subscribeToTeamsInfo = () => {
-      console.log('subscribing to info');
+      // console.log('subscribing to info');
       socket.current.on('teamsInfo', teams => {
         // console.log('REEEE', { teams });
         dispatch(setGame({ teams }));
@@ -161,7 +161,7 @@ const Game = props => {
 
   useEffect(() => {
     const subscribeToRightOrWrongAnswer = () => {
-      console.log('subscribing to answers');
+      // console.log('subscribing to answers');
       socket.current.on('answersDesktop', ({ team, points, action }) => {
         const o =
           action === 'answered'
@@ -182,7 +182,7 @@ const Game = props => {
     if (questionIndex !== -1 && published) {
       questions[questionIndex].disabled = true;
       const { error } = updateRound(idOfRound, { questions });
-      console.log('ERROR ON DISABLE QUESTION', { error });
+      // console.log('ERROR ON DISABLE QUESTION', { error });
     }
   }, [questionIndex, published, questions, idOfRound]);
 
