@@ -28,3 +28,18 @@ export const getTeamByRoomIdAndTeamName = async (room, teamName) => {
     return { data: null, error };
   }
 };
+
+export const findTeamBelongsToRound = async (teamName, room) => {
+  try {
+    const headers = await createToken();
+    const response = await apiClient.get(
+      `${URL_TEAMS}/team/${encodeURIComponent(teamName)}/round/${room}`,
+      headers
+    );
+    console.log('reponse data:', response.data.data);
+    return { data: response.data.data, error: null };
+  } catch (error) {
+    console.log({ error });
+    return { data: false, error };
+  }
+};

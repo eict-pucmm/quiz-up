@@ -4,6 +4,7 @@ import {
   OK,
   INTERNAL_SERVER_ERROR,
   CREATED,
+  NOT_FOUND,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -111,6 +112,35 @@ const findByRoomIdAndTeamName = async (req, res) => {
 };
 
 /**
+ * Finds if team belongs to round
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {JSON} of the team info of that specific round
+ */
+const findTeamBelongsToRound = async (req, res) => {
+  const [errorRound, round] = await wrapper(
+    Round.findOne({ roomId: req.params.room }).populate([
+      {
+        path: 'participants.team',
+        select: 'name',
+      },
+    ])
+  );
+
+  if (errorRound) {
+    return res.status(INTERNAL_SERVER_ERROR).json({ errorRound });
+  }
+
+  const team = round.participants.find(el => el.team.name === req.params.team);
+
+  return team
+    ? res.status(OK).json({ data: true, error: null })
+    : res
+        .status(NOT_FOUND)
+        .json({ data: false, error: 'El equipo no pertenece a la ronda.' });
+};
+
+/**
  * Creates a Team
  * @param {Object} req
  * @param {Object} res
@@ -168,4 +198,5 @@ export {
   findByMedicalCenter,
   update,
   findByRoomIdAndTeamName,
+  findTeamBelongsToRound,
 };

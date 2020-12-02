@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Alert, Select } from 'antd';
-import { Link } from 'react-router-dom';
 
 import { useStateValue } from '../../state/';
 import { setUserInfo } from '../../state/actions';
-import { getTeamsByMedicalCenter } from '../../api/teams';
+import {
+  getTeamsByMedicalCenter,
+  findTeamBelongsToRound,
+} from '../../api/teams';
 import { getMedicalCenters } from '../../api/medicalCenter';
 
 import './styles.css';
@@ -32,8 +34,14 @@ const Home = () => {
     setTeams(data);
   };
 
-  const handleSubmit = () => {
-    setError(roomId && teamName ? false : true);
+  const handleSubmit = async () => {
+    const { data } = await findTeamBelongsToRound(teamName, roomId);
+    console.log({ teamName });
+    setError(!data);
+    if (data) {
+      localStorage.setItem('TEAM', teamName);
+      window.location.replace(`/${roomId}`);
+    }
   };
 
   const handleChange = e => {
@@ -83,11 +91,13 @@ const Home = () => {
         size="large"
         value={roomId}
       />
-      <Link to={roomId && teamName ? `/${roomId}` : '#'} onClick={handleSubmit}>
-        <Button className={'btn-join'} type="primary" size="large">
-          Unirse al evento
-        </Button>
-      </Link>
+      <Button
+        className={'btn-join'}
+        type="primary"
+        size="large"
+        onClick={handleSubmit}>
+        Unirse al evento
+      </Button>
     </div>
   );
 };
