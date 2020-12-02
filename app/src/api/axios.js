@@ -2,7 +2,7 @@ import axios from 'axios';
 import { auth } from '../constants/firebase';
 
 export const apiClient = axios.create({
-  baseURL: 'https://quizup-api-pucmm.site/',
+  baseURL: 'http://localhost:8080',
 });
 
 export const createToken = async () => {

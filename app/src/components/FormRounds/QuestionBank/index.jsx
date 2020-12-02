@@ -19,7 +19,6 @@ const QuestionBank = () => {
     state: { roundToAdd },
   } = useStateValue();
   const { categories, questionBank } = roundToAdd;
-  console.log({ roundToAdd });
   const [loading, setLoading] = useState(false);
   const [gettingQuestions, setGettingQuestions] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -46,7 +45,10 @@ const QuestionBank = () => {
       questionBank &&
       Object.keys(questionBank).length === 4
     ) {
-      roundToAdd.questions.map(el => {
+      roundToAdd.questions.forEach(el => {
+        if (questionBank[el.categorySelected].length === 5) {
+          return;
+        }
         questionBank[el.categorySelected].push({
           name: el.question.name,
           category: el.question.categories,
@@ -54,13 +56,10 @@ const QuestionBank = () => {
           categorySelected: el.categorySelected,
           _id: el.question._id,
         });
-        console.log({ el });
         dispatch(addRound({ questionBank }));
       });
     }
   }, [dispatch, roundToAdd.questions, questionBank]);
-
-  console.log('BACA QUESTION ', questionBank);
 
   const callQuestionBank = async () => {
     setLoading(true);
