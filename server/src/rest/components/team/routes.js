@@ -6,6 +6,7 @@ import {
   findByMedicalCenter,
   update,
   findByRoomIdAndTeamName,
+  findTeamBelongsToRound,
 } from './controller';
 
 const router = express.Router();
@@ -37,6 +38,13 @@ router.get('/find/mc', findByMedicalCenter);
  * @access Public
  */
 router.get('/round/:room/team/:team', findByRoomIdAndTeamName);
+
+/**
+ * @route GET '/team/TEAM_NAME/round/123456'
+ * @returns {JSON} the team belongs to the round
+ * @access Public
+ */
+router.get('/team/:team/round/:room', findTeamBelongsToRound);
 
 /**
  * @route POST '/'
