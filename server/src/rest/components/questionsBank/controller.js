@@ -79,6 +79,10 @@ function pickRandomQuestion(categories) {
         });
       }
 
+      if (question.isBonus) {
+        return;
+      }
+
       if (!repeated) {
         if (question.points === 100) {
           actualCatQuestions.oneH.push(question);

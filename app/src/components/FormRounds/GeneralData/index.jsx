@@ -10,8 +10,9 @@ const { Option } = Select;
 const GeneralData = props => {
   const {
     dispatch,
-    state: { roundToAdd },
+    state: { roundToAdd, round },
   } = useStateValue();
+  const { editing } = round;
   const { allCategories, allTeams, form } = props;
   const { errorName, errorCategories, errorTeams } = roundToAdd;
   const categoriesRef = useRef();
@@ -57,6 +58,7 @@ const GeneralData = props => {
           {...SHARED_PROPS}
           ref={categoriesRef}
           onChange={onSelectEvents}
+          disabled={editing}
           placeholder="Categorías de esta ronda">
           {allCategories.map(({ name, _id }) => (
             <Option value={name} key={_id}>

@@ -7,6 +7,7 @@ import {
   subscribe,
   update,
   getQuestionByCategoryAndPoints,
+  listBonusQuestions,
 } from './controller';
 
 const router = express.Router();
@@ -17,6 +18,13 @@ const router = express.Router();
  * @access Public
  */
 router.get('/', list);
+
+/**
+ * @route GET '/'
+ * @returns {JSON} of all questions
+ * @access Public
+ */
+router.get('/bonus', listBonusQuestions);
 
 /**
  * @route GET '/:id'
