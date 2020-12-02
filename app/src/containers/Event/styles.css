@@ -12,6 +12,14 @@
   margin-bottom: 25px !important;
 }
 
+.events-main-title {
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 5px;
+  font-size: 28px;
+}
+
 .event-rounds-label {
   font-size: 14;
   color: black !important;
@@ -47,4 +55,10 @@
   color: dodgerblue;
   cursor: pointer;
   margin-left: 2%;
+}
+@media (min-width: 1024px) {
+  .events-main-title {
+    margin-top: 0;
+    font-size: 50px;
+  }
 }

@@ -82,6 +82,9 @@ const Event = () => {
           ? 'Ver eventos recientes'
           : 'Ver eventos anteriores'}
       </span>
+      <h2 className="events-main-title">
+        {state.viewOldEvents ? 'Eventos Anteriores' : 'Proximos Eventos'}
+      </h2>
       <div className="outer-event-card">
         {data.length === 0 ? (
           <Empty description={'No hay eventos creados!'}>

@@ -8,6 +8,8 @@
 }
 
 .add-round-card {
+  background-color: dodgerblue !important;
+  color: white !important;
   max-height: 70px;
   text-align: center;
 }

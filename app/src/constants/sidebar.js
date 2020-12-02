@@ -3,26 +3,38 @@ import {
   TeamOutlined,
   BookOutlined,
   UserAddOutlined,
+  AppstoreAddOutlined,
+  UserSwitchOutlined,
+  ShopOutlined,
 } from '@ant-design/icons';
 
 export default [
   { title: 'Eventos', route: '/', Icon: BookOutlined },
+
   {
     title: 'Preguntas',
     Icon: QuestionCircleOutlined,
-    subMenu: [
-      { title: 'Preguntas', route: '/questions' },
-      { title: 'Categorías', route: '/categories' },
-    ],
+    route: '/questions',
   },
   {
-    title: 'Participantes',
+    title: 'Categorias',
+    Icon: AppstoreAddOutlined,
+    route: '/categories',
+  },
+  {
+    title: 'Equipos',
     Icon: TeamOutlined,
-    subMenu: [
-      { title: 'Equipos', route: '/teams' },
-      { title: 'Residentes', route: '/residents' },
-      { title: 'Centros Médicos', route: '/medical-centers' },
-    ],
+    route: '/teams',
+  },
+  {
+    title: 'Residentes',
+    Icon: UserSwitchOutlined,
+    route: '/residents',
+  },
+  {
+    title: 'Centros Médicos',
+    Icon: ShopOutlined,
+    route: '/medical-centers',
   },
   { title: 'Administradores', route: '/admins', Icon: UserAddOutlined },
 ];
