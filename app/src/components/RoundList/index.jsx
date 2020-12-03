@@ -42,6 +42,7 @@ const RoundList = props => {
       categories,
       bonusQuestion,
       questions,
+      finished,
     } = localRounds[roundIndex];
     const teams = participants.map(({ team }) => team);
     dispatch(
@@ -51,7 +52,14 @@ const RoundList = props => {
       })
     );
     dispatch(
-      addRound({ name, categories, participants, bonusQuestion, questions })
+      addRound({
+        name,
+        categories,
+        participants,
+        bonusQuestion,
+        questions,
+        finished,
+      })
     );
     form.setFieldsValue({ categories, teams });
   };
