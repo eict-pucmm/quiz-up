@@ -35,7 +35,7 @@ export const COLUMNS = ({ onUpdate }) => {
           <Tooltip title={`${firstName} ${lastName}`} placement="top">
             <Avatar
               style={{
-                backgroundColor: '#fde3cf',
+                backgroundColor: '#f99548',
               }}>{`${firstName[0]}${lastName[0]}`}</Avatar>
           </Tooltip>
         );

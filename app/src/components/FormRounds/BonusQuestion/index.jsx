@@ -12,7 +12,7 @@ const QuestionBank = () => {
     dispatch,
     state: { roundToAdd },
   } = useStateValue();
-  const { bonusQuestion } = roundToAdd;
+  const { bonusQuestion, finished } = roundToAdd;
   const [gettingQuestions, setGettingQuestions] = useState(false);
   const [questions, setQuestions] = useState([]);
 
@@ -35,6 +35,7 @@ const QuestionBank = () => {
     <Form.Item label="Ultima Pregunta - Bono">
       <Select
         {...SHARED_PROPS}
+        disabled={finished}
         mode="single"
         onFocus={() => onFocus()}
         onSelect={v => onSelect(v)}

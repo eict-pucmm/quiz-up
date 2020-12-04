@@ -167,7 +167,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
           ))}
         </Steps>
       )}
-      {showInfo && (
+      {showInfo && !roundToAdd.finished && (
         <Link to={viewOldEvents ? '#' : `/event/round/${round.roundId}`}>
           <Button className="mb-15" type="primary" block>
             Empezar Ronda

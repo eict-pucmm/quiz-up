@@ -83,7 +83,7 @@ const Event = () => {
           : 'Ver eventos anteriores'}
       </span>
       <h2 className="events-main-title">
-        {state.viewOldEvents ? 'Eventos Anteriores' : 'Proximos Eventos'}
+        {state.viewOldEvents ? 'Eventos Anteriores' : 'Próximos Eventos'}
       </h2>
       <div className="outer-event-card">
         {data.length === 0 ? (

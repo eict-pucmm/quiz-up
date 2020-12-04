@@ -4,8 +4,6 @@ import { useMediaQuery } from 'react-responsive';
 
 import { getRoundById } from '../../api/round';
 
-const COLORS = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
-
 const RoundCard = ({ round, showModal, index }) => {
   const { _id, name } = round;
   const [fetchedRound, setFetchedRound] = useState({});
@@ -52,9 +50,11 @@ const RoundCard = ({ round, showModal, index }) => {
       <p>Equipos:</p>
       <Avatar.Group>
         {participants &&
-          participants.map(({ team }, i) => (
+          participants.map(({ team }) => (
             <Tooltip title={team.name} placement="top" key={team.name}>
-              <Avatar size="large" style={{ backgroundColor: COLORS[i] }}>
+              <Avatar
+                size="large"
+                style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
                 {team.name[0]}
               </Avatar>
             </Tooltip>
