@@ -25,7 +25,7 @@ const Game = props => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
-  console.log(state.game);
+  // console.log(state.game);
   // console.log('WHATEVER', { published });
 
   const HEADERS =
@@ -146,16 +146,13 @@ const Game = props => {
   //subscribe to sockets for timer and the index of the selected question
   // TODO: check how this is affecting multiple re-renders
   useEffect(() => {
-    let i = 0;
     const subscribeToIndexChange = () => {
       const QUEUE = isDesktopOrBigger ? 'indexDesktop' : 'indexMobile';
 
+      socket.current.off(QUEUE);
       socket.current.on(QUEUE, ({ index, open }) => {
-        i++;
-        if (i > 1) return;
         // console.log('🚀 { index, open }', { index, open });
         if (index !== -1) {
-          i = 0;
           dispatch(setGame({ questionIndex: index }));
         }
 
@@ -231,18 +228,20 @@ const Game = props => {
   }, [visible, dispatch]);
 
   useEffect(() => {
-    let i = 0;
+    // let i = 0;
     const subscribeToRightOrWrongAnswer = () => {
       // console.log('subscribing to answers');
+      socket.current.off('answersDesktop');
       socket.current.on('answersDesktop', ({ team, points, action }) => {
-        i++;
-        if (i > 1) return;
+        // i++;
+        // if (i > 1) return;
 
         const o =
           action === 'answered'
             ? { type: 'success', msg: 'ganado' }
             : { type: 'error', msg: 'perdido' };
 
+        console.log(`El equipo ${team} ha ${o.msg} ${points} puntos`);
         return message[o.type](
           `El equipo ${team} ha ${o.msg} ${points} puntos`
         );
