@@ -54,7 +54,11 @@ const RoundCard = ({ round, showModal, index }) => {
             <Tooltip title={team.name} placement="top" key={team.name}>
               <Avatar
                 size="large"
-                style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                style={{
+                  color: '#FFFF',
+                  background:
+                    'linear-gradient( to bottom, #99e6ff, dodgerblue )',
+                }}>
                 {team.name[0]}
               </Avatar>
             </Tooltip>
