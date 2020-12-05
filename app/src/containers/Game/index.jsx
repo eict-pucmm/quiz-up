@@ -199,13 +199,10 @@ const Game = props => {
   }, [visible, dispatch]);
 
   useEffect(() => {
-    let i = 0;
     const subscribeToRightOrWrongAnswer = () => {
       // console.log('subscribing to answers');
+      socket.current.off('answersDesktop');
       socket.current.on('answersDesktop', ({ team, points, action }) => {
-        i++;
-        if (i > 1) return;
-
         const o =
           action === 'answered'
             ? { type: 'success', msg: 'ganado' }
@@ -218,7 +215,7 @@ const Game = props => {
     };
 
     if (visible) subscribeToRightOrWrongAnswer();
-  }, [visible, dispatch]);
+  }, [visible, questions]);
 
   // disable the question after its published
   useEffect(() => {
