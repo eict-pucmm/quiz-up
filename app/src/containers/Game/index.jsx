@@ -24,6 +24,7 @@ const Game = props => {
   const socket = useRef(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [waiting, setWaiting] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   // console.log('WHATEVER', { published });
 
@@ -344,8 +345,8 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, true);
-
     // console.log('handleRightAnwers', { error });
 
     socket.current.emit('subscribeToAnswersDesktop', {
@@ -353,6 +354,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'answered',
     });
+    setWaiting(false);
 
     //close modal and reset part of the state
     handleCancel();
@@ -365,6 +367,7 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, false);
     // console.log('handleWRONGAnswer', { error });
 
@@ -373,6 +376,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'failed',
     });
+    setWaiting(false);
   };
 
   return (
@@ -423,6 +427,7 @@ const Game = props => {
                 handleRightAnswer={handleRightAnswer}
                 handleWrongAnswer={handleWrongAnswer}
                 openQuestion={openQuestion}
+                waiting={waiting}
                 visible
               />
             ) : null}
