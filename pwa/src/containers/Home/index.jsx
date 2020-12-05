@@ -3,15 +3,17 @@ import { Button, Input, Alert, Select } from 'antd';
 
 import { useStateValue } from '../../state/';
 import { setUserInfo } from '../../state/actions';
+import { getMedicalCenters } from '../../api/medicalCenter';
 import {
   getTeamsByMedicalCenter,
   findTeamBelongsToRound,
 } from '../../api/teams';
-import { getMedicalCenters } from '../../api/medicalCenter';
 
 import './styles.css';
 
 const { Option } = Select;
+
+const DEFAULT_ERROR = 'Debe ingresar un equipo y número de ronda válido';
 
 const Home = () => {
   const [error, setError] = useState(false);
@@ -19,6 +21,7 @@ const Home = () => {
   const { roomId, teamName } = state.userInfo;
   const [medicalCenters, setMedicalCenters] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [errorMsg, setErrorMsg] = useState(DEFAULT_ERROR);
 
   useEffect(() => {
     const getCenters = async () => {
@@ -36,8 +39,8 @@ const Home = () => {
 
   const handleSubmit = async () => {
     const { data } = await findTeamBelongsToRound(teamName, roomId);
-    console.log({ teamName });
     setError(!data);
+    setErrorMsg(data.error ? data.error : DEFAULT_ERROR);
     if (data) {
       localStorage.setItem('TEAM', teamName);
       window.location.replace(`/${roomId}`);
@@ -51,13 +54,7 @@ const Home = () => {
 
   return (
     <div className="container">
-      {error && (
-        <Alert
-          message="Debe ingresar un equipo y número válido"
-          type="error"
-          showIcon
-        />
-      )}
+      {error && <Alert message={errorMsg} type="error" showIcon />}
       <Select
         showSearch
         className="input-join"
