@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Tag, Avatar, Tooltip, Divider } from 'antd';
+import { CrownOutlined } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 
 import { getRoundById } from '../../api/round';
 
-const COLORS = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
+import './styles.css';
 
 const RoundCard = ({ round, showModal, index }) => {
-  const { _id, name } = round;
+  const { _id, name, finished } = round;
   const [fetchedRound, setFetchedRound] = useState({});
   const [loading, setLoading] = useState(true);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
@@ -23,7 +24,15 @@ const RoundCard = ({ round, showModal, index }) => {
     loadRound();
   }, [_id, round]);
 
-  const { categories, participants } = fetchedRound;
+  const { categories, participants = [] } = fetchedRound;
+
+  //TODO: does this go on a useMemo?
+  const FIRST_PLACE_IN_POINTS =
+    participants.length > 0 &&
+    Math.max.apply(
+      Math,
+      participants.map(({ total }) => total)
+    );
 
   return (
     <Card
@@ -41,6 +50,7 @@ const RoundCard = ({ round, showModal, index }) => {
           {isDesktop ? 'Ver más' : '...'}
         </span>
       }>
+      {finished && <p className="finished-round-banner">FINALIZADO</p>}
       <p>Categorías:</p>
       {categories &&
         categories.map(c => (
@@ -52,14 +62,35 @@ const RoundCard = ({ round, showModal, index }) => {
       <p>Equipos:</p>
       <Avatar.Group>
         {participants &&
-          participants.map(({ team }, i) => (
+          participants.map(({ team }) => (
             <Tooltip title={team.name} placement="top" key={team.name}>
-              <Avatar size="large" style={{ backgroundColor: COLORS[i] }}>
+              <Avatar
+                size="large"
+                style={{
+                  color: '#FFFF',
+                  background:
+                    'linear-gradient( to bottom, #99e6ff, dodgerblue )',
+                }}>
                 {team.name[0]}
               </Avatar>
             </Tooltip>
           ))}
       </Avatar.Group>
+      {finished && (
+        <>
+          <Divider />
+          <p style={{ fontWeight: 'bold' }}>
+            <CrownOutlined /> Ganador:
+          </p>
+          {participants
+            .filter(({ total }) => total === FIRST_PLACE_IN_POINTS)
+            .map(({ team }) => (
+              <div key={team._id}>
+                <Tag color="warning">{team.name}</Tag>
+              </div>
+            ))}
+        </>
+      )}
     </Card>
   );
 };

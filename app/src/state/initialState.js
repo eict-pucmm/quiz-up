@@ -27,6 +27,7 @@ export const initialState = {
     errorCategories: false,
     errorTeams: false,
     bonusQuestion: '',
+    finished: false,
   },
   game: {
     teams: [],

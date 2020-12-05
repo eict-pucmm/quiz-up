@@ -5,6 +5,7 @@ import {
   INTERNAL_SERVER_ERROR,
   CREATED,
   NOT_FOUND,
+  FORBIDDEN,
 } from '../../../config/statusCodes';
 import wrapper from '../../utils/async';
 import validateData from '../../utils/validateData';
@@ -127,8 +128,24 @@ const findTeamBelongsToRound = async (req, res) => {
     ])
   );
 
+  if (round === null) {
+    return res.status(NOT_FOUND).json({
+      data: false,
+      error: 'Favor introducir un número de ronda válido',
+    });
+  }
+
   if (errorRound) {
-    return res.status(INTERNAL_SERVER_ERROR).json({ errorRound });
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ data: false, error: errorRound });
+  }
+
+  if (round.finished) {
+    return res.status(FORBIDDEN).json({
+      data: false,
+      error: 'Esta ronda ya ha finalizado. Favor introducir otra ronda',
+    });
   }
 
   const team = round.participants.find(el => el.team.name === req.params.team);

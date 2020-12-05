@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, Spin } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 import { useStateValue } from '../../state';
@@ -9,7 +9,7 @@ import './styles.css';
 const AnswersModal = props => {
   const { state } = useStateValue();
   const { published, questions, questionIndex, timer } = state.game;
-  const { openQuestion, handleCancel, visible } = props;
+  const { openQuestion, handleCancel, visible, waiting } = props;
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
 
@@ -81,29 +81,33 @@ const AnswersModal = props => {
                 <div className="answers-cell">{timeToAnswer}</div>
                 {!isDesktopOrBigger && (
                   <div className="answers-cell--actions">
-                    {!pressed && (
-                      <>
-                        <CheckCircleTwoTone
-                          onClick={e =>
-                            props.handleRightAnswer(
-                              e,
-                              team,
-                              questions[questionIndex].question._id
-                            )
-                          }
-                          twoToneColor="#52c41a"
-                        />
-                        <CloseCircleTwoTone
-                          onClick={e =>
-                            props.handleWrongAnswer(
-                              e,
-                              team,
-                              questions[questionIndex].question._id
-                            )
-                          }
-                          twoToneColor="#F51D23"
-                        />
-                      </>
+                    {waiting ? (
+                      <Spin />
+                    ) : (
+                      !pressed && (
+                        <>
+                          <CheckCircleTwoTone
+                            onClick={e =>
+                              props.handleRightAnswer(
+                                e,
+                                team,
+                                questions[questionIndex].question._id
+                              )
+                            }
+                            twoToneColor="#52c41a"
+                          />
+                          <CloseCircleTwoTone
+                            onClick={e =>
+                              props.handleWrongAnswer(
+                                e,
+                                team,
+                                questions[questionIndex].question._id
+                              )
+                            }
+                            twoToneColor="#F51D23"
+                          />
+                        </>
+                      )
                     )}
                   </div>
                 )}

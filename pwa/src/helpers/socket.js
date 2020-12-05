@@ -23,6 +23,21 @@ export const subscribeToQuestion = cb => {
   });
 };
 
+export const subscribeToVamonos = cb => {
+  if (!socket) return true;
+  socket.on('vamonos', status => {
+    //if true apaga y vamonos
+    return cb(null, status);
+  });
+};
+
+export const subscribeToRightOrWrongAnswer = cb => {
+  if (!socket) return true;
+  socket.on('answersDesktop', ({ team, points, action }) => {
+    return cb(null, { team, points, action });
+  });
+};
+
 export const subscribeToTeamInfo = cb => {
   if (!socket) return true;
   socket.on('teamsInfo', teams => {

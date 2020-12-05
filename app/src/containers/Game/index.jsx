@@ -24,6 +24,7 @@ const Game = props => {
   const socket = useRef(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [waiting, setWaiting] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   // console.log(state.game);
   // console.log('WHATEVER', { published });
@@ -228,14 +229,10 @@ const Game = props => {
   }, [visible, dispatch]);
 
   useEffect(() => {
-    // let i = 0;
     const subscribeToRightOrWrongAnswer = () => {
       // console.log('subscribing to answers');
       socket.current.off('answersDesktop');
       socket.current.on('answersDesktop', ({ team, points, action }) => {
-        // i++;
-        // if (i > 1) return;
-
         const o =
           action === 'answered'
             ? { type: 'success', msg: 'ganado' }
@@ -249,7 +246,7 @@ const Game = props => {
     };
 
     if (visible) subscribeToRightOrWrongAnswer();
-  }, [visible, dispatch]);
+  }, [visible, questions]);
 
   // disable the question after its published
   useEffect(() => {
@@ -378,8 +375,8 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, true);
-
     // console.log('handleRightAnwers', { error });
 
     socket.current.emit('subscribeToAnswersDesktop', {
@@ -387,6 +384,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'answered',
     });
+    setWaiting(false);
 
     //close modal and reset part of the state
     handleCancel();
@@ -399,6 +397,7 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, false);
     // console.log('handleWRONGAnswer', { error });
 
@@ -407,6 +406,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'failed',
     });
+    setWaiting(false);
   };
 
   return (
@@ -457,6 +457,7 @@ const Game = props => {
                 handleRightAnswer={handleRightAnswer}
                 handleWrongAnswer={handleWrongAnswer}
                 openQuestion={openQuestion}
+                waiting={waiting}
                 visible
               />
             ) : null}
