@@ -112,7 +112,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       const { error: e } = await updateRound(round.roundId, {
         ...ROUND_INFO,
         event: gameEvent._id,
-        bonusQuestion: roundToAdd.bonusQuestion._id,
+        bonusQuestion: roundToAdd.bonusQuestion._id || roundToAdd.bonusQuestion,
       });
       //close modal after submitting
       props.onCancel();
@@ -167,7 +167,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
           ))}
         </Steps>
       )}
-      {showInfo && (
+      {showInfo && !roundToAdd.finished && (
         <Link to={viewOldEvents ? '#' : `/event/round/${round.roundId}`}>
           <Button className="mb-15" type="primary" block>
             Empezar Ronda

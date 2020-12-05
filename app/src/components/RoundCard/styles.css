@@ -1,0 +1,11 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.finished-round-banner {
+  font-weight: bold;
+  letter-spacing: 10px;
+  background: dodgerblue;
+  text-align: center;
+  color: white;
+}

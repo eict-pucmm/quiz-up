@@ -14,7 +14,7 @@ const GeneralData = props => {
   } = useStateValue();
   const { editing } = round;
   const { allCategories, allTeams, form } = props;
-  const { errorName, errorCategories, errorTeams } = roundToAdd;
+  const { errorName, errorCategories, errorTeams, finished } = roundToAdd;
   const categoriesRef = useRef();
   const teamsRef = useRef();
 
@@ -44,6 +44,7 @@ const GeneralData = props => {
       <Form.Item label="Nombre">
         <Input
           name="name"
+          disabled={finished}
           value={roundToAdd.name}
           placeholder="Nombre de la ronda"
           onChange={handleChange}
@@ -73,6 +74,7 @@ const GeneralData = props => {
         <Select
           {...SHARED_PROPS}
           ref={teamsRef}
+          disabled={finished}
           onChange={onSelectTeams}
           placeholder="Equipos que participaran en esta ronda">
           {allTeams.map(({ name, _id }) => (

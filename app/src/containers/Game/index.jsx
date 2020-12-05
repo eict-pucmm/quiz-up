@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
@@ -6,14 +5,14 @@ import uniqBy from 'lodash/uniqBy';
 import { Spin, message } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 
+import AnswersModal from '../../components/AnswersModal';
+import EndGameModal from '../../components/EndGameModal';
 import QuestionsTable from '../../components/QuestionsTable';
 import RoundController from '../../components/RoundController';
-import AnswersModal from '../../components/AnswersModal';
 import TeamsLeaderboard from '../../components/TeamsLeaderboard';
-import EndGameModal from '../../components/EndGameModal';
 import { getRoundById, updateRound } from '../../api/round';
-import { useStateValue } from '../../state';
 import { setGame } from '../../state/actions';
+import { useStateValue } from '../../state';
 
 import './styles.css';
 
@@ -25,6 +24,7 @@ const Game = props => {
   const socket = useRef(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [waiting, setWaiting] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   // console.log('WHATEVER', { published });
 
@@ -109,19 +109,24 @@ const Game = props => {
 
     const allTeamsConnected = () =>
       teams.map(({ connected }) => connected).every(v => v === true);
-    // console.log('useEffect ~ allTeamsConnected', allTeamsConnected());
     if (!allTeamsConnected()) welcomeTeams();
   }, [teams, dispatch, idOfRound, state.game]);
 
   //subscribe to sockets for timer and the index of the selected question
   // TODO: check how this is affecting multiple re-renders
   useEffect(() => {
+    let i = 0;
     const subscribeToIndexChange = () => {
       const QUEUE = isDesktopOrBigger ? 'indexDesktop' : 'indexMobile';
 
       socket.current.on(QUEUE, ({ index, open }) => {
+        i++;
+        if (i > 1) return;
         // console.log('🚀 { index, open }', { index, open });
-        if (index !== -1) dispatch(setGame({ questionIndex: index }));
+        if (index !== -1) {
+          i = 0;
+          dispatch(setGame({ questionIndex: index }));
+        }
 
         if (!visible) {
           setVisible(open);
@@ -130,7 +135,9 @@ const Game = props => {
       });
     };
 
-    if (!visible) subscribeToIndexChange();
+    if (!visible) {
+      subscribeToIndexChange();
+    }
   }, [dispatch, isDesktopOrBigger, visible]);
 
   useEffect(() => {
@@ -182,7 +189,7 @@ const Game = props => {
 
   useEffect(() => {
     const subscribeToTeamsInfo = () => {
-      console.log('subscribing to info');
+      // console.log('subscribing to info');
       socket.current.on('teamsInfo', teams => {
         // console.log('REEEE', { teams });
         dispatch(setGame({ teams }));
@@ -195,6 +202,7 @@ const Game = props => {
   useEffect(() => {
     const subscribeToRightOrWrongAnswer = () => {
       // console.log('subscribing to answers');
+      socket.current.off('answersDesktop');
       socket.current.on('answersDesktop', ({ team, points, action }) => {
         const o =
           action === 'answered'
@@ -208,7 +216,7 @@ const Game = props => {
     };
 
     if (visible) subscribeToRightOrWrongAnswer();
-  }, [visible, dispatch]);
+  }, [visible, questions]);
 
   // disable the question after its published
   useEffect(() => {
@@ -267,7 +275,7 @@ const Game = props => {
     [dispatch, roomId, questions, isDesktopOrBigger]
   );
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useCallback(async () => {
     //Desktop/TV cant control state
     if (isDesktopOrBigger) {
       return;
@@ -282,7 +290,13 @@ const Game = props => {
       index: -1,
       open: false,
     });
-  }, [dispatch, isDesktopOrBigger, roomId]);
+
+    if (questions.filter(({ disabled }) => disabled).length === 20) {
+      const { error } = await updateRound(idOfRound, { finished: true });
+      // console.log({ error });
+      dispatch(setGame({ finished: true }));
+    }
+  }, [dispatch, isDesktopOrBigger, roomId, idOfRound, questions]);
 
   //correctAnswer can be either true or false
   const handleAnswersActions = async (
@@ -331,8 +345,8 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, true);
-
     // console.log('handleRightAnwers', { error });
 
     socket.current.emit('subscribeToAnswersDesktop', {
@@ -340,6 +354,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'answered',
     });
+    setWaiting(false);
 
     //close modal and reset part of the state
     handleCancel();
@@ -352,6 +367,7 @@ const Game = props => {
       return;
     }
 
+    setWaiting(true);
     const error = await handleAnswersActions(team, questionId, false);
     // console.log('handleWRONGAnswer', { error });
 
@@ -360,6 +376,7 @@ const Game = props => {
       points: questions[questionIndex].question.points,
       action: 'failed',
     });
+    setWaiting(false);
   };
 
   return (
@@ -403,12 +420,14 @@ const Game = props => {
                 title={state.game.title}
               />
             )}
+
             {questions.length > 0 && visible ? (
               <AnswersModal
                 handleCancel={handleCancel}
                 handleRightAnswer={handleRightAnswer}
                 handleWrongAnswer={handleWrongAnswer}
                 openQuestion={openQuestion}
+                waiting={waiting}
                 visible
               />
             ) : null}

@@ -18,7 +18,7 @@ const QuestionBank = () => {
     dispatch,
     state: { roundToAdd },
   } = useStateValue();
-  const { categories, questionBank } = roundToAdd;
+  const { categories, questionBank, finished } = roundToAdd;
   const [loading, setLoading] = useState(false);
   const [gettingQuestions, setGettingQuestions] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -96,7 +96,11 @@ const QuestionBank = () => {
 
   return (
     <>
-      <Button loading={loading} className="mb-15" onClick={callQuestionBank}>
+      <Button
+        loading={loading}
+        className="mb-15"
+        onClick={callQuestionBank}
+        disabled={finished}>
         <BankOutlined />
         Generar banco de preguntas
       </Button>
@@ -107,6 +111,7 @@ const QuestionBank = () => {
               <Form.Item key={points} label={`Pregunta de ${points} puntos`}>
                 <Select
                   {...SHARED_PROPS}
+                  disabled={finished}
                   loading={gettingQuestions}
                   mode="single"
                   onFocus={() => onFocus(category, points)}

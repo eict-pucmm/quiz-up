@@ -36,10 +36,8 @@ export const findTeamBelongsToRound = async (teamName, room) => {
       `${URL_TEAMS}/team/${encodeURIComponent(teamName)}/round/${room}`,
       headers
     );
-    console.log('reponse data:', response.data.data);
     return { data: response.data.data, error: null };
   } catch (error) {
-    console.log({ error });
     return { data: false, error };
   }
 };
