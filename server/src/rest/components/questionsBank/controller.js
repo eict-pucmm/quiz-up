@@ -21,6 +21,17 @@ const create = async (req, res) => {
 
   const qbank = createQuestionBank(questions, orderedByCategories);
 
+  const notEnoughQuestions = Object.values(qbank).some(v =>
+    Object.values(v).some(i => Object.keys(i).length < 5)
+  );
+
+  if (notEnoughQuestions) {
+    //returns a CREATED status but it also sends an `error` payload
+    return res
+      .status(CREATED)
+      .json({ message: 'not enough questions created', error: true, qbank });
+  }
+
   return error
     ? res
         .status(INTERNAL_SERVER_ERROR)

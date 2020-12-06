@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Select, Collapse, Button, message } from 'antd';
+import { Form, Select, Collapse, Button, message, notification } from 'antd';
 import { BankOutlined } from '@ant-design/icons';
 
 import { SHARED_PROPS } from '../';
 import { useStateValue } from '../../../state';
+import { addRound } from '../../../state/actions';
 import {
   generateQuestionBank,
   getQuestionByCatAndPoints,
 } from '../../../api/questions';
-import { addRound } from '../../../state/actions';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -18,13 +18,16 @@ const QuestionBank = () => {
     dispatch,
     state: { roundToAdd },
   } = useStateValue();
-  const { categories, questionBank, finished } = roundToAdd;
+  const { categories, questionBank, finished, errorQuestionBank } = roundToAdd;
   const [loading, setLoading] = useState(false);
   const [gettingQuestions, setGettingQuestions] = useState(false);
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    if (Object.keys(questionBank).length === 0) {
+    if (
+      Object.keys(questionBank).length === 0 ||
+      Object.keys(questionBank).some((k, i) => k !== categories[i])
+    ) {
       dispatch(
         addRound({
           questionBank: {
@@ -49,6 +52,7 @@ const QuestionBank = () => {
         if (questionBank[el.categorySelected].length === 5) {
           return;
         }
+
         questionBank[el.categorySelected].push({
           name: el.question.name,
           category: el.question.categories,
@@ -56,6 +60,7 @@ const QuestionBank = () => {
           categorySelected: el.categorySelected,
           _id: el.question._id,
         });
+
         dispatch(addRound({ questionBank }));
       });
     }
@@ -63,8 +68,18 @@ const QuestionBank = () => {
 
   const callQuestionBank = async () => {
     setLoading(true);
-    const { data } = await generateQuestionBank(categories);
-    dispatch(addRound({ questionBank: data || [] }));
+    const { data, extra } = await generateQuestionBank(categories);
+
+    if (extra && extra.error) {
+      dispatch(addRound({ questionBank: data || [], errorQuestionBank: true }));
+      setLoading(false);
+      return notification['error']({
+        message:
+          'No hay suficientes preguntas creadas de cada categoría. Favor crear un mínimo de 5 preguntas',
+      });
+    }
+
+    dispatch(addRound({ questionBank: data || [], errorQuestionBank: false }));
     setLoading(false);
     message.success('Banco de preguntas agregado con éxito');
   };
@@ -104,6 +119,11 @@ const QuestionBank = () => {
         <BankOutlined />
         Generar banco de preguntas
       </Button>
+      {errorQuestionBank && (
+        <p className="red">
+          Favor revisar que todas las categorías tengan preguntas suficientes
+        </p>
+      )}
       <Collapse className="form-collapse-container" accordion>
         {categories.map(category => (
           <Panel header={category} key={category}>
@@ -119,8 +139,10 @@ const QuestionBank = () => {
                   onBlur={onBlur}
                   placeholder={`Pregunta de ${points} puntos`}
                   value={
-                    Object.keys(questionBank).length > 0
-                      ? questionBank[category][i]?.name || undefined
+                    Object.keys(questionBank).length > 0 &&
+                    questionBank[category] &&
+                    questionBank[category].length > 0
+                      ? questionBank[category][i].name || undefined
                       : undefined
                   }>
                   {questions.map(({ name, _id }) => (

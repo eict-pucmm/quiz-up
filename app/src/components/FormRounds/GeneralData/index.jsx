@@ -23,7 +23,7 @@ const GeneralData = props => {
     dispatch(addRound({ name: value, errorName: value.length < 3 }));
   };
 
-  const onSelectEvents = value => {
+  const onSelectCategories = value => {
     form.setFieldsValue({ categories: value });
     dispatch(
       addRound({ categories: value, errorCategories: value.length !== 4 })
@@ -34,7 +34,13 @@ const GeneralData = props => {
   const onSelectTeams = value => {
     form.setFieldsValue({ teams: value });
     const participants = value.map(v => ({ team: v }));
-    dispatch(addRound({ participants, errorTeams: value.length !== 4 }));
+    dispatch(
+      addRound({
+        participants,
+        errorTeams: value.length !== 4,
+        questionBank: {},
+      })
+    );
     if (value.length === 4) teamsRef.current.blur();
   };
 
@@ -58,7 +64,7 @@ const GeneralData = props => {
         <Select
           {...SHARED_PROPS}
           ref={categoriesRef}
-          onChange={onSelectEvents}
+          onChange={onSelectCategories}
           disabled={editing}
           placeholder="Categorías de esta ronda">
           {allCategories.map(({ name, _id }) => (
