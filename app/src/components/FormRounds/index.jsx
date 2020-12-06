@@ -3,7 +3,11 @@ import { Form, notification, Button, Steps } from 'antd';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 
-import { clearRoundFields, setRoundAttributes } from '../../state/actions';
+import {
+  addRound,
+  clearRoundFields,
+  setRoundAttributes,
+} from '../../state/actions';
 import { useStateValue } from '../../state';
 import { getCategories } from '../../api/categories';
 import { getTeams } from '../../api/teams';
@@ -32,6 +36,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   } = useStateValue();
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const { errorName, errorCategories, errorTeams, questionBank } = roundToAdd;
+  const { errorQuestionBank, errorBonusQuestion } = roundToAdd;
   const { editing } = round;
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
@@ -53,11 +58,47 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   }, []);
 
   const nextStep = () => {
-    if (errorCategories || roundToAdd.categories.length === 0) return;
+    //check for errors on step change
+    const errCat = errorCategories || roundToAdd.categories.length < 4;
+    const errTeams =
+      errorTeams || roundToAdd.participants.map(({ team }) => team).length < 4;
+    const errName = errorName || roundToAdd.name.length < 3;
+
+    const notEnoughQuestions =
+      currentStep === 1 &&
+      (errorQuestionBank ||
+        Object.values(roundToAdd.questionBank).some(v => v.length < 5));
+
+    const errBonus =
+      currentStep === 2 &&
+      (errorBonusQuestion || roundToAdd.bonusQuestion === '');
+
+    dispatch(
+      addRound({
+        errorName: errName,
+        errorCategories: errCat,
+        errorTeams: errTeams,
+        errorQuestionBank: notEnoughQuestions,
+        errorBonusQuestion: errBonus,
+      })
+    );
+
+    if (errName || errCat || errTeams || notEnoughQuestions || errBonus) {
+      return;
+    }
+
     setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
+    //when going back a step, dismiss prevous errors
+    dispatch(
+      addRound({
+        errorQuestionBank: false,
+        errorBonusQuestion: false,
+      })
+    );
+
     setCurrentStep(currentStep - 1);
   };
 
@@ -93,7 +134,9 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       errorName ||
       errorCategories ||
       errorTeams ||
-      Object.keys(questionBank).length === 0
+      errorQuestionBank ||
+      errorBonusQuestion ||
+      roundToAdd.bonusQuestion === ''
     ) {
       return notification['error']({
         message: 'Por favor revise los datos de la ronda.',
