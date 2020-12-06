@@ -88,13 +88,23 @@ const findById = async (req, res) => {
   );
 
   const withTotalPoints = round.participants.map(values => {
-    const { answered, failed, connected, _id, team } = values;
-    const temp = { connected, _id, team, answered, failed };
+    const { answered, failed, connected, _id, team, answeredBonus } = values;
+    const temp = { connected, _id, team, answered, failed, answeredBonus };
     const sumFunc = (total, num) => total + num.points;
     const pointsGained = answered.reduce(sumFunc, 0);
     const pointsLosed = failed.reduce(sumFunc, 0);
+    let bonusPoints = 0;
 
-    return { ...temp, total: pointsGained - pointsLosed };
+    if (answeredBonus.joined) {
+      if (answeredBonus.failed == null) {
+        return;
+      }
+      bonusPoints = answeredBonus.failed
+        ? -answeredBonus.points
+        : answeredBonus.points;
+    }
+
+    return { ...temp, total: pointsGained - pointsLosed + bonusPoints };
   });
 
   return error
@@ -236,13 +246,23 @@ const update = async (req, res) => {
   );
 
   const withTotalPoints = round.participants.map(values => {
-    const { answered, failed, connected, _id, team } = values;
-    const temp = { connected, _id, team, answered, failed };
+    const { answered, failed, connected, _id, team, answeredBonus } = values;
+    const temp = { connected, _id, team, answered, failed, answeredBonus };
     const sumFunc = (total, num) => total + num.points;
     const pointsGained = answered.reduce(sumFunc, 0);
     const pointsLosed = failed.reduce(sumFunc, 0);
+    let bonusPoints = 0;
 
-    return { ...temp, total: pointsGained - pointsLosed };
+    if (answeredBonus.joined) {
+      if (answeredBonus.failed == null) {
+        return;
+      }
+      bonusPoints = answeredBonus.failed
+        ? -answeredBonus.points
+        : answeredBonus.points;
+    }
+
+    return { ...temp, total: pointsGained - pointsLosed + bonusPoints };
   });
 
   io.getIO().to(updatedRound.roomId).emit('teamsInfo', withTotalPoints);

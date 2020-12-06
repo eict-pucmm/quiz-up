@@ -26,8 +26,9 @@ const Game = props => {
   const [loading, setLoading] = useState(true);
   const [waiting, setWaiting] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
+  const [openAnnouncement, setOpenAnnouncement] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
-  // console.log(state.game);
+  console.log(state.game);
   // console.log('WHATEVER', { published });
 
   const HEADERS =
@@ -324,11 +325,17 @@ const Game = props => {
     });
 
     if (questions.filter(({ disabled }) => disabled).length === 20) {
-      const { error } = await updateRound(idOfRound, { finished: true });
-      // console.log({ error });
-      dispatch(setGame({ finished: true }));
+      //check if more than one team has positive points
+      if (teams.filter(({ total }) => total > 0).length > 1) {
+        setOpenAnnouncement(true);
+      } else {
+        //finish the game with the only winner
+        const { error } = await updateRound(idOfRound, { finished: true });
+        // console.log({ error });
+        dispatch(setGame({ finished: true }));
+      }
     }
-  }, [dispatch, isDesktopOrBigger, roomId, idOfRound, questions]);
+  }, [dispatch, isDesktopOrBigger, roomId, idOfRound, questions, teams]);
 
   //correctAnswer can be either true or false
   const handleAnswersActions = async (
@@ -444,9 +451,11 @@ const Game = props => {
               />
             )}
 
-            {finished && (
+            {(finished || openAnnouncement) && (
               <EndGameModal
+                finished={finished}
                 firstPlace={FIRST_PLACE_IN_POINTS}
+                openAnnouncement={openAnnouncement}
                 socket={socket.current}
                 teams={teams}
                 title={state.game.title}

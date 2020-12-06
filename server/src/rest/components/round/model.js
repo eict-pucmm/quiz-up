@@ -89,6 +89,26 @@ const Round = new Schema({
             ref: 'Question',
           },
         ],
+        answeredBonus: {
+          joined: {
+            type: Boolean,
+            default: false,
+          },
+          points: {
+            type: Number,
+            default: 0,
+          },
+          failed: {
+            type: Boolean,
+          },
+          question: {
+            type: String,
+          },
+          timer: {
+            type: Number,
+            default: 30,
+          },
+        },
       }),
     },
   ],

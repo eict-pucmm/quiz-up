@@ -124,12 +124,30 @@ export const socketMagic = socketio => {
         const withTotalPoints = roomData[roomId].room.participants.map(
           values => {
             const { answered, failed, connected, _id, team } = values;
-            const temp = { connected, _id, team, answered, failed };
+            const { answeredBonus } = values;
+            const temp = {
+              connected,
+              _id,
+              team,
+              answered,
+              failed,
+              answeredBonus,
+            };
             const sumFunc = (total, num) => total + num.points;
             const pointsGained = answered.reduce(sumFunc, 0);
             const pointsLosed = failed.reduce(sumFunc, 0);
+            let bonusPoints = 0;
 
-            return { ...temp, total: pointsGained - pointsLosed };
+            if (answeredBonus.joined) {
+              if (answeredBonus.failed == null) {
+                return;
+              }
+              bonusPoints = answeredBonus.failed
+                ? -answeredBonus.points
+                : answeredBonus.points;
+            }
+
+            return { ...temp, total: pointsGained - pointsLosed + bonusPoints };
           }
         );
 
@@ -248,12 +266,33 @@ export const socketMagic = socketio => {
             const withTotalPoints = roomData[roomId].room.participants.map(
               values => {
                 const { answered, failed, connected, _id, team } = values;
-                const temp = { connected, _id, team, answered, failed };
+                const { answeredBonus } = values;
+                const temp = {
+                  connected,
+                  _id,
+                  team,
+                  answered,
+                  failed,
+                  answeredBonus,
+                };
                 const sumFunc = (total, num) => total + num.points;
                 const pointsGained = answered.reduce(sumFunc, 0);
                 const pointsLosed = failed.reduce(sumFunc, 0);
+                let bonusPoints = 0;
 
-                return { ...temp, total: pointsGained - pointsLosed };
+                if (answeredBonus.joined) {
+                  if (answeredBonus.failed == null) {
+                    return;
+                  }
+                  bonusPoints = answeredBonus.failed
+                    ? -answeredBonus.points
+                    : answeredBonus.points;
+                }
+
+                return {
+                  ...temp,
+                  total: pointsGained - pointsLosed + bonusPoints,
+                };
               }
             );
 
