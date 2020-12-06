@@ -26,6 +26,7 @@ const Game = props => {
   const [loading, setLoading] = useState(true);
   const [waiting, setWaiting] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
+  // console.log(state.game);
   // console.log('WHATEVER', { published });
 
   const HEADERS =
@@ -83,48 +84,76 @@ const Game = props => {
   }, [roomId, isDesktopOrBigger]);
 
   useEffect(() => {
-    const welcomeTeams = () => {
-      socket.current.on('welcomeTeam', team => {
-        const index =
-          teams.length > 0 &&
-          teams.findIndex(i => i.team && i.team.name === team && !i.connected);
+    socket.current.off('welcomeTeam'); //Remove all prev. methods
+    socket.current.on('welcomeTeam', team => {
+      console.log('Welcome, Teams: ', teams, 'Team', team);
+      const index =
+        teams.length > 0 &&
+        teams.findIndex(i => i.team && i.team.name === team);
 
-        if (index !== -1) {
-          if (teams.length > 0) {
-            dispatch(
-              setGame({ teams: [...teams, (teams[index].connected = true)] })
-            );
-            const { error } = updateRound(idOfRound, {
-              ...state.game,
-              participants: teams,
-            });
-            //TODO" do something with this
-            // console.log('ERRR welcome teams', { error });
-            return message.success(`Bienvenido ${team}`);
-          }
+      if (index !== -1) {
+        if (teams.length > 0) {
+          dispatch(
+            setGame({
+              teams: teams.map((team, i) =>
+                i === index ? { ...team, connected: true } : team
+              ),
+            })
+          );
+
+          const { error } = updateRound(idOfRound, {
+            ...state.game,
+            participants: teams.filter(t => t && t.team),
+          });
+          //TODO" do something with this
+          // console.log('ERRR welcome teams', { error });
+          return message.success(`Bienvenido ${team}`);
         }
-        return;
-      });
-    };
+      }
+      return;
+    });
+  }, [teams, dispatch, idOfRound, state.game]);
 
-    const allTeamsConnected = () =>
-      teams.map(({ connected }) => connected).every(v => v === true);
-    if (!allTeamsConnected()) welcomeTeams();
+  useEffect(() => {
+    socket.current.off('byeTeam'); //Remove all prev. methods
+    socket.current.on('byeTeam', team => {
+      console.log('Bye, Teams: ', teams, 'Team', team);
+      const index =
+        teams.length > 0 &&
+        teams.findIndex(i => i.team && i.team.name === team);
+
+      if (index !== -1) {
+        if (teams.length > 0) {
+          dispatch(
+            setGame({
+              teams: teams.map((team, i) =>
+                i === index ? { ...team, connected: false } : team
+              ),
+            })
+          );
+
+          const { error } = updateRound(idOfRound, {
+            ...state.game,
+            participants: teams.filter(t => t && t.team),
+          });
+
+          return message.warning(`Adios ${team}`);
+        }
+      }
+      return;
+    });
   }, [teams, dispatch, idOfRound, state.game]);
 
   //subscribe to sockets for timer and the index of the selected question
   // TODO: check how this is affecting multiple re-renders
   useEffect(() => {
-    let i = 0;
     const subscribeToIndexChange = () => {
       const QUEUE = isDesktopOrBigger ? 'indexDesktop' : 'indexMobile';
 
+      socket.current.off(QUEUE);
       socket.current.on(QUEUE, ({ index, open }) => {
-        i++;
-        if (i > 1) return;
         // console.log('🚀 { index, open }', { index, open });
         if (index !== -1) {
-          i = 0;
           dispatch(setGame({ questionIndex: index }));
         }
 

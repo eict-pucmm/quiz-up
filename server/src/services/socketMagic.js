@@ -1,9 +1,35 @@
 export const socketMagic = socketio => {
+  // We will keep track of active teams & rooms. Whenever a room is empty, we will
+  let roomData = {};
+  let clients = 0;
+
   socketio.on('connection', socket => {
     console.log('Client connected');
+    console.log('On connection Started', roomData);
+    clients++;
+    console.log('Clients', clients);
 
     socket.on('joinRoom', ({ teamName, roomId }) => {
       socket.join(roomId);
+
+      if (roomId) {
+        const teamData = {
+          name: teamName,
+          socketId: socket.id,
+        };
+
+        if (!roomData[roomId]) {
+          // Enable this room with the team
+          roomData[roomId] = {
+            teams: [teamData],
+          };
+        } else {
+          // Add the team to the room
+          roomData[roomId].teams = [...roomData[roomId].teams, teamData];
+        }
+      }
+
+      console.log('On Join Room', roomData[roomId]);
 
       socket.to(roomId).emit('welcomeTeam', teamName);
 
@@ -66,6 +92,37 @@ export const socketMagic = socketio => {
     });
 
     socket.on('disconnect', () => {
+      // Check rooms with no teams and clear them up:
+      Object.keys(roomData).forEach(roomId => {
+        // Look for disconnected team:
+        if (!roomData[roomId]) {
+          return;
+        }
+
+        const teamThatLeft = roomData[roomId].teams.find(
+          team => team.socketId === socket.id
+        );
+
+        if (teamThatLeft) {
+          console.log(teamThatLeft);
+          // Emit to the room that the team has left;
+          socketio.to(roomId).emit('byeTeam', teamThatLeft.name);
+          // Ideally, report that to the DB :shrug:
+          // Remove the team from our list:
+          roomData[roomId].teams = roomData[roomId].teams.filter(
+            team => team.socketId !== socket.id
+          );
+        } else {
+          // This team wasn't in that room.
+        }
+
+        if (roomData[roomId].teams.length === 0) {
+          roomData[roomId] = undefined;
+        }
+      });
+
+      clients--;
+      console.log('Clients', clients);
       console.log('see you later');
     });
   });
