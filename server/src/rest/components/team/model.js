@@ -52,4 +52,15 @@ export function validateTeam(team) {
   return schema.validate(team);
 }
 
+export function validateForUpdate(team) {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(255),
+    residents: Joi.array(),
+    medicalCenter: Joi.string(),
+    createdBy: Joi.objectId(),
+  }).options({ stripUnknown: true });
+
+  return schema.validate(team);
+}
+
 export default moongose.model('Team', Team);

@@ -1,4 +1,4 @@
-import Team, { validateTeam } from './model';
+import Team, { validateTeam, validateForUpdate } from './model';
 import Round from '../round/model';
 import {
   OK,
@@ -18,7 +18,7 @@ const attributes = {
 
 const updateAttributes = {
   Model: Team,
-  validate: validateTeam,
+  validate: validateForUpdate,
 };
 
 /**

@@ -1,5 +1,6 @@
 import { URL_TEAMS } from '../config/urls';
 import { apiClient, createToken } from './axios';
+import { getUserInfo } from './user';
 
 export const getTeams = async () => {
   try {
@@ -28,7 +29,7 @@ export const saveTeam = async team => {
     const headers = await createToken();
     const response = await apiClient.post(
       `${URL_TEAMS}/`,
-      { ...team },
+      { ...team, createdBy: getUserInfo().id },
       headers
     );
 
