@@ -4,8 +4,13 @@
 
 .finished-round-banner {
   font-weight: bold;
-  letter-spacing: 10px;
   background: dodgerblue;
   text-align: center;
   color: white;
+}
+
+@media (min-width: 768px) {
+  .finished-round-banner {
+    letter-spacing: 10px;
+  }
 }

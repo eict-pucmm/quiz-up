@@ -109,11 +109,11 @@ const Event = () => {
                 className="event-card"
                 title={<EventCardTitle gameEvent={event} />}
                 key={event._id}>
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab="Rondas" key="1">
+                <Tabs defaultActiveKey="1" type="card">
+                  <TabPane tab="Rondas" key={`${event.name}-1`}>
                     <RoundList gameEvent={event} />
                   </TabPane>
-                  <TabPane tab="Rondas finalizadas" key="2">
+                  <TabPane tab="Rondas finalizadas" key={`${event.name}-2`}>
                     <RoundList gameEvent={event} finished={1} />
                   </TabPane>
                 </Tabs>
