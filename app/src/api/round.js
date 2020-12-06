@@ -2,11 +2,11 @@ import { URL_ROUNDS, URL_EVENTS } from '../config/urls';
 import { apiClient, createToken } from './axios';
 import { getUserInfo } from './user';
 
-export const getRoundsByEvent = async eventId => {
+export const getRoundsByEvent = async (eventId, finished = 0) => {
   try {
     const headers = await createToken();
     const response = await apiClient.get(
-      `${URL_ROUNDS}/event/${eventId}`,
+      `${URL_ROUNDS}/event/${eventId}?finished=${finished}`,
       headers
     );
 

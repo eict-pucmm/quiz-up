@@ -25,14 +25,17 @@ const RoundList = props => {
 
   useEffect(() => {
     const get = async () => {
-      const { data: rounds } = await getRoundsByEvent(props.gameEvent._id);
+      const { data: rounds } = await getRoundsByEvent(
+        props.gameEvent._id,
+        props.finished
+      );
 
       setLocalRounds(rounds || []);
       setLoading(false);
     };
 
     if (!saving) get();
-  }, [dispatch, saving, props.gameEvent._id]);
+  }, [dispatch, saving, props.gameEvent._id, props.finished]);
 
   const showModal = roundIndex => {
     setShowInfo(true);
