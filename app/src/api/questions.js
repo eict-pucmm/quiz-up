@@ -61,9 +61,9 @@ export const generateQuestionBank = async categories => {
       headers
     );
 
-    return { data: response.data.qbank, error: null };
+    return { data: response.data.qbank, error: null, extra: response.data };
   } catch (error) {
-    return { data: null, error };
+    return { data: null, error: error.response };
   }
 };
 

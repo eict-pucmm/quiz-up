@@ -36,8 +36,9 @@ const list = async (req, res) => {
  * @returns {JSON} of Rounds
  */
 const roundByEvent = async (req, res) => {
+  const finished = req.query.finished == 1;
   const [error, rounds] = await wrapper(
-    Round.find({ event: req.params.idOfEvent }).populate([
+    Round.find({ event: req.params.idOfEvent, finished: finished }).populate([
       {
         path: 'bonusQuestion',
         select: 'name',

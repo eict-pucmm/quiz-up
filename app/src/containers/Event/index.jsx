@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Breadcrumb, Card, Empty, Button, notification } from 'antd';
+import { Breadcrumb, Card, Empty, Button, notification, Tabs } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { getEvents, saveEvents } from '../../api/event';
@@ -15,6 +15,8 @@ import LoadingCards from '../../components/LoadingCards';
 import RoundList from '../../components/RoundList';
 
 import './styles.css';
+
+const { TabPane } = Tabs;
 
 const Event = () => {
   const { state, dispatch } = useStateValue();
@@ -102,17 +104,21 @@ const Event = () => {
               <PlusOutlined />
               Agregar Evento
             </Button>
-            {data.map(event => {
-              return (
-                <Card
-                  className="event-card"
-                  title={<EventCardTitle gameEvent={event} />}
-                  key={event._id}>
-                  <p className="event-rounds-label">Rondas del evento</p>
-                  <RoundList gameEvent={event} />
-                </Card>
-              );
-            })}
+            {data.map(event => (
+              <Card
+                className="event-card"
+                title={<EventCardTitle gameEvent={event} />}
+                key={event._id}>
+                <Tabs defaultActiveKey="1" type="card">
+                  <TabPane tab="Rondas" key={`${event.name}-1`}>
+                    <RoundList gameEvent={event} />
+                  </TabPane>
+                  <TabPane tab="Rondas finalizadas" key={`${event.name}-2`}>
+                    <RoundList gameEvent={event} finished={1} />
+                  </TabPane>
+                </Tabs>
+              </Card>
+            ))}
           </>
         )}
         <EventModal onSubmit={onSubmit} />

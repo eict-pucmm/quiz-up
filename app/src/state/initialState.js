@@ -23,10 +23,12 @@ export const initialState = {
     categories: [],
     participants: [{ team: '', answered: [], failed: [] }],
     questionBank: {},
+    bonusQuestion: '',
     errorName: false,
     errorCategories: false,
     errorTeams: false,
-    bonusQuestion: '',
+    errorQuestionBank: false,
+    errorBonusQuestion: false,
     finished: false,
   },
   game: {
