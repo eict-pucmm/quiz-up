@@ -137,7 +137,7 @@ const Game = props => {
             participants: teams.filter(t => t && t.team),
           });
 
-          return message.success(`Adios ${team}`);
+          return message.warning(`Adios ${team}`);
         }
       }
       return;
@@ -238,7 +238,6 @@ const Game = props => {
             ? { type: 'success', msg: 'ganado' }
             : { type: 'error', msg: 'perdido' };
 
-        console.log(`El equipo ${team} ha ${o.msg} ${points} puntos`);
         return message[o.type](
           `El equipo ${team} ha ${o.msg} ${points} puntos`
         );
