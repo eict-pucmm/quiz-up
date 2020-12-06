@@ -30,15 +30,17 @@ const Admins = () => {
 
   const onRemove = async key => {
     dispatch(setAdmins({ saving: true }));
+    setLoading(true);
     const { error } = await removeAdmin(key);
 
     if (!error) {
       notification['success']({
-        message: 'La pregunta ha sido removida con éxito',
+        message: 'El administrador ha sido removido con éxito',
       });
     }
 
     dispatch(setAdmins({ saving: false }));
+    setLoading(false);
   };
 
   const fieldWithError = () => {

@@ -48,9 +48,9 @@ export function validateAdmin(admin) {
 
 export function validateForUpdate(admin) {
   const schema = Joi.object({
-    firstName: Joi.string().max(255).required(),
-    lastName: Joi.string().max(255).required(),
-    allAccess: Joi.boolean().required(),
+    firstName: Joi.string().max(255),
+    lastName: Joi.string().max(255),
+    allAccess: Joi.boolean(),
     deleted: Joi.boolean(),
     deletedAt: Joi.date(),
   }).options({ stripUnknown: true });
