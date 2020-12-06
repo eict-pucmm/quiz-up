@@ -25,6 +25,7 @@ const Game = props => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [waiting, setWaiting] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   // console.log(state.game);
   // console.log('WHATEVER', { published });
@@ -69,6 +70,12 @@ const Game = props => {
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_QU_BASE_API);
     // socket.current = io(process.env.REACT_APP_QU_LOCAL_API);
+    socket.current.on('connect', () => {
+      setSocketConnected(true);
+    });
+    socket.current.on('disconnect', () => {
+      setSocketConnected(false);
+    });
     return () => {
       socket.current.disconnect();
     };
@@ -76,37 +83,36 @@ const Game = props => {
 
   //when roomId is fetched -> join it
   useEffect(() => {
-    const QUEUE = isDesktopOrBigger ? 'desktop' : 'mobile';
-    socket.current.emit('joinRoom', { teamName: `ADMIN-${QUEUE}`, roomId });
+    if (socketConnected && roomId) {
+      const QUEUE = isDesktopOrBigger ? 'desktop' : 'mobile';
+      socket.current.emit('joinRoom', { teamName: `ADMIN-${QUEUE}`, roomId });
+    }
+
     return () => {
       socket.current.emit('leaveRoom', { roomId });
     };
-  }, [roomId, isDesktopOrBigger]);
+  }, [roomId, isDesktopOrBigger, socketConnected]);
 
   useEffect(() => {
     socket.current.off('welcomeTeam'); //Remove all prev. methods
     socket.current.on('welcomeTeam', team => {
-      console.log('Welcome, Teams: ', teams, 'Team', team);
+      // console.log('Welcome, Teams: ', teams, 'Team', team);
       const index =
         teams.length > 0 &&
         teams.findIndex(i => i.team && i.team.name === team);
 
       if (index !== -1) {
         if (teams.length > 0) {
+          const updatedTeams = teams.map((team, i) =>
+            i === index ? { ...team, connected: true } : team
+          );
+
           dispatch(
             setGame({
-              teams: teams.map((team, i) =>
-                i === index ? { ...team, connected: true } : team
-              ),
+              teams: updatedTeams,
             })
           );
 
-          const { error } = updateRound(idOfRound, {
-            ...state.game,
-            participants: teams.filter(t => t && t.team),
-          });
-          //TODO" do something with this
-          // console.log('ERRR welcome teams', { error });
           return message.success(`Bienvenido ${team}`);
         }
       }
@@ -117,25 +123,22 @@ const Game = props => {
   useEffect(() => {
     socket.current.off('byeTeam'); //Remove all prev. methods
     socket.current.on('byeTeam', team => {
-      console.log('Bye, Teams: ', teams, 'Team', team);
+      // console.log('Bye, Teams: ', teams, 'Team', team);
       const index =
         teams.length > 0 &&
         teams.findIndex(i => i.team && i.team.name === team);
 
       if (index !== -1) {
         if (teams.length > 0) {
-          dispatch(
-            setGame({
-              teams: teams.map((team, i) =>
-                i === index ? { ...team, connected: false } : team
-              ),
-            })
+          const updatedTeams = teams.map((team, i) =>
+            i === index ? { ...team, connected: false } : team
           );
 
-          const { error } = updateRound(idOfRound, {
-            ...state.game,
-            participants: teams.filter(t => t && t.team),
-          });
+          dispatch(
+            setGame({
+              teams: updatedTeams,
+            })
+          );
 
           return message.warning(`Adios ${team}`);
         }
