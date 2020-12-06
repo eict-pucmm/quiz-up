@@ -6,7 +6,14 @@ export const initiateSocket = (roomId, teamName) => {
   socket = io(process.env.REACT_APP_QU_BASE_API);
   // socket = io(process.env.REACT_APP_QU_LOCAL_API);
   rID = roomId;
-  if (socket && roomId) socket.emit('joinRoom', { teamName, roomId });
+  if (socket && roomId) {
+    socket.on('connect', () => {
+      // console.log('Connection happened');
+      // Safeguard in case of disconnections
+      // Will reconnect & re-send team info.
+      socket.emit('joinRoom', { teamName, roomId });
+    });
+  }
 };
 
 export const disconnectSocket = () => {
