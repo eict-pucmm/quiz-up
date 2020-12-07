@@ -3,7 +3,7 @@ import { Tag, Tooltip, Avatar } from 'antd';
 
 import ActionButtons from '../../components/ActionButtons';
 
-export const COLUMNS = ({ onRemove, onUpdate }) => {
+export const COLUMNS = ({ onRemove, onUpdate, isBonusTable }) => {
   return [
     {
       title: 'Pregunta',
@@ -26,7 +26,7 @@ export const COLUMNS = ({ onRemove, onUpdate }) => {
     },
     {
       title: 'Valor',
-      dataIndex: 'points',
+      dataIndex: !isBonusTable ? 'points' : 'N/A',
       key: 'points',
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.points - b.points,

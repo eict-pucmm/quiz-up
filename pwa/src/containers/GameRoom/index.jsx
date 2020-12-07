@@ -63,7 +63,7 @@ const GameRoom = props => {
     subscribeToTeamInfo((err, teams) => {
       if (err) return;
       const info = teams.find(({ team }) => team.name === teamName);
-      setPoints(info.total);
+      setPoints(info && info.total ? info.total : 0);
     });
 
     if (roomId) {

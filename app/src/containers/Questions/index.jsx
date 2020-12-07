@@ -205,7 +205,7 @@ const Questions = () => {
       />
       <Table
         loading={loading}
-        columns={COLUMNS({ onRemove, onUpdate })}
+        columns={COLUMNS({ onRemove, onUpdate, isBonusTable })}
         dataSource={data}
       />
     </>
