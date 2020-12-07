@@ -3,7 +3,7 @@ import { Avatar, Tooltip } from 'antd';
 
 import ActionButtons from '../../components/ActionButtons';
 
-export const COLUMNS = ({ onUpdate, onRemove }) => {
+export const COLUMNS = ({ onUpdate }) => {
   return [
     {
       title: 'Centros Médicos',
@@ -34,12 +34,7 @@ export const COLUMNS = ({ onUpdate, onRemove }) => {
       key: 'action',
       width: 200,
       render: record => (
-        <ActionButtons
-          onUpdate={() => onUpdate(record.key)}
-          onRemove={() => onRemove(record.key)}
-          update
-          remove
-        />
+        <ActionButtons onUpdate={() => onUpdate(record.key)} update />
       ),
     },
   ];

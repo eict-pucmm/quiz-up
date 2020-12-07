@@ -5,7 +5,6 @@ import { COLUMNS } from './columns';
 import {
   getMedicalCenterById,
   getMedicalCenters,
-  removeMedicalCenter,
   saveMedicalCenter,
   updateMedicalCenter,
 } from '../../api/medialCenters';
@@ -28,19 +27,6 @@ const MedicalCenters = () => {
 
     if (!saving) get();
   }, [saving]);
-
-  const onRemove = async key => {
-    setLoading(true);
-    setSaving(true);
-    const { error } = await removeMedicalCenter(key);
-    if (!error) {
-      notification['success']({
-        message: 'El centro ha sido removido con éxito',
-      });
-    }
-    setSaving(false);
-    setLoading(false);
-  };
 
   const clearAndReturn = error => {
     setCenterName('');
@@ -122,7 +108,7 @@ const MedicalCenters = () => {
 
       <Table
         loading={loading}
-        columns={COLUMNS({ onUpdate, onRemove })}
+        columns={COLUMNS({ onUpdate })}
         dataSource={centers}
       />
     </>
