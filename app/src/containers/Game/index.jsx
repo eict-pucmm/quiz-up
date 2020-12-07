@@ -178,8 +178,10 @@ const Game = props => {
       socket.current.on('timer', ({ timer, open }) => {
         // questions[questionIndex].timer = timer;
         dispatch(setGame({ published: open, timer }));
-        if (!open) {
-          dispatch(setGame({ published: false, timer: 15 }));
+        if (!open || timer <= 0) {
+          if (!open) {
+            dispatch(setGame({ published: false, timer: 15 }));
+          }
 
           if (isDesktopOrBigger) {
             return;
