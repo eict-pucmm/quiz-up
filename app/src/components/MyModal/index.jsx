@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
 
-const TOTAL_ROUND_STEPS = 3;
+const TOTAL_ROUND_STEPS = 2;
 
 const MyModal = props => {
   const { onSubmit, saving, type, visible, steps = null, editing } = props;

@@ -23,10 +23,10 @@ const fetchRoom = async roomId => {
         path: 'participants.team',
         select: 'name',
       },
-      {
-        path: 'bonusQuestion',
-        select: 'name',
-      },
+      // {
+      //   path: 'bonusQuestion',
+      //   select: 'name',
+      // },
     ])
   );
 

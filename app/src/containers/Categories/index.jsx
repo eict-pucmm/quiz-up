@@ -126,6 +126,7 @@ const Categories = () => {
         loading={loading}
         columns={COLUMNS({ onUpdate, onRemove })}
         dataSource={categories}
+        pagination={{ pageSize: 6 }}
       />
     </>
   );

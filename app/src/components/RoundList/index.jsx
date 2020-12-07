@@ -39,14 +39,9 @@ const RoundList = props => {
 
   const showModal = roundIndex => {
     setShowInfo(true);
-    const {
-      name,
-      participants,
-      categories,
-      bonusQuestion,
-      questions,
-      finished,
-    } = localRounds[roundIndex];
+    const { name, participants, categories, questions, finished } = localRounds[
+      roundIndex
+    ];
     const teams = participants.map(({ team }) => team);
     dispatch(
       setRoundAttributes({
@@ -54,16 +49,7 @@ const RoundList = props => {
         editing: true,
       })
     );
-    dispatch(
-      addRound({
-        name,
-        categories,
-        participants,
-        bonusQuestion,
-        questions,
-        finished,
-      })
-    );
+    dispatch(addRound({ name, categories, participants, questions, finished }));
     form.setFieldsValue({ categories, teams });
   };
 

@@ -15,7 +15,7 @@ import { saveRound, updateRound } from '../../api/round';
 import MyModal from '../MyModal';
 import GeneralData from './GeneralData';
 import QuestionBank from './QuestionBank';
-import BonusQuestion from './BonusQuestion';
+// import BonusQuestion from './BonusQuestion';
 
 import './styles.css';
 
@@ -36,7 +36,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
   } = useStateValue();
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const { errorName, errorCategories, errorTeams, questionBank } = roundToAdd;
-  const { errorQuestionBank, errorBonusQuestion } = roundToAdd;
+  const { errorQuestionBank } = roundToAdd;
   const { editing } = round;
   const [allCategories, setAllCategories] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
@@ -69,9 +69,9 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       (errorQuestionBank ||
         Object.values(roundToAdd.questionBank).some(v => v.length < 5));
 
-    const errBonus =
-      currentStep === 2 &&
-      (errorBonusQuestion || roundToAdd.bonusQuestion === '');
+    // const errBonus =
+    //   currentStep === 2 &&
+    //   (errorBonusQuestion || roundToAdd.bonusQuestion === '');
 
     dispatch(
       addRound({
@@ -79,11 +79,11 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
         errorCategories: errCat,
         errorTeams: errTeams,
         errorQuestionBank: notEnoughQuestions,
-        errorBonusQuestion: errBonus,
+        // errorBonusQuestion: errBonus,
       })
     );
 
-    if (errName || errCat || errTeams || notEnoughQuestions || errBonus) {
+    if (errName || errCat || errTeams || notEnoughQuestions) {
       return;
     }
 
@@ -95,7 +95,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
     dispatch(
       addRound({
         errorQuestionBank: false,
-        errorBonusQuestion: false,
+        // errorBonusQuestion: false,
       })
     );
 
@@ -134,9 +134,9 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       errorName ||
       errorCategories ||
       errorTeams ||
-      errorQuestionBank ||
-      errorBonusQuestion ||
-      roundToAdd.bonusQuestion === ''
+      errorQuestionBank
+      // errorBonusQuestion ||
+      // roundToAdd.bonusQuestion === ''
     ) {
       return notification['error']({
         message: 'Por favor revise los datos de la ronda.',
@@ -155,7 +155,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       const { error: e } = await updateRound(round.roundId, {
         ...ROUND_INFO,
         event: gameEvent._id,
-        bonusQuestion: roundToAdd.bonusQuestion._id || roundToAdd.bonusQuestion,
+        // bonusQuestion: roundToAdd.bonusQuestion._id || roundToAdd.bonusQuestion,
       });
       //close modal after submitting
       props.onCancel();
@@ -182,7 +182,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       />
     ),
     1: () => <QuestionBank form={form} allCategories={allCategories} />,
-    2: () => <BonusQuestion form={form} />,
+    // 2: () => <BonusQuestion form={form} />,
   };
 
   return (
@@ -205,7 +205,7 @@ const FormRounds = ({ gameEvent, showInfo, form, ...props }) => {
       }>
       {isDesktopOrLaptop && (
         <Steps current={currentStep} size="small" className="round-modal-steps">
-          {['Datos Generales', 'Banco de Preguntas', 'Pregunta Bono'].map(t => (
+          {['Datos Generales', 'Banco de Preguntas'].map(t => (
             <Step key={t} title={t} />
           ))}
         </Steps>

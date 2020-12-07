@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, notification, Table, Form, Radio } from 'antd';
+import { Breadcrumb, notification, Table, Form } from 'antd';
 
 import QuestionsForm from '../../components/FormQuestions';
-import BonusQuestionsForm from '../../components/FormBonusQuestion';
+// import BonusQuestionsForm from '../../components/FormBonusQuestion';
 import CollapsableFormWrapper from '../../components/CollapsableFormWrapper';
 import { COLUMNS } from './Columns';
 import { getCategories } from '../../api/categories';
@@ -13,7 +13,7 @@ import {
   removeQuestion,
   saveQuestion,
   updateQuestion,
-  getBonusQuestions,
+  // getBonusQuestions,
 } from '../../api/questions';
 import {
   addQuestion,
@@ -24,35 +24,33 @@ import {
 const Questions = () => {
   const { state, dispatch } = useStateValue();
   const [loading, setLoading] = useState(true);
-  const [isBonus, SetIsBonus] = useState(false);
-  const [isBonusTable, SetIsBonusTable] = useState(false);
+  // const [isBonus, SetIsBonus] = useState(false);
+  // const [isBonusTable, SetIsBonusTable] = useState(false);
   const [id, setId] = useState('');
   const [form] = Form.useForm();
-  const questionOptions = [
-    { label: 'Pregunta', value: false },
-    { label: 'Bono', value: true },
-  ];
-  const tablesOptions = [
-    { label: 'Ver preguntas con categorias', value: false },
-    { label: 'Ver preguntas para rondas de bonos', value: true },
-  ];
+  // const questionOptions = [
+  //   { label: 'Pregunta', value: false },
+  //   { label: 'Bono', value: true },
+  // ];
+  // const tablesOptions = [
+  //   { label: 'Ver preguntas con categorias', value: false },
+  //   { label: 'Ver preguntas para rondas de bonos', value: true },
+  // ];
 
   const { saving, data, editing, nameChanged } = state.questions;
 
-  const onChangeRB = e => {
-    SetIsBonus(e.target.value);
-  };
+  // const onChangeRB = e => {
+  //   SetIsBonus(e.target.value);
+  // };
 
-  const onChangeRBTable = e => {
-    SetIsBonusTable(e.target.value);
-  };
+  // const onChangeRBTable = e => {
+  //   SetIsBonusTable(e.target.value);
+  // };
 
   useEffect(() => {
     const get = async () => {
       setLoading(true);
-      const { data } = isBonusTable
-        ? await getBonusQuestions()
-        : await getQuestions();
+      const { data } = await getQuestions();
       const questions = (data || []).map(el => ({ ...el, key: el._id }));
       const { data: d } = await getCategories();
       const categories = (d || []).map(el => ({ ...el, key: el._id }));
@@ -67,7 +65,7 @@ const Questions = () => {
     };
 
     if (!saving) get();
-  }, [saving, dispatch, isBonusTable]);
+  }, [saving, dispatch]);
 
   const onRemove = async key => {
     dispatch(setQuestionsAttributes({ saving: true }));
@@ -101,16 +99,7 @@ const Questions = () => {
     e.preventDefault();
     const { errorName, errorPoints, categories } = state.questionToAdd;
 
-    if (isBonus) {
-      dispatch(
-        addQuestion({
-          points: 100,
-          errorCategories: false,
-        })
-      );
-    }
-
-    if (errorName || errorPoints || (categories.length === 0 && !isBonus)) {
+    if (errorName || errorPoints || categories.length === 0) {
       dispatch(addQuestion({ errorCategories: categories.length === 0 }));
       return notification['error']({
         message: 'Por favor revise los datos del formulario.',
@@ -120,7 +109,7 @@ const Questions = () => {
     setLoading(true);
     dispatch(setQuestionsAttributes({ saving: true }));
 
-    const QUESTION = { ...state.questionToAdd, isBonus };
+    const QUESTION = { ...state.questionToAdd };
 
     if (editing) {
       if (!nameChanged) delete QUESTION.name;
@@ -173,40 +162,41 @@ const Questions = () => {
         <Breadcrumb.Item>Preguntas</Breadcrumb.Item>
       </Breadcrumb>
       <CollapsableFormWrapper header={'Agregar una pregunta'}>
-        <Radio.Group
+        {/* <Radio.Group
           options={questionOptions}
           onChange={onChangeRB}
           value={isBonus}
           optionType="button"
           buttonStyle="solid"
-        />
+        /> */}
 
-        {isBonus ? (
+        {/* {isBonus ? (
           <BonusQuestionsForm
             form={form}
             cancelUpdate={cancelUpdate}
             onSubmit={onSubmit}
           />
-        ) : (
-          <QuestionsForm
-            form={form}
-            cancelUpdate={cancelUpdate}
-            onSubmit={onSubmit}
-          />
-        )}
+        ) : ( */}
+        <QuestionsForm
+          form={form}
+          cancelUpdate={cancelUpdate}
+          onSubmit={onSubmit}
+        />
+        {/* )} */}
       </CollapsableFormWrapper>
 
-      <Radio.Group
+      {/* <Radio.Group
         options={tablesOptions}
         onChange={onChangeRBTable}
         value={isBonusTable}
         optionType="button"
         buttonStyle="solid"
-      />
+      /> */}
       <Table
         loading={loading}
-        columns={COLUMNS({ onRemove, onUpdate, isBonusTable })}
+        columns={COLUMNS({ onRemove, onUpdate })}
         dataSource={data}
+        pagination={{ pageSize: 6 }}
       />
     </>
   );

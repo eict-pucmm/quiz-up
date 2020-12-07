@@ -90,7 +90,7 @@ function pickRandomQuestion(categories) {
         });
       }
 
-      if (question.isBonus) {
+      if (question.deleted) {
         return;
       }
 

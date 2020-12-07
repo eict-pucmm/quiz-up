@@ -39,10 +39,10 @@ const roundByEvent = async (req, res) => {
   const finished = req.query.finished == 1;
   const [error, rounds] = await wrapper(
     Round.find({ event: req.params.idOfEvent, finished: finished }).populate([
-      {
-        path: 'bonusQuestion',
-        select: 'name',
-      },
+      // {
+      //   path: 'bonusQuestion',
+      //   select: 'name',
+      // },
       {
         path: 'questions.question',
         select: 'name categories points',
@@ -80,10 +80,10 @@ const findById = async (req, res) => {
         path: 'participants.team',
         select: 'name',
       },
-      {
-        path: 'bonusQuestion',
-        select: 'name',
-      },
+      // {
+      //   path: 'bonusQuestion',
+      //   select: 'name',
+      // },
     ])
   );
 
@@ -108,7 +108,7 @@ const findById = async (req, res) => {
           questions: round.questions,
           categories: round.categories,
           participants: withTotalPoints,
-          bonusQuestion: round.bonusQuestion,
+          // bonusQuestion: round.bonusQuestion,
         },
       });
 };
@@ -228,10 +228,10 @@ const update = async (req, res) => {
         path: 'participants.team',
         select: 'name',
       },
-      {
-        path: 'bonusQuestion',
-        select: 'name',
-      },
+      // {
+      // path: 'bonusQuestion',
+      // select: 'name',
+      // },
     ])
   );
 
