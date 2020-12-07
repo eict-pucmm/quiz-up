@@ -77,49 +77,58 @@ export const socketMagic = socketio => {
           'socketId'
         );
 
-        // console.log('Updating Room, ', roomId);
-        // console.log(
-        //   'participants pre-update',
-        //   roomData[roomId].room.participants,
-        //   teamName
-        // );
-
-        roomData[roomId].room.participants = roomData[
-          roomId
-        ].room.participants.map(participant => {
-          if (participant.team.name === teamName) {
-            participant.connected = true;
-          }
-
-          return participant;
-        });
-
-        // console.log(
-        //   'participants input',
-        //   roomData[roomId].room.participants,
-        //   teamName
-        // );
-
-        await wrapper(
-          Round.findByIdAndUpdate(
-            { _id: roomData[roomId].room._id },
-            roomData[roomId].room,
-            { new: true }
-          )
+        const updateDB = roomData[roomId].room.participants.find(
+          participant => participant.team.name === teamName
         );
 
-        roomData[roomId].room = await fetchRoom(roomId);
+        if (updateDB) {
+          console.log('Updating Room, ', roomId);
 
-        // console.log(
-        //   'participants post-update',
-        //   roomData[roomId].room.participants,
-        //   teamName
-        // );
-        // console.log('Room Updated, ', roomId);
+          roomData[roomId].room = await fetchRoom(roomId);
+
+          console.log(
+            'participants pre-update',
+            roomData[roomId].room.participants,
+            teamName
+          );
+
+          roomData[roomId].room.participants = roomData[
+            roomId
+          ].room.participants.map(participant => {
+            if (participant.team.name === teamName) {
+              participant.connected = true;
+            }
+
+            return participant;
+          });
+
+          console.log(
+            'participants input',
+            roomData[roomId].room.participants,
+            teamName
+          );
+
+          await wrapper(
+            Round.findByIdAndUpdate(
+              { _id: roomData[roomId].room._id },
+              { participants: roomData[roomId].room.participants },
+              { new: true }
+            )
+          );
+
+          roomData[roomId].room = await fetchRoom(roomId);
+
+          console.log(
+            'participants post-update',
+            roomData[roomId].room.participants,
+            teamName
+          );
+          console.log('Room Updated, ', roomId);
+        }
 
         // Update this team as logged in:
 
-        // console.log(roomData[roomId].room.participants);
+        console.log(roomData[roomId].room.participants);
 
         const withTotalPoints = roomData[roomId].room.participants.map(
           values => {
@@ -136,7 +145,7 @@ export const socketMagic = socketio => {
         socket.to(roomId).emit('teamsInfo', withTotalPoints);
       }
 
-      // console.log('On Join Room', roomData[roomId]);
+      console.log('On Join Room', roomData[roomId]);
 
       socket.to(roomId).emit('welcomeTeam', teamName);
 
@@ -211,7 +220,7 @@ export const socketMagic = socketio => {
         );
 
         if (teamThatLeft) {
-          // console.log(teamThatLeft);
+          console.log(teamThatLeft);
           // Emit to the room that the team has left, but first
           // Check that no other teams with that name are in the room:
           const totalTeamsThatLeft = roomData[roomId].teams.filter(
@@ -220,44 +229,51 @@ export const socketMagic = socketio => {
 
           // If we detect no duplicates of this team, we report it has left
           if (totalTeamsThatLeft.length <= 1) {
-            // console.log('Updating Room, ', roomId);
-
-            // Update this team as logged out:
-            roomData[roomId].room.participants = roomData[
-              roomId
-            ].room.participants.map(participant => {
-              if (participant.team.name === teamThatLeft.name) {
-                participant.connected = false;
-              }
-
-              return participant;
-            });
-
-            await wrapper(
-              Round.findByIdAndUpdate(
-                { _id: roomData[roomId].room._id },
-                roomData[roomId].room,
-                { new: true }
-              )
+            const updateDB = roomData[roomId].room.participants.find(
+              participant => participant.team.name === teamThatLeft.name
             );
 
-            // console.log('Room Updated, ', roomId);
+            if (updateDB) {
+              console.log('Updating Room, ', roomId);
+              roomData[roomId].room = await fetchRoom(roomId);
 
-            roomData[roomId].room = await fetchRoom(roomId);
+              // Update this team as logged out:
+              roomData[roomId].room.participants = roomData[
+                roomId
+              ].room.participants.map(participant => {
+                if (participant.team.name === teamThatLeft.name) {
+                  participant.connected = false;
+                }
 
-            const withTotalPoints = roomData[roomId].room.participants.map(
-              values => {
-                const { answered, failed, connected, _id, team } = values;
-                const temp = { connected, _id, team, answered, failed };
-                const sumFunc = (total, num) => total + num.points;
-                const pointsGained = answered.reduce(sumFunc, 0);
-                const pointsLosed = failed.reduce(sumFunc, 0);
+                return participant;
+              });
 
-                return { ...temp, total: pointsGained - pointsLosed };
-              }
-            );
+              await wrapper(
+                Round.findByIdAndUpdate(
+                  { _id: roomData[roomId].room._id },
+                  { participants: roomData[roomId].room.participants },
+                  { new: true }
+                )
+              );
 
-            socket.to(roomId).emit('teamsInfo', withTotalPoints);
+              console.log('Room Updated, ', roomId);
+
+              roomData[roomId].room = await fetchRoom(roomId);
+
+              const withTotalPoints = roomData[roomId].room.participants.map(
+                values => {
+                  const { answered, failed, connected, _id, team } = values;
+                  const temp = { connected, _id, team, answered, failed };
+                  const sumFunc = (total, num) => total + num.points;
+                  const pointsGained = answered.reduce(sumFunc, 0);
+                  const pointsLosed = failed.reduce(sumFunc, 0);
+
+                  return { ...temp, total: pointsGained - pointsLosed };
+                }
+              );
+
+              socket.to(roomId).emit('teamsInfo', withTotalPoints);
+            }
 
             socketio.to(roomId).emit('byeTeam', teamThatLeft.name);
           }
