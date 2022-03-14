@@ -9,7 +9,6 @@ Manager for panel based questions games.
 - [Express.js](https://expressjs.com/): API service framework
 - [React](https://reactjs.org/): Frontend framework
 - [Docker](https://www.docker.com/): Provides a way to run applications securely isolated in a container.
-- [RabbitMQ](https://www.rabbitmq.com/): Message queue used for communication
 
 ## Folder Structure
 
@@ -32,6 +31,7 @@ quiz-up
 |   |   |   |   └── utils            # API's utils
 |   |   |   └── services/            # files for external services. E.g: sending mails
 |   |   |   └── index.js             # Initialize server and handle routes and services
+|   |   |   └── serviceAccountKey.json # Keys for the firebase app
 └── package.json                     # All dependencies and script to run the application
 └── babel.config.js                  # Babel configuration file
 └── Dockerfile                       # file that contains the commands needed to assemble an image
@@ -64,7 +64,7 @@ You need to have `docker` and `docker-compose` installed to run this project. If
   - ```bash
     cd quiz-up
     ```
-- Add the neccessary environment variables for the server in its own `.env` file in `/server/.env` (More info on the [this](https://github.com/ect-pucmm/quiz-up#environment-variables) section)
+- Add the neccessary environment variables for the server in its own `.env` file in `/server/.env`, `/app/.env`, `/pwa/.env` (More info on the [this](https://github.com/ect-pucmm/quiz-up#environment-variables) section)
 - When you're in the root directory type the command `npm run install-all` and then:
   - To start the server in a local environment:
     ```bash
@@ -82,11 +82,17 @@ You need to have `docker` and `docker-compose` installed to run this project. If
 
 ### Environment variables
 
-- **PORT**: Port number to run the API
-- **MONGO_URI**: URI to connect to the mongo database locally
-- **AMQP_CONNECTION_URL**: URL to connect to the MQ service
-- **MONGO_DOCKER_URI**: URI to connect to the mongo database in docker
-- **NODE_ENV**: Node environment value
+- For the admin dashboard `(/app/.env)` and the PWA `(/pwa/.env)`:
+
+  - REACT_APP_QU_BASE_API: URL that will be calling the server/API (e.g:https://myDomain.com)
+  - REACT_APP_QU_LOCAL_API: URL that will be using the server/API locally (e.g:http://localhost:5000)
+
+- For the server `(/server/.env)`:
+  - **PORT**: Port number to run the API
+  - **MONGO_URI**: URI to connect to the mongo database locally
+  - **MONGO_DOCKER_URI**: URI to connect to the mongo database in docker
+  - **NODE_ENV**: Node environment value
+  - **GOOGLE_APPLICATION_CREDENTIALS**: Firebase credentials used for the user management
 
 ### Scripts used on the project
 
@@ -117,3 +123,27 @@ You need to have `docker` and `docker-compose` installed to run this project. If
 
 - `npm start`: Run the app in development mode
 - `npm run build`: Builds the app for production to the build folder
+
+---
+
+### Development Experience (VSCode - Optional).
+
+Integrating ESLint and Prettier into VSCode
+
+1. Add the prettier extension (Extension ID: `esbenp.prettier-vscode`)
+2. Add the ESLint extension (Extension ID: `dbaeumer.vscode-eslint`) and restart VSCode afterwards.
+3. Create and/or go to your `.vscode/settings.json` file at the root of this project.
+4. Copy the following chunk in your `settings.json` file:
+
+- ```json
+  {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  }
+  ```

@@ -3,7 +3,7 @@ import { FORBIDDEN, UNAUTHORIZED } from '../../config/statusCodes';
 
 firebase.initializeApp({
   credentials: firebase.credential.applicationDefault(),
-  databaseURL: 'https://quizup-c36c7.firebaseio.com',
+  databaseURL: 'https://quiz-up-a8fa0.firebaseio.com',
 });
 
 const authMiddleware = (request, response, next) => {
