@@ -5,6 +5,8 @@ import { useMediaQuery } from 'react-responsive';
 import { useStateValue } from '../../state';
 import { addQuestion, setQuestionsAttributes } from '../../state/actions';
 
+import { storage } from '../../constants/firebase';
+
 const { Option } = Select;
 const POINTS = [100, 200, 300, 400, 500];
 
@@ -30,6 +32,33 @@ const FormQuestions = ({ form, ...props }) => {
     const name = e.target.value;
     if (editing) dispatch(setQuestionsAttributes({ nameChanged: true }));
     dispatch(addQuestion({ name, errorName: name.length < 4 }));
+  };
+
+
+  let imageToUpload = null;
+
+  const handleImage = () => {
+    if(imageToUpload == null) return;
+    // console.log(imageToUpload);
+    uploadFiles(imageToUpload);
+  };
+
+  const uploadFiles = (file) => {
+    const filename = "image" + new Date().getTime();
+    const uploadTask = storage.ref('imagenes/' + filename).put(file);
+    uploadTask.on('state_changed', 
+    (snapshot) => {
+
+    }, 
+    error => console.log(error),
+    () => {
+      storage
+      .ref('imagenes')
+      .child(filename)
+      .getDownloadURL().then((url) => {
+        console.log(url);
+      });
+    })
   };
 
   return (
@@ -69,6 +98,18 @@ const FormQuestions = ({ form, ...props }) => {
           defaultValue={POINTS[0]}
           onChange={handlePointsChange}
         />
+      </Form.Item>
+
+      <Form.Item label="Imágenes:" name="imageURL">
+        <Input type="file"
+        onChange={(event) => {
+          imageToUpload = event.target.files[0];
+        }}/>
+      
+        <Button type="primary" onClick={handleImage}>
+          Subir imágen
+        </Button>        
+
       </Form.Item>
 
       <Form.Item wrapperCol={{ span: 14, offset: isDesktop ? 4 : 0 }}>

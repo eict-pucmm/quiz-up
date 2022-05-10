@@ -32,5 +32,5 @@ const socketio = io.init(server);
 socketMagic(socketio);
 
 server.listen(PORT, () =>
-  console.log(`Your server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`)
+    console.log(`URI: ${MONGO}\nYour server is 🏃‍♂️💨 on http://0.0.0.0:${PORT}`)
 );
