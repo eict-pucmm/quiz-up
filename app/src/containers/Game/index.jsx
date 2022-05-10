@@ -68,8 +68,9 @@ const Game = props => {
 
   //connect-disconect to socket
   useEffect(() => {
-    socket.current = io(process.env.REACT_APP_QU_BASE_API);
-    // socket.current = io(process.env.REACT_APP_QU_LOCAL_API);
+    socket.current = io(
+      process.env.REACT_APP_QU_BASE_API || process.env.REACT_APP_QU_LOCAL_API
+    );
     socket.current.on('connect', () => {
       setSocketConnected(true);
     });
