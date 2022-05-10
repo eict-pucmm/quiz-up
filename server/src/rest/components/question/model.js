@@ -60,7 +60,7 @@ const Question = new Schema({
  */
 export function validateQuestion(question) {
   const schema = Joi.object({
-    name: Joi.string().min(4).max(255).required(),
+    name: Joi.string().min(4).required(),
     categories: Joi.array(),
     points: Joi.number().min(100).max(500).required(),
     image: Joi.string(),
@@ -74,7 +74,7 @@ export function validateQuestion(question) {
 
 export function validateForUpdate(question) {
   const schema = Joi.object({
-    name: Joi.string().min(4).max(255),
+    name: Joi.string().min(4),
     categories: Joi.array(),
     points: Joi.number().min(100).max(500),
     image: Joi.string(),
