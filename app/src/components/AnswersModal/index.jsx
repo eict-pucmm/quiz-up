@@ -49,6 +49,8 @@ const AnswersModal = props => {
     return <span className="question-countdown">{timer}</span>;
   };
 
+  const questionName = questions[questionIndex].question.name;
+  const questionImageSrc = questions[questionIndex].question.image ?? null;
   return (
     <Modal
       centered
@@ -61,9 +63,14 @@ const AnswersModal = props => {
       visible={visible}>
       <div className="question-wrapper">
         {(published || isDesktopOrBigger) && RENDERER()}
-        <p className="question-content">
-          {questions[questionIndex].question.name}
-        </p>
+        <p className="question-content">{questionName}</p>
+        {/* TODO: make image responsive and 
+        confirm if we want this to render on mobile */}
+        {ANSWERS.length === 0 && questionImageSrc ? (
+          <div>
+            <img src={questionImageSrc} alt={questionName} />
+          </div>
+        ) : null}
         <div className="answers-table">
           {ANSWERS.length > 0 && (
             <div className="answers-header">

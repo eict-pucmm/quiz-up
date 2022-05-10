@@ -3,8 +3,9 @@ let socket;
 
 let rID;
 export const initiateSocket = (roomId, teamName) => {
-  socket = io(process.env.REACT_APP_QU_BASE_API);
-  // socket = io(process.env.REACT_APP_QU_LOCAL_API);
+  socket = io(
+    process.env.REACT_APP_QU_BASE_API || process.env.REACT_APP_QU_LOCAL_API
+  );
   rID = roomId;
   if (socket && roomId) {
     socket.on('connect', () => {
