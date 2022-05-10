@@ -28,7 +28,7 @@
     "firebase-admin": "^9.3.0",
     "helmet": "^4.2.0",
     "joi-objectid": "3.0.1",
-    "lodash": "^4.17.20",
+    "lodash.uniqby": "^4.7.0",
     "mongoose": "5.8.11",
     "morgan": "^1.10.0",
     "socket.io": "^2.3.0"
