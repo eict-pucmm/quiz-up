@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input, Select, InputNumber, Form } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 
@@ -34,7 +34,9 @@ const FormQuestions = ({ form, ...props }) => {
     dispatch(addQuestion({ name, errorName: name.length < 4 }));
   };
 
+  // https://www.youtube.com/watch?v=mEf-6IUsTKs
   let imageToUpload = null;
+  const [progress, setProgress] = useState(0);
 
   const handleImage = () => {
     if (imageToUpload == null) return;
@@ -47,7 +49,15 @@ const FormQuestions = ({ form, ...props }) => {
     const uploadTask = storage.ref('imagenes/' + filename).put(file);
     uploadTask.on(
       'state_changed',
-      snapshot => {},
+      snapshot => {
+
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        setProgress(prog);
+
+      },
       error => console.log(error),
       () => {
         storage
@@ -144,7 +154,7 @@ const FormQuestions = ({ form, ...props }) => {
         />
 
         <Button type="primary" onClick={handleImage}>
-          Subir imágen
+          Subir imágen - {progress}%
         </Button>
       </Form.Item>
 
