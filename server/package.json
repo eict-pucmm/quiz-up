@@ -9,7 +9,8 @@
   "scripts": {
     "start": "npm run build && node dist/src/index.js",
     "dev": "babel-watch -L ./src/index.js",
-    "build": "rm -rf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules"
+    "clean": "rimraf dist",
+    "build": "npm run clean && babel ./ --out-dir dist/ --ignore ./node_modules"
   },
   "keywords": [],
   "author": "ECT PUCMM",
@@ -31,6 +32,7 @@
     "lodash": "^4.17.20",
     "mongoose": "5.8.11",
     "morgan": "^1.10.0",
+    "rimraf": "^3.0.2",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {

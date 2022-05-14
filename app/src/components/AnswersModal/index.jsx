@@ -1,10 +1,11 @@
 import React from 'react';
-import { Modal, Button, Spin } from 'antd';
+import { Modal, Button, Spin, Row, Col, Image } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 import { useStateValue } from '../../state';
 
 import './styles.css';
+
 
 const AnswersModal = props => {
   const { state } = useStateValue();
@@ -49,6 +50,9 @@ const AnswersModal = props => {
     return <span className="question-countdown">{timer}</span>;
   };
 
+  const questionName = questions[questionIndex].question.name;
+  const questionImageSrc = questions[questionIndex].question.image ?? null;
+      
   return (
     <Modal
       centered
@@ -57,13 +61,32 @@ const AnswersModal = props => {
       maskClosable={!timer}
       closable={!isDesktopOrBigger}
       onCancel={handleCancel}
-      width={'90%'}
+      width={'100%'}
       visible={visible}>
       <div className="question-wrapper">
         {(published || isDesktopOrBigger) && RENDERER()}
-        <p className="question-content">
-          {questions[questionIndex].question.name}
-        </p>
+        
+        <Row>
+        
+        {questionImageSrc.length > 0 ? (
+        <Col span={12}>
+          <p className="question-content">{questionName}</p>
+        </Col>) : (
+        <Col span={24}>
+          <p className="question-content">{questionName}</p>
+        </Col>
+        )}
+
+        {questionImageSrc.length > 0 ? (          
+        <Col span={12}>
+          <div>
+            <Image className="image-class" src={questionImageSrc} alt={"empty"}/>
+          </div>          
+        </Col>
+        ) : (null)}
+        
+        </Row>          
+        
         <div className="answers-table">
           {ANSWERS.length > 0 && (
             <div className="answers-header">

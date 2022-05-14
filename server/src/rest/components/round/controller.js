@@ -66,7 +66,7 @@ const findById = async (req, res) => {
     Round.findById({ _id: req.params.id }).populate([
       {
         path: 'questions.question',
-        select: 'name points',
+        select: 'name points image',
       },
       {
         path: 'participants.failed',

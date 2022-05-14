@@ -2,8 +2,8 @@ import axios from 'axios';
 import { auth } from '../constants/firebase';
 
 export const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_QU_BASE_API,
-  // baseURL: process.env.REACT_APP_QU_LOCAL_API,
+  baseURL:
+    process.env.REACT_APP_QU_BASE_API || process.env.REACT_APP_QU_LOCAL_API,
 });
 
 export const createToken = async () => {

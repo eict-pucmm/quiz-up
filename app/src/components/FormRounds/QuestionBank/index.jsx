@@ -94,9 +94,13 @@ const QuestionBank = () => {
   const onSelect = (value, category, position) => {
     setQuestions([]);
 
+    var questTemp = questionBank[category][position];
+    console.log(questTemp);
+
     if (
-      questionBank[category][position].name &&
+      questTemp && questionBank[category][position] &&
       questionBank[category][position]._id
+      
     ) {
       questionBank[category][position].name = value[0];
       questionBank[category][position]._id = value[1];

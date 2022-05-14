@@ -55,9 +55,11 @@ export const initialState = {
     name: '',
     categories: [],
     points: 100,
+    image: '',
     errorName: false,
     errorCategories: false,
     errorPoints: false,
+    errorImage: false,
     isBonus: false,
   },
   teams: {
