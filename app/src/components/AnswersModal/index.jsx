@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, Button, Spin, Row, Col, Image } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
@@ -13,7 +13,6 @@ const AnswersModal = props => {
   const { openQuestion, handleCancel, visible, waiting } = props;
   const isDesktopOrBigger = useMediaQuery({ minWidth: 1024 });
   const ANSWERS = questions[questionIndex].answers;
-  // const [colSize, setcolSize] = useState(12);
 
   const MODAL_BTNS = [
     !published && ANSWERS.length === 0 && (
