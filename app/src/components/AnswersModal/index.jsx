@@ -1,10 +1,11 @@
 import React from 'react';
-import { Modal, Button, Spin } from 'antd';
+import { Modal, Button, Spin, Row, Col, Image } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 import { useStateValue } from '../../state';
 
 import './styles.css';
+
 
 const AnswersModal = props => {
   const { state } = useStateValue();
@@ -59,18 +60,24 @@ const AnswersModal = props => {
       maskClosable={!timer}
       closable={!isDesktopOrBigger}
       onCancel={handleCancel}
-      width={'90%'}
+      width={'100%'}
       visible={visible}>
       <div className="question-wrapper">
         {(published || isDesktopOrBigger) && RENDERER()}
-        <p className="question-content">{questionName}</p>
-        {/* TODO: make image responsive and 
-        confirm if we want this to render on mobile */}
-        {ANSWERS.length === 0 && questionImageSrc ? (
+        
+        <Row>
+        <Col span={16}>
+          <p className="question-content">{questionName}</p>
+        </Col>
+        <Col span={8}>
+          {ANSWERS.length === 0 && questionImageSrc ? (
           <div>
-            <img src={questionImageSrc} alt={questionName} />
+            <Image className="image-class" src={questionImageSrc} alt={questionName}/>
           </div>
-        ) : null}
+          ) : null}
+        </Col>
+        </Row>          
+        
         <div className="answers-table">
           {ANSWERS.length > 0 && (
             <div className="answers-header">
