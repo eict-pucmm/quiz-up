@@ -61,7 +61,7 @@ const AnswersModal = props => {
       maskClosable={!timer}
       closable={!isDesktopOrBigger}
       onCancel={handleCancel}
-      width={'100%'}
+      width={'95%'}
       visible={visible}>
       <div className="question-wrapper">
         {(published || isDesktopOrBigger) && RENDERER()}
@@ -73,14 +73,14 @@ const AnswersModal = props => {
           <p className="question-content">{questionName}</p>
         </Col>) : (
         <Col span={24}>
-          <p className="question-content">{questionName}</p>
+          <p className="question-content-imageless">{questionName}</p>
         </Col>
         )}
 
         {questionImageSrc.length > 0 ? (          
         <Col span={12}>
           <div>
-            <Image className="image-class" src={questionImageSrc} alt={"empty"}/>
+            <Image className="image-class" src={questionImageSrc} height="10" alt={"Failed to load the image"}/>
           </div>          
         </Col>
         ) : (null)}
