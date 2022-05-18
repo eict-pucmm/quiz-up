@@ -67,6 +67,8 @@ const FormQuestions = ({ form, ...props }) => {
           .then(url => {
             console.log(url);
             dispatch(addQuestion({ image: url }));
+            imageToUpload = null;
+            setProgress(0);
           })
           .catch(error => {
             /* TODO: la logica de manejar el error se puede mover a su propio archivo 
