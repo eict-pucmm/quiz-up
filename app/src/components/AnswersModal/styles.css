@@ -49,7 +49,7 @@
 }
 
 .question-content {
-    font-size: 1.3vw;
+    font-size: 2.2vw;
     font-weight: bold;
     color: dodgerblue !important;
 }
@@ -67,7 +67,7 @@
 }
 
 .image-class {
-    width: 95%;
+    width: 90%;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -82,10 +82,10 @@
         margin-right: 2%;
     }
     .question-content {
-        font-size: 1.2vw;
+        font-size: 1.4vw;
     }
     .question-content-imageless {
-        font-size: 1vw;
+        font-size: 1.85vw;
         font-weight: bold;
         color: dodgerblue !important;
     }
